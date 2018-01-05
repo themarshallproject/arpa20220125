@@ -1,0 +1,10 @@
+{
+  "name": "gfx-v2",
+  "version": "0.0.1",
+  "description": "Publishing tool for creating graphics and custom posts at The Marshall Project.",
+  "main": "",
+  "author": "Gabe Isman <isman@themarshallproject.org>",
+  "devDependencies": {
+    "gulp": "^4.0.0"
+  }
+}
