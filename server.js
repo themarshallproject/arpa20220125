@@ -18,12 +18,12 @@ module.exports = function(options) {
   var injectPayload = [
     "<script src='//localhost:" + lrPort + "/livereload.js'></script>",
     "<link rel='stylesheet' href='/fonts.css'>",
-    "<link rel='stylesheet' href='/app.css'>",
-    "<script src='/app.js'></script>\n"
+    "<link rel='stylesheet' href='/graphic.css'>",
+    "<script src='/graphic.js'></script>\n"
   ].join("\n");
 
   app.get('/', function(req, res){
-    fs.readFile('./dist/app.html', 'utf8', function(err, content) {
+    fs.readFile('./dist/graphic.html', 'utf8', function(err, content) {
 
       var contentHTML;
       if (config.local_markdown === 'true') {
