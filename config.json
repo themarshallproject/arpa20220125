@@ -1,0 +1,8 @@
+{
+  "slug": "changemechangeme",
+  "local_markdown": true,
+  "local_template": "post",
+  "destination": "graphic",
+  "bucket": "tmp-production-story-assets",
+  "cdn": "https://d63kb4t2ifcex.cloudfront.net"
+}

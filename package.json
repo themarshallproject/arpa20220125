@@ -4,7 +4,13 @@
   "description": "Publishing tool for creating graphics and custom posts at The Marshall Project.",
   "main": "",
   "author": "Gabe Isman <isman@themarshallproject.org>",
-  "devDependencies": {
-    "gulp": "^4.0.0"
+  "dependencies": {
+    "express": "^4.16.2",
+    "first-open-port": "^0.1.2",
+    "gulp": "^4.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-live-server": "0.0.31",
+    "gulp-ruby-sass": "^3.0.0",
+    "marked": "^0.3.9"
   }
 }
