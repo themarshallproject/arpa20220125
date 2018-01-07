@@ -3,12 +3,14 @@ var sass = require('gulp-sass');
 var livereload = require('gulp-livereload');
 var firstOpenPort = require('first-open-port');
 var opn = require('opn');
+var log = require('fancy-log');
 var notify = require('gulp-notify');
 
 var server = require('./server.js');
+var config = require('./config.json');
 
 
-gulp.task('server', function() {
+function startServer() {
   var serverPort, lrPort;
   return firstOpenPort(3000).then(function(port) {
     serverPort = port;
@@ -18,41 +20,44 @@ gulp.task('server', function() {
   }).then(function() {
     var app = server({ port: serverPort, lrPort: lrPort });
     livereload.listen({ port: lrPort });
-  }).then(function() {
-    opn('http://localhost:' + serverPort);
   });
-});
+}
 
 
-gulp.task('scss:dev', function() {
+function openBrowser() {
+  opn('http://localhost:' + serverPort);
+}
+
+
+function styles() {
   return gulp.src('src/graphic.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
-});
+}
 
 
-gulp.task('html:dev', function() {
+function copyHtml() {
   return gulp.src('src/graphic.html')
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
-});
+}
 
 
-gulp.task('js:dev', function() {
+function scripts() {
   return gulp.src('src/graphic.js')
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
-});
+}
 
 
-gulp.task('watch', gulp.parallel('html:dev', 'scss:dev', 'js:dev'), function() {
-  gulp.watch(['src/*.scss'], gulp.series('scss:dev'));
-  gulp.watch(['src/*.js'], gulp.series('js:dev'));
-  return gulp.watch(['src/graphic.html'], gulp.series('html:dev'));
-});
+function watch() {
+  gulp.parallel(copyHtml, styles, scripts)();
+  gulp.watch(['src/*.scss'], styles);
+  gulp.watch(['src/*.js'], scripts);
+  return gulp.watch(['src/graphic.html'], copyHtml);
+}
 
+gulp.task('default', gulp.series(startServer, watch));
 
-
-gulp.task('default', gulp.series('server', 'watch'));
 
