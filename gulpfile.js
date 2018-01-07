@@ -1,7 +1,9 @@
 var gulp = require('gulp');
-var sass = require('gulp-ruby-sass');
+var sass = require('gulp-sass');
 var livereload = require('gulp-livereload');
 var firstOpenPort = require('first-open-port');
+var opn = require('opn');
+var notify = require('gulp-notify');
 
 var server = require('./server.js');
 
@@ -16,20 +18,15 @@ gulp.task('server', function() {
   }).then(function() {
     var app = server({ port: serverPort, lrPort: lrPort });
     livereload.listen({ port: lrPort });
+  }).then(function() {
+    opn('http://localhost:' + serverPort);
   });
 });
 
 
-gulp.task('watch', function() {
-  gulp.watch(['src/*.scss'], gulp.series('scss:dev'));
-  gulp.watch(['src/*.js'], gulp.series('js:dev'));
-  gulp.watch(['src/graphic.html'], gulp.series('html:dev'));
-});
-
-
 gulp.task('scss:dev', function() {
-  return sass('src/graphic.scss')
-    .on('error', sass.logError)
+  return gulp.src('src/graphic.scss')
+    .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
 });
@@ -49,5 +46,13 @@ gulp.task('js:dev', function() {
 });
 
 
-gulp.task('default', gulp.series( 'server','watch'));
+gulp.task('watch', gulp.parallel('html:dev', 'scss:dev', 'js:dev'), function() {
+  gulp.watch(['src/*.scss'], gulp.series('scss:dev'));
+  gulp.watch(['src/*.js'], gulp.series('js:dev'));
+  return gulp.watch(['src/graphic.html'], gulp.series('html:dev'));
+});
+
+
+
+gulp.task('default', gulp.series('server', 'watch'));
 
