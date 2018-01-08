@@ -5,6 +5,8 @@ var firstOpenPort = require('first-open-port');
 var opn = require('opn');
 var log = require('fancy-log');
 var notify = require('gulp-notify');
+var request = require('request');
+var fs = require('fs');
 
 var server = require('./server.js');
 var config = require('./config.json');
@@ -58,6 +60,32 @@ function watch() {
   return gulp.watch(['src/graphic.html'], copyHtml);
 }
 
-gulp.task('default', gulp.series(startServer, watch));
 
+function endrunDeploy(done) {
+  var host = "https://www.themarshallproject.org";
+  var endpoint = "/admin/api/v1/update-" + config.destination
+  request.post({
+    url: host + endpoint,
+    json: true,
+    body: {
+      token: 'TODO',
+      html: fs.readFileSync('dist/graphic.html')
+    }
+  }, function(error, response, body) {
+    if (error) {
+      log.error(error);
+    }
+
+    if (response && response.statusCode !== 200) {
+      log.error(response.statusCode + ': ' + body.error);
+      done(body.error);
+    }
+
+    done();
+  });
+}
+
+
+gulp.task('default', gulp.series(startServer, watch));
+gulp.task('deploy:endrun', endrunDeploy);
 
