@@ -10,6 +10,7 @@ var fs = require('fs');
 
 var server = require('./server.js');
 var config = require('./config.json');
+var credentials = require('./credentials.js');
 
 
 function startServer() {
@@ -62,30 +63,45 @@ function watch() {
 
 
 function endrunDeploy(done) {
-  var host = "https://www.themarshallproject.org";
-  var endpoint = "/admin/api/v1/update-" + config.destination
-  request.post({
-    url: host + endpoint,
-    json: true,
-    body: {
-      token: 'TODO',
-      html: fs.readFileSync('dist/graphic.html')
-    }
-  }, function(error, response, body) {
-    if (error) {
-      log.error(error);
-    }
 
-    if (response && response.statusCode !== 200) {
-      log.error(response.statusCode + ': ' + body.error);
-      done(body.error);
-    }
+  credentials.ensureCredentials(function(creds) {
+    var host = "http://localhost:7000";
+    var endpoint = "/admin/api/v2/deploy-gfx";
+    request.post({
+      url: host + endpoint,
+      json: true,
+      body: {
+        token: creds['gfx-endrun'],
+        type: 'graphic',
+        slug: config.slug,
+        html: fs.readFileSync('dist/graphic.html')
+      }
+    }, function(error, response, body) {
+      if (error) {
+        log.error(error);
+      }
 
-    done();
+      if (response.statusCode === 403) {
+        log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
+      }
+
+      if (response && response.statusCode !== 200) {
+        log.error(response.statusCode + ': ' + body.error);
+        done(body.error);
+      }
+
+      log(body)
+
+      done();
+    });
   });
+
 }
 
 
 gulp.task('default', gulp.series(startServer, watch));
 gulp.task('deploy:endrun', endrunDeploy);
+gulp.task('credentials', credentials.ensureCredentials);
+gulp.task('clearcreds', credentials.clearServicePasswords);
+gulp.task('credentials:endrun', credentials.resetEndrunKey);
 
