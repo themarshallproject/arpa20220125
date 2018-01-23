@@ -72,9 +72,9 @@ function endrunDeploy(done) {
       json: true,
       body: {
         token: creds['gfx-endrun'],
-        type: 'graphic',
+        type: config.type,
         slug: config.slug,
-        html: fs.readFileSync('dist/graphic.html')
+        html: fs.readFileSync('dist/graphic.html').toString()
       }
     }, function(error, response, body) {
       if (error) {
