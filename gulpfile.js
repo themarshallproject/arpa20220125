@@ -6,6 +6,7 @@ var opn = require('opn');
 var log = require('fancy-log');
 var notify = require('gulp-notify');
 var request = require('request');
+var del = require('del');
 var fs = require('fs');
 
 var server = require('./server.js');
@@ -54,16 +55,28 @@ function scripts() {
 }
 
 
+function assets() {
+  return gulp.src('src/assets/**', { base: 'src' })
+    .pipe(gulp.dest('dist'))
+    .pipe(livereload());
+}
+
+
 function watch() {
-  gulp.parallel(copyHtml, styles, scripts)();
+  gulp.parallel(copyHtml, styles, scripts, assets)();
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
+  gulp.watch(['src/assets/**'], assets);
   return gulp.watch(['src/graphic.html'], copyHtml);
 }
 
 
-function endrunDeploy(done) {
+function clean() {
+  return del(['dist/**']);
+}
 
+
+function endrunDeploy(done) {
   credentials.ensureCredentials(function(creds) {
     var host = "http://localhost:7000";
     var endpoint = "/admin/api/v2/deploy-gfx";
@@ -95,13 +108,34 @@ function endrunDeploy(done) {
       done();
     });
   });
+}
 
+function S3Deploy(done) {
+  credentials.ensureCredentials(function(creds) {
+    var s3 = require('gulp-s3-upload')({
+      accessKeyId: creds['gfx-aws-access'],
+      secretAccessKey: creds['gfx-aws-secret']
+    });
+    gulp.src('dist/**', { base: 'dist' })
+      .pipe(s3({
+        bucket: config.bucket,
+        ACL: 'public-read',
+        keyTransform: function(filename) {
+          var key = config.slug + '/' + filename;
+          console.log(config.cdn + '/' + key);
+          return key;
+        }
+      })).on('end', done);
+  });
 }
 
 
-gulp.task('default', gulp.series(startServer, watch));
+gulp.task('default', gulp.series(clean, startServer, watch));
+gulp.task('clean', clean);
 gulp.task('deploy:endrun', endrunDeploy);
+gulp.task('deploy:s3', S3Deploy);
 gulp.task('credentials', credentials.ensureCredentials);
 gulp.task('clearcreds', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
+gulp.task('credentials:aws', credentials.resetAWSKeys);
 

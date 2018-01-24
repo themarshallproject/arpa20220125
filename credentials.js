@@ -2,20 +2,19 @@ const keychain = require('keychain');
 const readline = require('readline');
 const log = require('fancy-log');
 
-var REQUIRED_CREDS = [
-  {
-    key: 'gfx-aws-access',
-    name: 'AWS Access token'
-  },
-  {
-    key: 'gfx-aws-secret',
-    name: 'AWS Secret Token'
-  },
-  {
-    key: 'gfx-endrun',
-    name: 'EndRun API token'
-  }
-];
+var ENDRUN = {
+  key: 'gfx-endrun',
+  name: 'EndRun API token'
+};
+var AWS_SECRET = {
+  key: 'gfx-aws-secret',
+  name: 'AWS Secret Token'
+};
+var AWS_ACCESS = {
+  key: 'gfx-aws-access',
+  name: 'AWS Access token'
+};
+var REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS];
 
 function ensureCredential(service, cb) {
   var key = service.key;
@@ -89,15 +88,19 @@ function ensureCredentials(done) {
 
 
 function resetEndrunKey(done) {
-  resetServicePassword({
-    key: 'gfx-endrun',
-    name: 'EndRun API token'
-  }, done);
+  resetServicePassword(ENDRUN, done);
+}
+
+function resetAWSKeys(done) {
+  resetServicePassword(AWS_ACCESS, function() {
+    resetServicePassword(AWS_SECRET, done);
+  });
 }
 
 module.exports = {
   ensureCredentials: ensureCredentials,
   clearServicePasswords: clearServicePasswords,
   getCredentials: getCredentials,
-  resetEndrunKey: resetEndrunKey
+  resetEndrunKey: resetEndrunKey,
+  resetAWSKeys: resetAWSKeys
 }
