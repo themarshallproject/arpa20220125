@@ -2,7 +2,7 @@
   "slug": "cecinestpasuneslug",
   "local_markdown": true,
   "local_template": "post",
-  "type": "header",
+  "type": "post",
   "bucket": "tmp-production-story-assets",
   "cdn": "https://d63kb4t2ifcex.cloudfront.net"
 }

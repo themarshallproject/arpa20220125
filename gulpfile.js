@@ -6,6 +6,10 @@ var opn = require('opn');
 var log = require('fancy-log');
 var notify = require('gulp-notify');
 var request = require('request');
+var hash = require('gulp-hash-filename');
+var manifest = require('gulp-asset-manifest');
+var uglify = require('gulp-uglify');
+var insert = require('gulp-insert');
 var del = require('del');
 var fs = require('fs');
 
@@ -41,8 +45,36 @@ function styles() {
 }
 
 
-function copyHtml() {
+function productionStyles() {
+  return gulp.src('src/graphic.scss')
+    .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .pipe(hash())
+    .pipe(manifest({ bundleName: 'css' }))
+    .pipe(gulp.dest('dist'));
+}
+
+
+function html() {
   return gulp.src('src/graphic.html')
+    .pipe(gulp.dest('dist'))
+    .pipe(livereload());
+}
+
+
+function productionHtml() {
+  var manifest = JSON.parse(fs.readFileSync('asset_manifest.json'));
+  var stylesheets = manifest.css.map(function(filename) {
+    var url = config.cdn + '/' + config.slug + '/' + filename;
+    return '<link rel="stylesheet" href="' + url + '">';
+  }).join('\n');
+  // TODO check to see if this script has contents, or should be inlined
+  var scripts = manifest.js.map(function(filename) {
+    var url = config.cdn + '/' + config.slug + '/' + filename;
+    return '<script src="' + url + '" type="text/javascript"></script>';
+  }).join('');
+  return gulp.src('src/graphic.html')
+    .pipe(insert.prepend(stylesheets + '\n\n'))
+    .pipe(insert.append('\n' + scripts + '\n\n'))
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
 }
@@ -55,6 +87,15 @@ function scripts() {
 }
 
 
+function productionScripts() {
+  return gulp.src('src/graphic.js')
+    .pipe(hash())
+    .pipe(uglify())
+    .pipe(manifest({ bundleName: 'js' }))
+    .pipe(gulp.dest('dist'));
+}
+
+
 function assets() {
   return gulp.src('src/assets/**', { base: 'src' })
     .pipe(gulp.dest('dist'))
@@ -63,16 +104,16 @@ function assets() {
 
 
 function watch() {
-  gulp.parallel(copyHtml, styles, scripts, assets)();
+  gulp.parallel(html, styles, scripts, assets)();
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
-  return gulp.watch(['src/graphic.html'], copyHtml);
+  return gulp.watch(['src/graphic.html'], html);
 }
 
 
 function clean() {
-  return del(['dist/**']);
+  return del(['asset_manifest.json', 'dist/**']);
 }
 
 
@@ -132,6 +173,10 @@ function S3Deploy(done) {
 
 gulp.task('default', gulp.series(clean, startServer, watch));
 gulp.task('clean', clean);
+gulp.task('deploy', gulp.series(clean, productionStyles, productionScripts, assets, productionHtml, S3Deploy, endrunDeploy));
+gulp.task('sass:production', productionStyles);
+gulp.task('scripts:production', productionScripts);
+gulp.task('html:production', productionHtml);
 gulp.task('deploy:endrun', endrunDeploy);
 gulp.task('deploy:s3', S3Deploy);
 gulp.task('credentials', credentials.ensureCredentials);
