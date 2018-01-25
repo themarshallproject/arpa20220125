@@ -179,7 +179,7 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('deploy:endrun', endrunDeploy);
 gulp.task('deploy:s3', S3Deploy);
-gulp.task('credentials', credentials.ensureCredentials);
+gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('clearcreds', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);

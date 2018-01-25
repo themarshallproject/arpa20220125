@@ -14,7 +14,12 @@ var AWS_ACCESS = {
   key: 'gfx-aws-access',
   name: 'AWS Access token'
 };
-var REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS];
+var GITHUB = {
+  key: 'gfx-github',
+  name: 'Github personal access token',
+  hint: 'You can get one at https://github.com/settings/tokens. Make sure it has at least "repo" scope.'
+}
+var REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
 
 function ensureCredential(service, cb) {
   var key = service.key;
@@ -87,6 +92,14 @@ function ensureCredentials(done) {
 };
 
 
+// This is necessary because there need to be no arguments to done, or gulp will assume error
+function ensureCredentialsTask(done) {
+  ensureCredentials(function() {
+    done();
+  });
+}
+
+
 function resetEndrunKey(done) {
   resetServicePassword(ENDRUN, done);
 }
@@ -99,6 +112,7 @@ function resetAWSKeys(done) {
 
 module.exports = {
   ensureCredentials: ensureCredentials,
+  ensureCredentialsTask: ensureCredentialsTask,
   clearServicePasswords: clearServicePasswords,
   getCredentials: getCredentials,
   resetEndrunKey: resetEndrunKey,
