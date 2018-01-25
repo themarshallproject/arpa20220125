@@ -64,6 +64,7 @@ function html() {
 
 function productionHtml() {
   var manifest = JSON.parse(fs.readFileSync('asset_manifest.json'));
+  // TODO scripts for heads should always be inlined, likely also for posts?
   var stylesheets = manifest.css.map(function(filename) {
     var url = config.cdn + '/' + config.slug + '/' + filename;
     return '<link rel="stylesheet" href="' + url + '">';
