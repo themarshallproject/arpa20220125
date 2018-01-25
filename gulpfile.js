@@ -174,7 +174,7 @@ function S3Deploy(done) {
 
 
 gulp.task('default', gulp.series(clean, startServer, watch));
-gulp.task('clean', clean);
+
 gulp.task('deploy', gulp.series(
   github.ensureRepoClean,
   clean,
@@ -184,14 +184,20 @@ gulp.task('deploy', gulp.series(
   productionHtml,
   S3Deploy,
   endrunDeploy));
+
+// Asset tasks
 gulp.task('sass:production', productionStyles);
 gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
+gulp.task('clean', clean);
+
+// Deployment
 gulp.task('deploy:endrun', endrunDeploy);
 gulp.task('deploy:s3', S3Deploy);
+
+// Credential management
 gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('clearcreds', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
-gulp.task('github', github.ensureRepoClean);
 
