@@ -16,6 +16,7 @@ var fs = require('fs');
 var server = require('./server.js');
 var config = require('./config.json');
 var credentials = require('./credentials.js');
+var github = require('./github.js');
 
 
 function startServer() {
@@ -173,7 +174,15 @@ function S3Deploy(done) {
 
 gulp.task('default', gulp.series(clean, startServer, watch));
 gulp.task('clean', clean);
-gulp.task('deploy', gulp.series(clean, productionStyles, productionScripts, assets, productionHtml, S3Deploy, endrunDeploy));
+gulp.task('deploy', gulp.series(
+  github.ensureRepoClean,
+  clean,
+  productionStyles,
+  productionScripts,
+  assets,
+  productionHtml,
+  S3Deploy,
+  endrunDeploy));
 gulp.task('sass:production', productionStyles);
 gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
@@ -183,4 +192,5 @@ gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('clearcreds', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
+gulp.task('github', github.ensureRepoClean);
 
