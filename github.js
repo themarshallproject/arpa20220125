@@ -59,6 +59,7 @@ function ensureRepoClean(done) {
     throw new Error('\n\nYou haven\'t pushed your code to Github!\n\n\tgit push\n\nbefore deploying.\n');
   }
 
+  done();
 }
 
 
