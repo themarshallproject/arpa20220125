@@ -47,7 +47,7 @@ function ensureRepoClean(done) {
 
   var statusOutput = child_process.execFileSync('git', ['status', '--porcelain']).toString();
   if (statusOutput.length !== 0) {
-    throw new Error('Cowardly refusing to deploy until you\'ve committed (and pushed!) your changes');
+    throw new Error('\n\nCowardly refusing to deploy until you\'ve committed (and pushed!) your changes.\n');
   }
 
   const headSHA = child_process.execFileSync('git', ['rev-parse', 'HEAD']).toString().trim();
@@ -56,7 +56,7 @@ function ensureRepoClean(done) {
   const originSHA = child_process.execFileSync('git', ['rev-parse', upstream]).toString().trim();
 
   if (headSHA !== originSHA) {
-    throw new Error('You haven\'t pushed your code to Github!\n\n\tgit push\n\n before deploying.');
+    throw new Error('\n\nYou haven\'t pushed your code to Github!\n\n\tgit push\n\nbefore deploying.\n');
   }
 
 }
