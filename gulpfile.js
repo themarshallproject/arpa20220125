@@ -19,9 +19,9 @@ var credentials = require('./credentials.js');
 var github = require('./github.js');
 var setup = require('./setup.js');
 
+var serverPort, lrPort;
 
 function startServer() {
-  var serverPort, lrPort;
   return firstOpenPort(3000).then(function(port) {
     serverPort = port;
     return firstOpenPort(35729);
@@ -34,8 +34,9 @@ function startServer() {
 }
 
 
-function openBrowser() {
+function openBrowser(done) {
   opn('http://localhost:' + serverPort);
+  done();
 }
 
 
@@ -106,8 +107,10 @@ function assets() {
 }
 
 
+const compileAll = gulp.parallel(html, styles, scripts, assets);
+
+
 function watch() {
-  gulp.parallel(html, styles, scripts, assets)();
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
@@ -176,7 +179,7 @@ function S3Deploy(done) {
 
 // Public interface
 gulp.task('setup', setup);
-gulp.task('default', gulp.series(clean, startServer, watch));
+gulp.task('default', gulp.series(clean, startServer, compileAll, openBrowser, watch));
 gulp.task('deploy', gulp.series(
   github.ensureRepoClean,
   clean,
