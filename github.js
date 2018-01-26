@@ -36,8 +36,10 @@ function createAndSetRepository(done) {
   var config = require('./config.json');
   createRepository(config.slug, function(repo) {
     console.log('Repo successfully created at ' + repo.html_url);
-    console.log('Setting new repo to remote');
+    console.log('Setting new repo to origin remote');
     console.log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]));
+    console.log('Adding original gfx repo as remote updates');
+    console.log(child_process.execFileSync('git', ['remote', 'add', 'updates', 'git@github.com:themarshallproject/gfx-v2.git']));
     done();
   });
 }

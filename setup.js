@@ -36,7 +36,7 @@ function setup(done) {
 
 function getType(cb) {
 
-  getInputFromValues('What kind of project is this?\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\n', ['c', 'b', 'f', 'h'], function(response) {
+  getInputFromValues('\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?', ['c', 'b', 'f', 'h'], function(response) {
     switch(response) {
       case 'c':
         config.local_template = 'commentary';
