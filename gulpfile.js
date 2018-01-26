@@ -17,6 +17,7 @@ var server = require('./server.js');
 var config = require('./config.json');
 var credentials = require('./credentials.js');
 var github = require('./github.js');
+var setup = require('./setup.js');
 
 
 function startServer() {
@@ -173,8 +174,9 @@ function S3Deploy(done) {
 }
 
 
+// Public interface
+gulp.task('setup', setup);
 gulp.task('default', gulp.series(clean, startServer, watch));
-
 gulp.task('deploy', gulp.series(
   github.ensureRepoClean,
   clean,
