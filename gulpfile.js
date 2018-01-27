@@ -13,11 +13,11 @@ var insert = require('gulp-insert');
 var del = require('del');
 var fs = require('fs');
 
-var server = require('./server.js');
 var config = require('./config.json');
-var credentials = require('./credentials.js');
-var github = require('./github.js');
-var setup = require('./setup.js');
+var server = require('./scripts/server.js');
+var credentials = require('./scripts/credentials.js');
+var github = require('./scripts/github.js');
+var setup = require('./scripts/setup.js');
 
 var serverPort, lrPort;
 
@@ -74,8 +74,10 @@ function productionHtml() {
   // TODO check to see if this script has contents, or should be inlined
   var scripts = manifest.js.map(function(filename) {
     var url = config.cdn + '/' + config.slug + '/' + filename;
+    var size = fs.statSync('./dist/' + filename).size;
+    console.log(size);
     return '<script src="' + url + '" type="text/javascript"></script>';
-  }).join('');
+  }).join('\n');
   return gulp.src('src/graphic.html')
     .pipe(insert.prepend(stylesheets + '\n\n'))
     .pipe(insert.append('\n' + scripts + '\n\n'))

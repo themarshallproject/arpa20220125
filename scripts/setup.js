@@ -1,5 +1,5 @@
 const github = require('./github.js');
-const config = require('./config.json');
+const config = require('../config.json');
 const readline = require('readline');
 const moment = require('moment');
 const fs = require('fs');
