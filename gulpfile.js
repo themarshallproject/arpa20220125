@@ -18,6 +18,7 @@ var server = require('./scripts/server.js');
 var credentials = require('./scripts/credentials.js');
 var github = require('./scripts/github.js');
 var setup = require('./scripts/setup.js');
+var includes = require('./scripts/includes.js');
 
 var serverPort, lrPort;
 
@@ -65,22 +66,9 @@ function html() {
 
 
 function productionHtml() {
-  var manifest = JSON.parse(fs.readFileSync('asset_manifest.json'));
-  // TODO scripts for heads should always be inlined, likely also for posts?
-  var stylesheets = manifest.css.map(function(filename) {
-    var url = config.cdn + '/' + config.slug + '/' + filename;
-    return '<link rel="stylesheet" href="' + url + '">';
-  }).join('\n');
-  // TODO check to see if this script has contents, or should be inlined
-  var scripts = manifest.js.map(function(filename) {
-    var url = config.cdn + '/' + config.slug + '/' + filename;
-    var size = fs.statSync('./dist/' + filename).size;
-    console.log(size);
-    return '<script src="' + url + '" type="text/javascript"></script>';
-  }).join('\n');
   return gulp.src('src/graphic.html')
-    .pipe(insert.prepend(stylesheets + '\n\n'))
-    .pipe(insert.append('\n' + scripts + '\n\n'))
+    .pipe(insert.prepend(includes.stylesheetIncludeText()))
+    .pipe(insert.append(includes.javascriptIncludeText()))
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
 }
@@ -109,7 +97,9 @@ function assets() {
 }
 
 
-const compileAll = gulp.parallel(html, styles, scripts, assets);
+const buildDev = gulp.parallel(html, styles, scripts, assets);
+
+const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
 
 function watch() {
@@ -181,14 +171,10 @@ function S3Deploy(done) {
 
 // Public interface
 gulp.task('setup', setup);
-gulp.task('default', gulp.series(clean, startServer, compileAll, openBrowser, watch));
+gulp.task('default', gulp.series(clean, startServer, buildDev, openBrowser, watch));
 gulp.task('deploy', gulp.series(
   github.ensureRepoClean,
-  clean,
-  productionStyles,
-  productionScripts,
-  assets,
-  productionHtml,
+  buildProduction,
   S3Deploy,
   endrunDeploy));
 
@@ -197,6 +183,7 @@ gulp.task('sass:production', productionStyles);
 gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
+gulp.task('build:production', buildProduction);
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);

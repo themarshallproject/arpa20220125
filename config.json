@@ -4,5 +4,6 @@
   "local_template": "post",
   "type": "post",
   "bucket": "tmp-production-story-assets",
-  "cdn": "https://d63kb4t2ifcex.cloudfront.net"
+  "cdn": "https://d63kb4t2ifcex.cloudfront.net",
+  "inline_threshold": 4000
 }
