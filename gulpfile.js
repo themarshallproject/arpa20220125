@@ -8,6 +8,7 @@ var notify = require('gulp-notify');
 var request = require('request');
 var hash = require('gulp-hash-filename');
 var manifest = require('gulp-asset-manifest');
+var checkFileSize = require('gulp-check-filesize');
 var uglify = require('gulp-uglify');
 var insert = require('gulp-insert');
 var del = require('del');
@@ -92,6 +93,7 @@ function productionScripts() {
 
 function assets() {
   return gulp.src('src/assets/**', { base: 'src' })
+    .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
 }
