@@ -117,9 +117,9 @@ function clean() {
 }
 
 
-function endrunDeploy(done) {
+function endrunDeploy(done, host) {
   credentials.ensureCredentials(function(creds) {
-    var host = "http://localhost:7000";
+    host = host || config.endrun_host;
     var endpoint = "/admin/api/v2/deploy-gfx";
     request.post({
       url: host + endpoint,
@@ -150,6 +150,7 @@ function endrunDeploy(done) {
     });
   });
 }
+
 
 function S3Deploy(done) {
   credentials.ensureCredentials(function(creds) {
