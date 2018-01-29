@@ -11,8 +11,11 @@ var manifest = require('gulp-asset-manifest');
 var checkFileSize = require('gulp-check-filesize');
 var uglify = require('gulp-uglify');
 var insert = require('gulp-insert');
+var concat = require('gulp-concat');
+var sort = require('gulp-sort');
 var del = require('del');
 var fs = require('fs');
+var path = require('path');
 
 var config = require('./config.json');
 var server = require('./scripts/server.js');
@@ -75,15 +78,32 @@ function productionHtml() {
 }
 
 
+function jsFileComparator(file1, file2) {
+  var name1 = path.basename(file1.path);
+  var name2 = path.basename(file2.path);
+  if (name1 === 'graphic.js') {
+    return 1;
+  } else if (name2 === 'graphic.js') {
+    return -1;
+  }
+
+  return 0;
+}
+
+
 function scripts() {
-  return gulp.src('src/graphic.js')
+  return gulp.src('src/*.js')
+    .pipe(sort(jsFileComparator))
+    .pipe(concat('graphic.js'))
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
 }
 
 
 function productionScripts() {
-  return gulp.src('src/graphic.js')
+  return gulp.src('src/*.js')
+    .pipe(sort(jsFileComparator))
+    .pipe(concat('graphic.js'))
     .pipe(hash())
     .pipe(uglify())
     .pipe(manifest({ bundleName: 'js' }))
