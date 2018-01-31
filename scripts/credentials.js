@@ -17,7 +17,7 @@ var AWS_ACCESS = {
 var GITHUB = {
   key: 'gfx-github',
   name: 'Github personal access token',
-  hint: 'You can get one at https://github.com/settings/tokens. Make sure it has at least "repo" scope.'
+  hint: 'You can get a personal access token at https://github.com/settings/tokens. Make sure it has at least "repo" scope.'
 }
 var REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
 
@@ -44,6 +44,10 @@ function resetServicePassword(service, cb) {
     input: process.stdin,
     output: process.stdout
   });
+
+  if (service.hint) {
+    log('\n\n\t' + service.hint + '\n\n');
+  }
 
   rl.question(`Enter your ${service.name}: ` , (answer) => {
     keychain.setPassword({ account: 'gfx', service: service.key, password: answer }, cb);
