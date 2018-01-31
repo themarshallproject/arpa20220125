@@ -4,7 +4,8 @@ const log = require('fancy-log');
 
 var ENDRUN = {
   key: 'gfx-endrun',
-  name: 'EndRun API token'
+  name: 'EndRun API key',
+  hint: 'You can get your API key at https://www.themarshallproject.org/admin/api_keys. They expire after 30 days.'
 };
 var AWS_SECRET = {
   key: 'gfx-aws-secret',
