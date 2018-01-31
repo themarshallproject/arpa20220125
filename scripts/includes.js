@@ -13,10 +13,10 @@ function stylesheetIncludeText() {
 
     if (config.type === 'header') {
       log('Inlinining CSS for freeform header');
-      return '<script type="text/javascript">' + fs.readFileSync(filename) + '</script>';
+      return '<style>' + fs.readFileSync(filename) + '</style>';
     } else if (size < config.inline_threshold) {
       log('Small CSS file found, inlining');
-      return '<script type="text/javascript">' + fs.readFileSync(filename) + '</script>';
+      return '<style>' + fs.readFileSync(filename) + '</style>';
     } else if (size === 0) {
       log('Empty CSS file found, omitting');
       return '';
