@@ -33,7 +33,7 @@ function createRepository(name, cb) {
 
 
 function createAndSetRepository(done) {
-  var config = require('./config.json');
+  var config = require('../config.json');
   createRepository(config.slug, function(repo) {
     console.log('Repo successfully created at ' + repo.html_url);
     console.log('Setting new repo to origin remote');
