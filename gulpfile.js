@@ -13,6 +13,7 @@ var uglify = require('gulp-uglify');
 var insert = require('gulp-insert');
 var concat = require('gulp-concat');
 var sort = require('gulp-sort');
+var notify = require('gulp-notify');
 var del = require('del');
 var fs = require('fs');
 var path = require('path');
@@ -47,7 +48,8 @@ function openBrowser(done) {
 
 function styles() {
   return gulp.src('src/graphic.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass()
+      .on('error', notify.onError("SASS <%= error.formatted %>")))
     .pipe(gulp.dest('dist'))
     .pipe(livereload());
 }

@@ -18,7 +18,7 @@
     "gulp-insert": "^0.5.0",
     "gulp-live-server": "0.0.31",
     "gulp-livereload": "^3.8.1",
-    "gulp-notify": "^3.1.0",
+    "gulp-notify": "^3.2.0",
     "gulp-s3-upload": "^1.7.0",
     "gulp-sass": "^3.1.0",
     "gulp-sort": "^2.0.0",
