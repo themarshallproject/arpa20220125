@@ -7,16 +7,16 @@ var config = require('../config.json');
 function stylesheetIncludeText() {
   var manifest = JSON.parse(fs.readFileSync('asset_manifest.json'));
   var stylesheets = manifest.css.map(function(filename) {
-    filename = './dist/' + filename;
-    var size = fs.statSync(filename).size;
+    var filepath = './dist/' + filename;
+    var size = fs.statSync(filepath).size;
     log('Handling css file ', filename, size + 'b minified');
 
     if (config.type === 'header') {
       log('Inlinining CSS for freeform header');
-      return '<style>' + fs.readFileSync(filename) + '</style>';
+      return '<style>' + fs.readFileSync(filepath) + '</style>';
     } else if (size < config.inline_threshold) {
       log('Small CSS file found, inlining');
-      return '<style>' + fs.readFileSync(filename) + '</style>';
+      return '<style>' + fs.readFileSync(filepath) + '</style>';
     } else if (size === 0) {
       log('Empty CSS file found, omitting');
       return '';
@@ -34,8 +34,8 @@ function stylesheetIncludeText() {
 function javascriptIncludeText() {
   var manifest = JSON.parse(fs.readFileSync('asset_manifest.json'));
   var scripts = manifest.js.map(function(filename) {
-    filename = './dist/' + filename;
-    var size = fs.statSync(filename).size;
+    var filepath = './dist/' + filename;
+    var size = fs.statSync(filepath).size;
     log('Handling js file ', filename, size + 'b minified');
 
     if (size > config.inline_threshold) {
@@ -47,7 +47,7 @@ function javascriptIncludeText() {
       return '';
     } else {
       log('Small JS file found, inlining');
-      return '<script type="text/javascript">' + fs.readFileSync(filename) + '</script>';
+      return '<script type="text/javascript">' + fs.readFileSync(filepath) + '</script>';
     }
   }).join('\n');
 
