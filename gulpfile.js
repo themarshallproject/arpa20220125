@@ -14,6 +14,7 @@ var insert = require('gulp-insert');
 var concat = require('gulp-concat');
 var sort = require('gulp-sort');
 var notify = require('gulp-notify');
+var cdnAbsolutePath = require('gulp-cdn-absolute-path');
 var del = require('del');
 var fs = require('fs');
 var path = require('path');
@@ -46,6 +47,15 @@ function openBrowser(done) {
 }
 
 
+function urlReplacer() {
+  return cdnAbsolutePath({
+    asset: 'src',
+    cdn: `${config.cdn}/${config.slug}`,
+    exts: ['jpg', 'jpeg', 'png', 'gif', 'js', 'css', 'mp3', 'mp4']
+  });
+}
+
+
 function styles() {
   return gulp.src('src/graphic.scss')
     .pipe(sass()
@@ -58,6 +68,7 @@ function styles() {
 function productionStyles() {
   return gulp.src('src/graphic.scss')
     .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .pipe(urlReplacer())
     .pipe(hash())
     .pipe(manifest({ bundleName: 'css' }))
     .pipe(gulp.dest('dist'));
@@ -73,6 +84,7 @@ function html() {
 
 function productionHtml() {
   return gulp.src('src/graphic.html')
+    .pipe(urlReplacer())
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
     .pipe(insert.append(includes.javascriptIncludeText()))
     .pipe(gulp.dest('dist'))
@@ -106,6 +118,7 @@ function productionScripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
+    .pipe(urlReplacer())
     .pipe(hash())
     .pipe(uglify())
     .pipe(manifest({ bundleName: 'js' }))

@@ -12,6 +12,7 @@
     "first-open-port": "^0.1.2",
     "gulp": "^4.0.0",
     "gulp-asset-manifest": "0.0.6",
+    "gulp-cdn-absolute-path": "0.0.6",
     "gulp-check-filesize": "^2.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-hash-filename": "^1.2.0",
