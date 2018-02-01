@@ -214,7 +214,9 @@ gulp.task('deploy', gulp.series(
   github.ensureRepoClean,
   buildProduction,
   S3Deploy,
-  endrunDeploy));
+  endrunDeploy,
+  buildDev
+));
 
 // Asset tasks
 gulp.task('sass:production', productionStyles);
