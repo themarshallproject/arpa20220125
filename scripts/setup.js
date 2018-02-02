@@ -3,6 +3,7 @@ const config = require('../config.json');
 const readline = require('readline');
 const moment = require('moment');
 const fs = require('fs');
+const path = require('path');
 var argv = require('minimist')(process.argv.slice(2));
 
 function setup(done) {
@@ -19,6 +20,7 @@ function setup(done) {
   }
 
   getSlug(function(slug) {
+    console.log(`Using slug: ${slug}`)
     config.slug = slug;
     getType(function() {
       fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
@@ -68,8 +70,15 @@ function getSlug(cb) {
       return "Slugs can contain only letters, numbers, dashes, and underscores.";
     }
   }
-  getInput("Enter a slug, (you can leave off the date)", validator, function(slug) {
-    slug = slug.toLowerCase();
+
+  var currentDir = path.basename(process.cwd());
+
+  getInput("Enter a slug, (you can leave off the date) (leave blank for: " + currentDir + ")", validator, function(slug) {
+    if (slug.trim().length === 0) {
+      slug = currentDir;
+    }
+
+    slug = slug.toLowerCase().trim();
 
     if (!/\d$/.test(slug)) {
       getBooleanInput("Do you want to append the date", function(date) {
