@@ -51,7 +51,7 @@ function urlReplacer() {
   return cdnAbsolutePath({
     asset: 'src',
     cdn: `${config.cdn}/${config.slug}`,
-    exts: ['jpg', 'jpeg', 'png', 'gif', 'js', 'css', 'mp3', 'mp4']
+    exts: ['jpg', 'jpeg', 'png', 'gif', 'js', 'css', 'mp3', 'mp4', 'eot', 'ttf', 'woff', 'woff2']
   });
 }
 
