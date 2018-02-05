@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
 var livereload = require('gulp-livereload');
 var firstOpenPort = require('first-open-port');
 var opn = require('opn');
@@ -69,6 +70,9 @@ function productionStyles() {
   return gulp.src('src/graphic.scss')
     .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
     .pipe(urlReplacer())
+    .pipe(autoprefixer({
+      cascade: false
+    }))
     .pipe(hash())
     .pipe(manifest({ bundleName: 'css' }))
     .pipe(gulp.dest('dist'));

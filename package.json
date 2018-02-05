@@ -4,6 +4,10 @@
   "description": "Publishing tool for creating graphics and custom posts at The Marshall Project.",
   "main": "",
   "author": "Gabe Isman <isman@themarshallproject.org>",
+  "browserslist": [
+    "last 2 versions",
+    "ie 9"
+  ],
   "dependencies": {
     "@octokit/rest": "^14.0.5",
     "del": "^3.0.0",
@@ -13,6 +17,7 @@
     "gulp": "^4.0.0",
     "gulp-asset-manifest": "0.0.6",
     "gulp-cdn-absolute-path": "0.0.6",
+    "gulp-autoprefixer": "^4.1.0",
     "gulp-check-filesize": "^2.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-hash-filename": "^1.2.0",
