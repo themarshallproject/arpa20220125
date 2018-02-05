@@ -1,6 +1,7 @@
 const github = require('@octokit/rest')();
 const credentials = require('./credentials.js');
-var child_process = require('child_process');
+const child_process = require('child_process');
+const log = require('fancy-log');
 
 
 function createRepository(name, cb) {
@@ -9,7 +10,7 @@ function createRepository(name, cb) {
       type: 'token',
       token: creds['gfx-github']
     });
-    console.log('Creating github repo themarshallproject/' + name);
+    log('Creating github repo themarshallproject/' + name);
     github.repos.createForOrg({
       org: 'themarshallproject',
       name: name,
@@ -22,10 +23,10 @@ function createRepository(name, cb) {
       cb(result.data);
     }).catch((error) => {
       if (error.code == 422) {
-        console.log(JSON.parse(error.message).errors.map((e) => e.message).join());
-        console.log('Did someone already set up this repository?');
+        log.error(JSON.parse(error.message).errors.map((e) => e.message).join());
+        log('Did someone already set up this repository?');
       } else {
-        console.log('Unrecognized error:', error);
+        log.error('Unrecognized error:', error);
       }
     });
   });
@@ -35,17 +36,17 @@ function createRepository(name, cb) {
 function createAndSetRepository(done) {
   var config = require('../config.json');
   createRepository(config.slug, function(repo) {
-    console.log('Repo successfully created at ' + repo.html_url);
-    console.log('Setting new repo to origin remote');
-    console.log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]).toString());
-    console.log('Adding original gfx repo as remote updates');
-    console.log(child_process.execFileSync('git', ['remote', 'add', 'updates', 'git@github.com:themarshallproject/gfx-v2.git']).toString());
+    log('Repo successfully created at ' + repo.html_url);
+    log('Setting new repo to origin remote');
+    log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]).toString());
+    log('Adding original gfx repo as remote updates');
+    log(child_process.execFileSync('git', ['remote', 'add', 'updates', 'git@github.com:themarshallproject/gfx-v2.git']).toString());
     done();
   });
 }
 
 
-function ensureRepoClean(done) {
+function ensureRepoCleanAndPushed(done) {
   child_process.execFileSync('git', ['fetch']);
 
   var statusOutput = child_process.execFileSync('git', ['status', '--porcelain']).toString();
@@ -59,7 +60,8 @@ function ensureRepoClean(done) {
   const originSHA = child_process.execFileSync('git', ['rev-parse', upstream]).toString().trim();
 
   if (headSHA !== originSHA) {
-    throw new Error('\n\nYou haven\'t pushed your code to Github!\n\n\tgit push\n\nbefore deploying.\n');
+    log('Pushing local changes to origin.');
+    child_process.execFileSync('git', ['push', '--porcelain', '--quiet']);
   }
 
   done();
@@ -69,5 +71,5 @@ function ensureRepoClean(done) {
 module.exports = {
   createRepository,
   createAndSetRepository,
-  ensureRepoClean
+  ensureRepoCleanAndPushed
 };

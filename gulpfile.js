@@ -215,7 +215,7 @@ function S3Deploy(done) {
 gulp.task('setup', setup);
 gulp.task('default', gulp.series(clean, startServer, buildDev, openBrowser, watch));
 gulp.task('deploy', gulp.series(
-  github.ensureRepoClean,
+  github.ensureRepoCleanAndPushed,
   buildProduction,
   S3Deploy,
   endrunDeploy,
