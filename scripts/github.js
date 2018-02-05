@@ -61,7 +61,12 @@ function ensureRepoCleanAndPushed(done) {
 
   if (headSHA !== originSHA) {
     log('Pushing local changes to origin.');
-    child_process.execFileSync('git', ['push', '--porcelain', '--quiet']);
+    try {
+      child_process.execFileSync('git', ['push', '--porcelain', '--quiet']);
+    } catch (error) {
+      log("Maybe you need to \n\n\tgit pull\n\n");
+      throw error;
+    }
   }
 
   done();
