@@ -26,7 +26,7 @@ module.exports = function(options) {
     fs.readFile('./dist/graphic.html', 'utf8', function(err, content) {
 
       var contentHTML;
-      if (config.local_markdown === 'true') {
+      if (config.local_markdown === true) {
         contentHTML = marked(content);
       } else {
         contentHTML = content;
