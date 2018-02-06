@@ -210,10 +210,11 @@ function S3Deploy(done) {
   });
 }
 
+var defaultTask = gulp.series(clean, startServer, buildDev, openBrowser, watch);
 
 // Public interface
-gulp.task('setup', setup);
-gulp.task('default', gulp.series(clean, startServer, buildDev, openBrowser, watch));
+gulp.task('setup', gulp.series(setup, defaultTask));
+gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
   buildProduction,

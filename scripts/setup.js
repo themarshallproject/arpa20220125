@@ -80,16 +80,12 @@ function getSlug(cb) {
 
     slug = slug.toLowerCase().trim();
 
-    if (!/\d$/.test(slug)) {
-      getBooleanInput("Do you want to append the date", function(date) {
-        if (date) {
-          slug += moment().format('YYYYMMDD');
-        }
-        cb(slug);
-      });
-    } else {
+    getBooleanInput("Do you want to append the date", function(date) {
+      if (date) {
+        slug += moment().format('YYYYMMDD');
+      }
       cb(slug);
-    }
+    });
   });
 }
 
