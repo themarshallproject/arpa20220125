@@ -46,7 +46,7 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 
 ### Tips ###
 
-You can simplify the setup process a bit by creating a bash function to do the wrote steps for you. Add this to your `~/.bashrc` or equivalent:
+You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
 
 ```sh
 function newgraphic() {
@@ -56,6 +56,17 @@ function newgraphic() {
 }
 ```
 Run `source ~/.bashrc` (or just open a new terminal session). Now you can create a new graphic with `newgraphic <slug>`, which will create the repo, put you in it, and then run setup.
+
+Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
+
+```sh
+function clonegraphic() {
+  git clone git@github.com:themarshallproject/$1.git
+  cd $1
+  bash setup.sh
+}
+```
+
 
 ### Editing this template ###
 
