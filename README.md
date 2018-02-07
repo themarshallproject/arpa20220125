@@ -44,6 +44,19 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 - Run `gulp deploy` to send files to S3 and EndRun.
 - You will be prompted for credentials if you have not entered them before. You will need an AWS keypair and an EndRun API key.
 
+### Tips ###
+
+You can simplify the setup process a bit by creating a bash function to do the wrote steps for you. Add this to your `~/.bashrc` or equivalent:
+
+```sh
+function newgraphic() {
+  git clone git@github.com:themarshallproject/gfx-v2.git $1
+  cd $1
+  bash setup.sh
+}
+```
+Run `source ~/.bashrc` (or just open a new terminal session). Now you can create a new graphic with `newgraphic <slug>`, which will create the repo, put you in it, and then run setup.
+
 ### Editing this template ###
 
 - Clone and push to a branch on this repo, then create a pull request.
