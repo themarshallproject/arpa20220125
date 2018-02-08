@@ -22,8 +22,7 @@ function stylesheetIncludeText() {
     stylesheets = '';
   } else {
     log('Largs CSS file found, will load asynchronously');
-    var url = config.cdn + '/' + config.slug + '/' + filename;
-    stylesheets = '<link rel="stylesheet" href="' + url + '">';
+    stylesheets = '<link rel="stylesheet" href="/' + filename + '">';
   }
 
   return stylesheets + '\n';
@@ -39,8 +38,7 @@ function javascriptIncludeText() {
 
   if (size > config.inline_threshold) {
     log('Largs JS file found, will load asynchronously');
-    var url = config.cdn + '/' + config.slug + '/' + filename;
-    scripts = '<script src="' + url + '" type="text/javascript"></script>';
+    scripts = '<script src="/' + filename + '" type="text/javascript"></script>';
   } else if (size === 0) {
     log('Empty JS file found, omitting');
     scripts = '';
