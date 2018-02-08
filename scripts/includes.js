@@ -32,7 +32,8 @@ function stylesheetIncludeText() {
 
 function javascriptIncludeText() {
   var scripts;
-  var filepath = './build/graphic.js';
+  var filename = 'graphic.js';
+  var filepath = './build/' + filename;
   var size = fs.statSync(filepath).size;
   log('Handling js file graphic.js ' + size + 'b minified');
 
