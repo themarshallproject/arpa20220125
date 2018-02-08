@@ -1,4 +1,5 @@
 node_modules/
 .sass-cache/
 dist/
+build/
 asset_manifest.json

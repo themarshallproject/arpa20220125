@@ -4,7 +4,7 @@ var marked = require('marked');
 
 module.exports = function(options) {
   var app = express();
-  app.use(express.static('dist'));
+  app.use(express.static('build'));
 
   var config;
   config = JSON.parse(fs.readFileSync('./config.json'), 'utf-8');
@@ -23,7 +23,7 @@ module.exports = function(options) {
   ].join("\n");
 
   app.get('/', function(req, res){
-    fs.readFile('./dist/graphic.html', 'utf8', function(err, content) {
+    fs.readFile('./build/graphic.html', 'utf8', function(err, content) {
 
       var contentHTML;
       if (config.local_markdown === true) {

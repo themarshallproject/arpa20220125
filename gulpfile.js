@@ -7,8 +7,6 @@ var opn = require('opn');
 var log = require('fancy-log');
 var notify = require('gulp-notify');
 var request = require('request');
-var hash = require('gulp-hash-filename');
-var manifest = require('gulp-asset-manifest');
 var checkFileSize = require('gulp-check-filesize');
 var uglify = require('gulp-uglify');
 var insert = require('gulp-insert');
@@ -52,7 +50,7 @@ function styles() {
   return gulp.src('src/graphic.scss')
     .pipe(sass()
       .on('error', notify.onError("SASS <%= error.formatted %>")))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -63,15 +61,13 @@ function productionStyles() {
     .pipe(autoprefixer({
       cascade: false
     }))
-    .pipe(hash())
-    .pipe(manifest({ bundleName: 'css' }))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('build'));
 }
 
 
 function html() {
   return gulp.src('src/graphic.html')
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -80,7 +76,7 @@ function productionHtml() {
   return gulp.src('src/graphic.html')
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
     .pipe(insert.append(includes.javascriptIncludeText()))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -102,7 +98,7 @@ function scripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -111,17 +107,15 @@ function productionScripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
-    .pipe(hash())
     .pipe(uglify())
-    .pipe(manifest({ bundleName: 'js' }))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('build'));
 }
 
 
 function assets() {
   return gulp.src('src/assets/**', { base: 'src' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -140,7 +134,19 @@ function watch() {
 
 
 function clean() {
-  return del(['asset_manifest.json', 'dist/**']);
+  return del(['dist/**']);
+}
+
+
+function revision() {
+  return gulp.src('build/**')
+    .pipe(RevAll.revision({
+      prefix: config.cdn + '/' + config.slug,
+      includeFilesInManifest: ['.html', '.js', '.css']
+    }))
+    .pipe(gulp.dest('dist'))
+    .pipe(RevAll.manifestFile())
+    .pipe(gulp.dest('dist'));
 }
 
 
@@ -148,6 +154,7 @@ function endrunDeploy(done, host) {
   credentials.ensureCredentials(function(creds) {
     host = host || config.endrun_host;
     var endpoint = "/admin/api/v2/deploy-gfx";
+    var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
     request.post({
       url: host + endpoint,
       json: true,
@@ -155,7 +162,7 @@ function endrunDeploy(done, host) {
         token: creds['gfx-endrun'],
         type: config.type,
         slug: config.slug,
-        html: fs.readFileSync('dist/graphic.html').toString()
+        html: fs.readFileSync(path.join('dist', htmlFile)).toString()
       }
     }, function(error, response, body) {
       if (error) {
@@ -186,7 +193,6 @@ function S3Deploy(done) {
       secretAccessKey: creds['gfx-aws-secret']
     });
     gulp.src('dist/**', { base: 'dist' })
-      .pipe(RevAll.revision({ prefix: config.cdn + '/' + config.slug }))
       .pipe(s3({
         bucket: config.bucket,
         ACL: 'public-read',
@@ -207,6 +213,7 @@ gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
   buildProduction,
+  revision,
   S3Deploy,
   endrunDeploy,
   buildDev
@@ -218,6 +225,7 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
+gulp.task('revision', revision);
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);
