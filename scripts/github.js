@@ -72,9 +72,14 @@ function ensureRepoCleanAndPushed(done) {
   done();
 }
 
+function getRemoteUrl() {
+  return child_process.execFileSync('git', ['config', '--get', 'remote.origin.url']).toString().trim();
+}
+
 
 module.exports = {
   createRepository,
   createAndSetRepository,
-  ensureRepoCleanAndPushed
+  ensureRepoCleanAndPushed,
+  getRemoteUrl
 };

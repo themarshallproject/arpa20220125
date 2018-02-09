@@ -165,7 +165,8 @@ function endrunDeploy(done, host) {
         token: creds['gfx-endrun'],
         type: config.type,
         slug: config.slug,
-        html: fs.readFileSync(path.join('dist', htmlFile)).toString()
+        html: fs.readFileSync(path.join('dist', htmlFile)).toString(),
+        repo: github.getRemoteUrl()
       }
     }, function(error, response, body) {
       if (error) {
