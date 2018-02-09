@@ -15,6 +15,7 @@ var sort = require('gulp-sort');
 var notify = require('gulp-notify');
 var RevAll = require('gulp-rev-all');
 var del = require('del');
+var urljoin = require('url-join');
 var fs = require('fs');
 var path = require('path');
 
@@ -141,7 +142,9 @@ function clean() {
 function revision() {
   return gulp.src('build/**')
     .pipe(RevAll.revision({
-      prefix: config.cdn + '/' + config.slug,
+      transformPath: (rev, source, file) => {
+        return urljoin(config.cdn, config.slug, rev);
+      },
       includeFilesInManifest: ['.html', '.js', '.css']
     }))
     .pipe(gulp.dest('dist'))
