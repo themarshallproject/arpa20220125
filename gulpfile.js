@@ -104,7 +104,7 @@ function scripts() {
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['@babel/env']
-    }))
+    }).on('error', notify.onError("Babel: <%= error.toString() %>")))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
