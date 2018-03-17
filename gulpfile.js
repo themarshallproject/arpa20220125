@@ -1,6 +1,8 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
+var babel = require('gulp-babel');
+var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 var firstOpenPort = require('first-open-port');
 var opn = require('opn');
@@ -99,6 +101,11 @@ function scripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -108,6 +115,9 @@ function productionScripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
     .pipe(uglify())
     .pipe(gulp.dest('build'));
 }
