@@ -3,3 +3,4 @@ node_modules/
 dist/
 build/
 asset_manifest.json
+.DS_Store
