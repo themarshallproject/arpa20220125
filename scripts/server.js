@@ -11,9 +11,9 @@ module.exports = function(options) {
   console.log('Config:', config);
 
   // TODO is this really the best way to serve fonts?
-  var fonts = fs.readFileSync('./templates/fonts.css', 'utf-8');
+  var fonts = fs.readFileSync('./post-templates/fonts.css', 'utf-8');
 
-  var template = fs.readFileSync('./templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
+  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
   var lrPort = options.lrPort || 35729;
   var injectPayload = [
     "<script src='//localhost:" + lrPort + "/livereload.js'></script>",
