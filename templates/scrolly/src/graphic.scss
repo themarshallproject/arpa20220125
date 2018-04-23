@@ -1,0 +1,104 @@
+// TODO DELETEME
+#measure-debug-2, #measure-debug, #switchpoint-debug, #switchpoint-debug-2 {
+  position: fixed;
+  z-index: 1000;
+  border-top: 1px solid red;
+  width: 100%;
+  left: 0;
+}
+#switchpoint-debug {
+  border-color: orange;
+  color: orange;
+}
+#measure-debug-2, #measure-debug {
+  border-color: green;
+  color: green;
+  position: absolute;
+}
+
+
+$bg-color: #f6f6f4;
+$breakpoint: 900px;
+
+.graphic-container {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+
+  @media (min-width: $breakpoint) {
+    margin-bottom: 0;
+    margin-top: -20vh;
+  }
+}
+
+.prefix-scrolly-text {
+  position: relative;
+  height: calc(100vh - 60px);
+  margin-bottom: 0;
+  width: 397px;
+  font-family: "acumin-pro";
+
+  .prefix-text-inner {
+    position: absolute;
+    top: 50%;
+  }
+
+  p {
+    font-family: "acumin-pro";
+    font-weight: 200;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1150px) {
+  .prefix-scrolly-text {
+    width: 35%;
+  }
+}
+
+@media (max-width: $breakpoint) {
+  .prefix-scrolly-text.step-1 .prefix-text-inner {
+    top: 47px; // 66 - 33 (p tag margin bottom)
+    transform: none;
+  }
+
+  .prefix-scrolly-text.step-5 {
+    height: auto;
+    margin-bottom: 80px;
+
+    .prefix-text-inner {
+      position: static;
+      transform: none;
+    }
+  }
+}
+
+.graphic-container-inner {
+  padding-top: 164px;
+  padding-bottom: 100px;
+  width: 100%;
+  position: absolute;
+  height: 100vh;
+  z-index: 50;
+  pointer-events: none;
+
+  // This width gets overritten in JS
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+@media (max-width: $breakpoint) {
+  .prefix-scrolly-text {
+    width: 100%;
+
+    p {
+      font-weight: 400;
+    }
+  }
+
+  .graphic-container-inner {
+    padding: 0;
+  }
+}
