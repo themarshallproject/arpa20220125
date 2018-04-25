@@ -101,11 +101,11 @@ function scripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
-    .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['@babel/env']
-    }).on('error', notify.onError("Babel: <%= error.toString() %>")))
-    .pipe(sourcemaps.write('.'))
+    // .pipe(sourcemaps.init())
+    // .pipe(babel({
+    //   presets: ['@babel/env']
+    // }).on('error', notify.onError("Babel: <%= error.toString() %>")))
+    // .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -115,9 +115,9 @@ function productionScripts() {
   return gulp.src('src/*.js')
     .pipe(sort(jsFileComparator))
     .pipe(concat('graphic.js'))
-    .pipe(babel({
-      presets: ['@babel/env']
-    }))
+    // .pipe(babel({
+    //   presets: ['@babel/env']
+    // }))
     .pipe(uglify())
     .pipe(gulp.dest('build'));
 }
