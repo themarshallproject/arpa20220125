@@ -159,9 +159,7 @@ $(document).ready(function() {
   // point of each text element to trigger the switch to the next step. This is
   // pretty manual, certainly less than ideal.
   function getSwitchPointForIndex(i) {
-    if (windowWidth > BREAKPOINT) {
-      return windowHeight * 4 / 5 - headerHeight;
-    } else if (windowWidth > 767) {
+    if (windowWidth > 767) {
       return windowHeight * 4 / 5 - headerHeight;
     } else {
       return windowHeight / 2 - 100;
