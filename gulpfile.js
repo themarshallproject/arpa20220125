@@ -20,6 +20,8 @@ var del = require('del');
 var urljoin = require('url-join');
 var fs = require('fs');
 var path = require('path');
+var nunjucksRender = require('gulp-nunjucks-render');
+var data = require('gulp-data');
 
 var config = require('./config.json');
 var server = require('./scripts/server.js');
@@ -70,6 +72,14 @@ function productionStyles() {
 
 function html() {
   return gulp.src('src/graphic.html')
+    .pipe(data(function(file) {
+      try {
+        return JSON.parse(fs.readFileSync('./src/assets/graphic-data.json'));
+      } catch (e) {
+        return
+      }
+    }))
+    .pipe(nunjucksRender({ path: 'src/graphic.html' }))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -140,7 +150,7 @@ function watch() {
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
-  return gulp.watch(['src/graphic.html'], html);
+  return gulp.watch(['src/graphic.html', 'src/assets/graphic-data.json'], html);
 }
 
 

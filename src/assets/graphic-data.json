@@ -1,0 +1,17 @@
+{
+  "title": "Title from a template",
+  "sections": [
+    {
+      "name": "one",
+      "text": "Do, a deer, a female deer"
+    },
+    {
+      "name": "two",
+      "text": "Re, a drop of golden sun"
+    },
+    {
+      "name": "three",
+      "text": "Mi, a name I call myself"
+    }
+  ]
+}

@@ -1,1 +1,9 @@
-<h1>Here is where you build.</h1>
+<h1>{{ title }}</h1>
+
+<p>But what if there are templates, too?</p>
+<p>How about this</p>
+
+{% for section in sections %}
+<h3>{{ section.name }}</h3>
+<p>{{ section.text }}</p>
+{% endfor %}
