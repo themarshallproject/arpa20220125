@@ -179,6 +179,8 @@ function watch() {
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
+  // Triggers a full refresh (html doesn't actually need to be recompiled)
+  gulp.watch(['post-templates/**'], html);
   return gulp.watch(['src/graphic.html'], html);
 }
 
