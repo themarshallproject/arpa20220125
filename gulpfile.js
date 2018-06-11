@@ -20,8 +20,6 @@ var del = require('del');
 var urljoin = require('url-join');
 var fs = require('fs');
 var path = require('path');
-var nunjucksRender = require('gulp-nunjucks-render');
-var data = require('gulp-data');
 
 var config = require('./config.json');
 var server = require('./scripts/server.js');
@@ -29,6 +27,7 @@ var credentials = require('./scripts/credentials.js');
 var github = require('./scripts/github.js');
 var setup = require('./scripts/setup.js');
 var includes = require('./scripts/includes.js');
+var externalData = require('./scripts/externaldata.js');
 
 var serverPort, lrPort;
 
@@ -72,14 +71,8 @@ function productionStyles() {
 
 function html() {
   return gulp.src('src/graphic.html')
-    .pipe(data(function(file) {
-      try {
-        return JSON.parse(fs.readFileSync('./src/assets/graphic-data.json'));
-      } catch (e) {
-        return
-      }
-    }))
-    .pipe(nunjucksRender({ path: 'src/graphic.html' }))
+    .pipe(externalData.getExternalData())
+    .pipe(externalData.renderGraphicHTML())
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }

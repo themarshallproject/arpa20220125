@@ -1,9 +1,15 @@
-<h1>{{ title }}</h1>
+{{ data|dump }}
+
+<h1>{{ data['graphic-data'].title }}</h1>
 
 <p>But what if there are templates, too?</p>
-<p>How about this</p>
 
-{% for section in sections %}
-<h3>{{ section.name }}</h3>
+{% for section in data['graphic-data'].sections %}
+<strong>{{ section.name }}</strong>
+<p>{{ section.text }}</p>
+{% endfor %}
+
+{% for section in data['streets'].sections %}
+<strong>{{ section.name }}</strong>
 <p>{{ section.text }}</p>
 {% endfor %}
