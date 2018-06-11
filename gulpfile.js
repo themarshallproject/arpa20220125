@@ -143,7 +143,7 @@ function watch() {
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
-  return gulp.watch(['src/graphic.html', 'src/assets/graphic-data.json'], html);
+  return gulp.watch(['src/graphic.html', 'src/template-files'], html);
 }
 
 
