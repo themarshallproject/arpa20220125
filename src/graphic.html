@@ -1,14 +1,17 @@
-<h1>{{ data['graphic-data'].title }}</h1>
-
-<p>But what if there are templates, too?</p>
-
-{% for section in data['graphic-data'].sections %}
-<strong>{{ section.name }}</strong><br>
-<span>{{ section.text }}</span>
+<h1>{{ data['example-key-value'].title }}</h1>
+<h2>{{ data['example-key-value'].dek }}</h2>
+<p>{{ data['example-key-value'].text|safe }}</p>
+<strong>Data can be in column format:</strong>
+<ul>
+{% for row in data['example-data-columns'] %}
+<li>
+  <strong>{{ row.type }} {{ row.day }}</strong>: {{ row.value }}
+  {% if row.notes %}
+  <ul>
+    <li><em>Note: {{ row.notes }}</em></li>
+  </ul>
+  {% endif %}
+</li>
 {% endfor %}
 
-{% for day in data.columns %}
-<p><strong><em>{{ day.type }}</em> {{ day.day }}</strong>: {{ day.value }}</p>
-{% endfor %}
-
-<script type="text/javascript">var streetData = {{ data.streets|dump|safe }};</script>
+<script type="text/javascript">var exampleData = {{ data['example-data-columns']|dump|safe }};</script>
