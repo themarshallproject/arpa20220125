@@ -1,7 +1,10 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
+var bro = require('gulp-bro');
 var babel = require('gulp-babel');
+var babelify = require('babelify');
+var mergeStream = require('merge-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 var firstOpenPort = require('first-open-port');
@@ -101,28 +104,64 @@ function jsFileComparator(file1, file2) {
 
 
 function scripts() {
-  return gulp.src('src/*.js')
-    .pipe(sort(jsFileComparator))
-    .pipe(concat('graphic.js'))
-    // .pipe(sourcemaps.init())
-    // .pipe(babel({
-    //   presets: ['@babel/env']
-    // }).on('error', notify.onError("Babel: <%= error.toString() %>")))
-    // .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('build'))
-    .pipe(livereload());
+  if (config.use_es6_modules) {
+    // Compile the vendor js
+    var libJs = gulp.src('src/lib/*.js');
+
+    var graphicJs = gulp.src('src/graphic.js')
+      .pipe(bro({
+        transform: [
+          babelify.configure({ presets: ['@babel/preset-env'] })
+        ]
+      }));
+
+    return mergeStream(libJs, graphicJs)
+      .pipe(sort(jsFileComparator))
+      .pipe(concat('graphic.js'))
+      .pipe(gulp.dest('build'))
+      .pipe(livereload());
+  } else {
+    return gulp.src('src/*.js')
+      .pipe(sort(jsFileComparator))
+      .pipe(concat('graphic.js'))
+       .pipe(sourcemaps.init())
+       .pipe(babel({
+         presets: ['@babel/env']
+       }).on('error', notify.onError("Babel: <%= error.toString() %>")))
+       .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest('build'))
+      .pipe(livereload());
+  }
 }
 
 
 function productionScripts() {
-  return gulp.src('src/*.js')
-    .pipe(sort(jsFileComparator))
-    .pipe(concat('graphic.js'))
-    // .pipe(babel({
-    //   presets: ['@babel/env']
-    // }))
-    .pipe(uglify())
-    .pipe(gulp.dest('build'));
+  if (config.use_es6_modules) {
+    // Compile the vendor js
+    var libJs = gulp.src('src/lib/*.js');
+
+    var graphicJs = gulp.src('src/graphic.js')
+      .pipe(bro({
+        transform: [
+          babelify.configure({ presets: ['@babel/preset-env'] })
+        ]
+      }));
+
+    return mergeStream(libJs, graphicJs)
+      .pipe(sort(jsFileComparator))
+      .pipe(concat('graphic.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest('build'))
+  } else {
+    return gulp.src('src/*.js')
+      .pipe(sort(jsFileComparator))
+      .pipe(concat('graphic.js'))
+       .pipe(babel({
+         presets: ['@babel/env']
+       }))
+      .pipe(uglify())
+      .pipe(gulp.dest('build'));
+  }
 }
 
 
@@ -143,6 +182,8 @@ function watch() {
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
+  // Triggers a full refresh (html doesn't actually need to be recompiled)
+  gulp.watch(['post-templates/**'], html);
   return gulp.watch(['src/graphic.html', 'src/template-files'], html);
 }
 

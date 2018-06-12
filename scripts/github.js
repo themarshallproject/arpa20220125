@@ -56,7 +56,7 @@ function ensureRepoCleanAndPushed(done) {
 
   const headSHA = child_process.execFileSync('git', ['rev-parse', 'HEAD']).toString().trim();
   const currentRef = child_process.execFileSync('git', ['symbolic-ref', '-q', 'HEAD']).toString().trim();
-  const upstream = child_process.execFileSync('git', ['for-each-ref', "--format=%(upstream:short)", currentRef]).toString().trim();
+  const upstream = child_process.execFileSync('git', ['for-each-ref', "--format=%(push:short)", currentRef]).toString().trim();
   const originSHA = child_process.execFileSync('git', ['rev-parse', upstream]).toString().trim();
 
   if (headSHA !== originSHA) {

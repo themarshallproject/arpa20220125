@@ -13,7 +13,6 @@ module.exports = function(options) {
   // TODO is this really the best way to serve fonts?
   var fonts = fs.readFileSync('./post-templates/fonts.css', 'utf-8');
 
-  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
   var lrPort = options.lrPort || 35729;
   var injectPayload = [
     "<script src='//localhost:" + lrPort + "/livereload.js'></script>",
@@ -24,6 +23,7 @@ module.exports = function(options) {
 
   app.get('/', function(req, res){
     fs.readFile('./build/graphic.html', 'utf8', function(err, content) {
+      var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
 
       var contentHTML;
       if (config.local_markdown === true) {
