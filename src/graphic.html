@@ -1,6 +1,7 @@
 <h1>{{ data['example-key-value'].title }}</h1>
 <h2>{{ data['example-key-value'].dek }}</h2>
 <p>{{ data['example-key-value'].text|safe }}</p>
+<p>But you can also just delete the templating language and write normal HTML if you prefer.</p>
 <strong>Data can be in column format:</strong>
 <ul>
 {% for row in data['example-data-columns'] %}
@@ -13,5 +14,6 @@
   {% endif %}
 </li>
 {% endfor %}
+</ul>
 
 <script type="text/javascript">var exampleData = {{ data['example-data-columns']|dump|safe }};</script>
