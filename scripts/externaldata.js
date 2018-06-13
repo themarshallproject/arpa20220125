@@ -1,7 +1,8 @@
 var fs = require('fs');
+var log = require('fancy-log');
 var path = require('path');
 var glob = require('glob');
-var parse = require('csv-parse/lib/sync');
+var csvParse = require('csv-parse/lib/sync');
 var nunjucksRender = require('gulp-nunjucks-render');
 var data = require('gulp-data');
 
@@ -11,14 +12,20 @@ function getExternalData() {
 
   for (i in dataPaths) {
     var extName = path.extname(dataPaths[i]);
-    var dataFileRead = fs.readFileSync(dataPaths[i]);
+    var fileContents = fs.readFileSync(dataPaths[i]);
     var baseFilename = path.basename(dataPaths[i], extName);
     var pathData;
 
-    if (extName == '.csv') {
-      pathData = convertCSVtoJSON(dataFileRead);
-    } else {
-      pathData = JSON.parse(dataFileRead);
+    try {
+      if (extName == '.csv') {
+        pathData = convertCSVtoJSON(fileContents);
+      } else if (extName == '.json') {
+        pathData = JSON.parse(fileContents);
+      } else {
+        log.warn('WARNING Skipping file', dataPaths[i], 'because it is neither CSV or JSON.');
+      }
+    } catch (e) {
+      printParseError(e, dataPaths[i]);
     }
 
     fullData[baseFilename] = pathData;
@@ -27,8 +34,8 @@ function getExternalData() {
   return data({ data: fullData });
 }
 
-function convertCSVtoJSON(dataFile) {
-  var parsedFile = parse(dataFile);
+function convertCSVtoJSON(fileContents) {
+  var parsedFile = csvParse(fileContents);
   var formattedData;
 
   // If columns are ['key', 'value'] then parse as an associative array
@@ -41,7 +48,7 @@ function convertCSVtoJSON(dataFile) {
   } else {
     // If not key/value pairs, then return an array of objects
     // representing each row with column names serving as keys
-    formattedData = parse(dataFile, { columns: true });
+    formattedData = csvParse(fileContents, { columns: true });
   }
 
   return formattedData;
@@ -52,6 +59,11 @@ function renderGraphicHTML(data) {
     path: 'src/graphic.html',
     data: data
   });
+}
+
+function printParseError(error, dataFilePath) {
+  var errorMessage = `ERROR: Couldn't parse file ${dataFilePath}.\n${error.name}: ${error.message}`;
+  log.error(errorMessage);
 }
 
 module.exports = {
