@@ -30,6 +30,7 @@ var credentials = require('./scripts/credentials.js');
 var github = require('./scripts/github.js');
 var setup = require('./scripts/setup.js');
 var includes = require('./scripts/includes.js');
+var externalData = require('./scripts/externaldata.js');
 
 var serverPort, lrPort;
 
@@ -73,6 +74,8 @@ function productionStyles() {
 
 function html() {
   return gulp.src('src/graphic.html')
+    .pipe(externalData.getExternalData())
+    .pipe(externalData.renderGraphicHTML())
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -181,7 +184,7 @@ function watch() {
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  return gulp.watch(['src/graphic.html'], html);
+  return gulp.watch(['src/graphic.html', 'src/template-files'], html);
 }
 
 
