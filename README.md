@@ -67,6 +67,24 @@ function clonegraphic() {
 }
 ```
 
+### Using external data sources in your HTML
+
+You may want to use a data file such as a CSV or JSON to populate
+your HTML. The graphics rig makes any CSV or JSON files placed in
+`src/template-files` available to `graphic.html` to be accessed through
+templates written in the [Nunjucks](https://mozilla.github.io/nunjucks/templating.html) templating language.
+
+For example, say you want to create a table. Rather than writing each
+row of the table HTML by hand, you could create a Nunjucks template for
+a table row and loop over a dataset to populate the table.
+
+Let's say you have this CSV:
+```
+name,date,slogan
+"New York","July 26, 1788","The Empire State"
+"Florida","March 3, 1845","The Sunshine State"
+"Hawaii","August 21, 1959","The Islands of Aloha"
+```
 
 ### Editing this template ###
 
