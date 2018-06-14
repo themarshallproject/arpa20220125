@@ -12,10 +12,12 @@ module.exports = function(options) {
 
   // TODO is this really the best way to serve fonts?
   var fonts = fs.readFileSync('./post-templates/fonts.css', 'utf-8');
+  var ghMarkdown = fs.readFileSync('./post-templates/github-markdown.css', 'utf-8');
 
   var lrPort = options.lrPort || 35729;
+  var livereloadScript = "<script src='//localhost:" + lrPort + "/livereload.js'></script>";
   var injectPayload = [
-    "<script src='//localhost:" + lrPort + "/livereload.js'></script>",
+    livereloadScript,
     "<link rel='stylesheet' href='/fonts.css'>",
     "<link rel='stylesheet' href='/graphic.css'>",
     "<script src='/graphic.js'></script>\n"
@@ -36,10 +38,25 @@ module.exports = function(options) {
     });
   });
 
+  app.get('/readme/', function(req, res) {
+    fs.readFile('./build/README.md', 'utf8', function(err, content) {
+      var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
+      var contentHTML = marked(content);
+      var html = template.replace('|CONTENT|', livereloadScript + contentHTML);
+      res.send(html);
+    });
+  });
+
   app.get('/fonts.css', function(req, res) {
     res.contentType('text/css');
     res.setHeader('Cache-Control', 'public,max-age=60')
     res.send(fonts);
+  });
+
+  app.get('/github-markdown.css', function(req, res) {
+    res.contentType('text/css');
+    res.setHeader('Cache-Control', 'public,max-age=60')
+    res.send(ghMarkdown);
   });
 
   port = options.port || 3000;
