@@ -83,6 +83,8 @@ function html() {
 
 function productionHtml() {
   return gulp.src('src/graphic.html')
+    .pipe(externalData.getExternalData())
+    .pipe(externalData.renderGraphicHTML())
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
     .pipe(insert.append(includes.javascriptIncludeText()))
     .pipe(gulp.dest('build'))
