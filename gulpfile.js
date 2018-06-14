@@ -72,6 +72,13 @@ function productionStyles() {
 }
 
 
+function readme() {
+  return gulp.src('README.md')
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
+}
+
+
 function html() {
   return gulp.src('src/graphic.html')
     .pipe(externalData.getExternalData())
@@ -173,12 +180,13 @@ function assets() {
 }
 
 
-const buildDev = gulp.parallel(html, styles, scripts, assets);
+const buildDev = gulp.parallel(html, styles, scripts, assets, readme);
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
 
 function watch() {
+  gulp.watch(['README.md'], readme);
   gulp.watch(['src/*.scss'], styles);
   gulp.watch(['src/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
