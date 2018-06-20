@@ -190,7 +190,7 @@ const buildProduction = gulp.series(clean, productionStyles, productionScripts, 
 function watch() {
   gulp.watch(['README.md'], readme);
   gulp.watch(['src/*.scss'], styles);
-  gulp.watch(['src/*.js'], scripts);
+  gulp.watch(['src/*.js', 'src/lib/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
