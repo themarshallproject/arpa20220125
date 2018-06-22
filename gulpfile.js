@@ -113,7 +113,7 @@ function jsFileComparator(file1, file2) {
 
 
 function scripts() {
-  if (config.use_es6_modules) {
+  if (config.use_es6) {
     // Compile the vendor js
     var libJs = gulp.src('src/lib/*.js');
 
@@ -133,11 +133,6 @@ function scripts() {
     return gulp.src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-       .pipe(sourcemaps.init())
-       .pipe(babel({
-         presets: ['@babel/env']
-       }).on('error', notify.onError("Babel: <%= error.toString() %>")))
-       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest('build'))
       .pipe(livereload());
   }
@@ -145,7 +140,7 @@ function scripts() {
 
 
 function productionScripts() {
-  if (config.use_es6_modules) {
+  if (config.use_es6) {
     // Compile the vendor js
     var libJs = gulp.src('src/lib/*.js');
 
@@ -165,9 +160,6 @@ function productionScripts() {
     return gulp.src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-       .pipe(babel({
-         presets: ['@babel/env']
-       }))
       .pipe(uglify())
       .pipe(gulp.dest('build'));
   }
