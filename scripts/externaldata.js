@@ -56,7 +56,7 @@ function convertCSVtoJSON(fileContents) {
 
 function renderGraphicHTML(data) {
   return nunjucksRender({
-    path: 'src/graphic.html',
+    path: 'src/',
     data: data
   });
 }
