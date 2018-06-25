@@ -44,28 +44,10 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 - Run `gulp deploy` to send files to S3 and EndRun.
 - You will be prompted for credentials if you have not entered them before. You will need an AWS keypair and an EndRun API key.
 
-### Tips ###
+### Notes on JavaScript
 
-You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
-
-```sh
-function newgraphic() {
-  git clone git@github.com:themarshallproject/gfx-v2.git $1
-  cd $1
-  bash setup.sh
-}
-```
-Run `source ~/.bashrc` (or just open a new terminal session). Now you can create a new graphic with `newgraphic <slug>`, which will create the repo, put you in it, and then run setup.
-
-Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
-
-```sh
-function clonegraphic() {
-  git clone git@github.com:themarshallproject/$1.git
-  cd $1
-  bash setup.sh
-}
-```
+- Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
+- You can use ES6 by setting the `use_es6` configuration option in `config.json`. This creates a slightly different compilation behavior. Only `graphic.js` will be included automatically, other files should be `import`ed from there. The `src/lib/` folder will be included and concatenated, without being compiled. This provides an easy way to use non-ES6-module code, such as jQuery Mobile.
 
 ### Using external data sources in your HTML
 
@@ -197,6 +179,29 @@ will output like this:
   "Headline": "Dewey defeats Truman",
   "Deck": "G.O.P. Sweep Indicated in State",
   "Description": "This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948."
+}
+```
+
+### Tips ###
+
+You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
+
+```sh
+function newgraphic() {
+  git clone git@github.com:themarshallproject/gfx-v2.git $1
+  cd $1
+  bash setup.sh
+}
+```
+Run `source ~/.bashrc` (or just open a new terminal session). Now you can create a new graphic with `newgraphic <slug>`, which will create the repo, put you in it, and then run setup.
+
+Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
+
+```sh
+function clonegraphic() {
+  git clone git@github.com:themarshallproject/$1.git
+  cd $1
+  bash setup.sh
 }
 ```
 
