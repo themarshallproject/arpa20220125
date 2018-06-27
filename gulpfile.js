@@ -10,7 +10,6 @@ var livereload = require('gulp-livereload');
 var firstOpenPort = require('first-open-port');
 var opn = require('opn');
 var log = require('fancy-log');
-var notify = require('gulp-notify');
 var request = require('request');
 var checkFileSize = require('gulp-check-filesize');
 var uglify = require('gulp-uglify');

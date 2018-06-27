@@ -5,6 +5,7 @@ var glob = require('glob');
 var csvParse = require('csv-parse/lib/sync');
 var nunjucksRender = require('gulp-nunjucks-render');
 var data = require('gulp-data');
+var notify = require('gulp-notify');
 
 function getExternalData() {
   var fullData = {};
@@ -58,7 +59,7 @@ function renderGraphicHTML(data) {
   return nunjucksRender({
     path: 'src/',
     data: data
-  });
+  }).on('error', notify.onError("Nunjucks <%= error %>"));
 }
 
 function printParseError(error, dataFilePath) {
