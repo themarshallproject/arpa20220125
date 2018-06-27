@@ -15,7 +15,7 @@ function createRepository(name, cb) {
       org: 'themarshallproject',
       name: name,
       private: true,
-      has_issues: false,
+      has_issues: true,
       has_projects: false,
       has_wiki: false,
       description: 'Repo automatically created by gfx rig.',
