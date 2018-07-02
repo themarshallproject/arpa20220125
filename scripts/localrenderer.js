@@ -1,0 +1,137 @@
+var fs = require('fs');
+var config = require('../config.json');
+var marked = require('marked');
+
+function renderTemplate(options) {
+  if (config.multiple_graphics) {
+    return renderMultiple(options);
+  } else {
+    return renderSingle(options)
+  }
+}
+
+
+function renderSingle(options) {
+  var content = fs.readFileSync('./build/graphic.html', 'utf-8');
+  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
+  var contentHTML;
+  if (config.local_markdown === true) {
+    contentHTML = marked(content);
+  } else {
+    contentHTML = content;
+  }
+
+  var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
+  return html;
+}
+
+
+function renderMultiple(options) {
+  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
+  var localText;
+  try {
+    localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8');
+  } catch(e) {
+    localText = false;
+  }
+
+  if (localText) {
+    content = replaceGraphics(localText);
+  } else {
+    content = '';
+    var graphics = getGraphics();
+    for (key in graphics) {
+      content += graphics[key] + '\n' + loremGraf() + '\n';
+    }
+  }
+  var contentHTML;
+  if (config.local_markdown === true) {
+    contentHTML = marked(content);
+  } else {
+    contentHTML = content;
+  }
+
+  var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
+  return html;
+}
+
+
+function replaceGraphics(text) {
+  var graphics = getGraphics();
+  var regex = /\[graphic .*slug=["\']?(\S+):(\S+)[\'"]?\s*.*\]/;
+  var lines = text.split('\n');
+  return lines.map(function(line) {
+    var groups = line.match(regex);
+    if (groups === null) {
+      return line;
+    }
+
+    var slug = groups[1];
+    var key = groups[2];
+
+    // TODO test these cases
+    if (slug != config.slug) {
+      return renderWarning('Found graphic slug that does not match repo slug.');
+    }
+
+    if (graphics[key] === undefined) {
+      return renderWarning('Missing graphic with slug ' + slug + ':' + key);
+    }
+
+    return graphics[key];
+  }).join('\n');
+}
+
+
+function renderWarning(text) {
+  return '<h1 style="color: red;">' + text + '</h1>'
+}
+
+
+function loremGraf() {
+  return "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+}
+
+
+function getGraphics() {
+  var files = fs.readdirSync('./build/', 'utf-8');
+  var graphics = {};
+  files.forEach(function(filename) {
+    if (filename.match(/[^_].*\.html$/)) {
+      var key = filename.replace(/\.html$/, '');
+      graphics[key] = fs.readFileSync('./build/' + filename, 'utf-8');
+    }
+  });
+  return graphics;
+}
+
+
+function renderReadme(options) {
+  var content = fs.readFileSync('./build/README.md', 'utf8')
+  var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
+  var contentHTML = marked(content);
+  var html = template.replace('|CONTENT|', getLRScript(options) + contentHTML);
+  return html;
+}
+
+
+function getIncludes(options) {
+  return [
+    getLRScript(options),
+    "<link rel='stylesheet' href='/fonts.css'>",
+    "<link rel='stylesheet' href='/graphic.css'>",
+    "<script src='/graphic.js'></script>\n"
+  ].join("\n");
+}
+
+
+function getLRScript(options) {
+  return "<script src='//localhost:" + options.lrPort + "/livereload.js'></script>";
+}
+
+
+module.exports = {
+  renderTemplate: renderTemplate,
+  renderReadme: renderReadme,
+  getGraphics: getGraphics
+}

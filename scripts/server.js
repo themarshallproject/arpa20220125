@@ -1,6 +1,6 @@
 var express = require('express');
 var fs = require('fs');
-var marked = require('marked');
+var renderer = require('./localrenderer.js');
 
 module.exports = function(options) {
   var app = express();
@@ -15,36 +15,13 @@ module.exports = function(options) {
   var ghMarkdown = fs.readFileSync('./post-templates/github-markdown.css', 'utf-8');
 
   var lrPort = options.lrPort || 35729;
-  var livereloadScript = "<script src='//localhost:" + lrPort + "/livereload.js'></script>";
-  var injectPayload = [
-    livereloadScript,
-    "<link rel='stylesheet' href='/fonts.css'>",
-    "<link rel='stylesheet' href='/graphic.css'>",
-    "<script src='/graphic.js'></script>\n"
-  ].join("\n");
 
-  app.get('/', function(req, res){
-    fs.readFile('./build/graphic.html', 'utf8', function(err, content) {
-      var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
-
-      var contentHTML;
-      if (config.local_markdown === true) {
-        contentHTML = marked(content);
-      } else {
-        contentHTML = content;
-      }
-      var html = template.replace('|CONTENT|', injectPayload + contentHTML);
-      res.send(html);
-    });
+  app.get('/', function(req, res) {
+    res.send(renderer.renderTemplate({ lrPort: lrPort }));
   });
 
   app.get('/readme/', function(req, res) {
-    fs.readFile('./build/README.md', 'utf8', function(err, content) {
-      var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
-      var contentHTML = marked(content);
-      var html = template.replace('|CONTENT|', livereloadScript + contentHTML);
-      res.send(html);
-    });
+    res.send(renderer.renderReadme({ lrPort: lrPort }))
   });
 
   app.get('/fonts.css', function(req, res) {
