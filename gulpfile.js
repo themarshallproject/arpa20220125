@@ -250,6 +250,7 @@ function endrunDeploy(done, host) {
     request.post({
       url: host + endpoint,
       json: true,
+      body: body
     }, function(error, response, body) {
       if (error) {
         log.error(error);
