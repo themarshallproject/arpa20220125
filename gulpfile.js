@@ -294,7 +294,7 @@ function S3Deploy(done) {
 var defaultTask = gulp.series(clean, startServer, buildDev, openBrowser, watch);
 
 // Public interface
-gulp.task('setup', gulp.series(setup, defaultTask));
+gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
@@ -323,3 +323,5 @@ gulp.task('clearcreds', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 
+// Configuration management
+gulp.task('reset:type', setup.resetType);

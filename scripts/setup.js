@@ -64,6 +64,14 @@ function getType(cb) {
 }
 
 
+function resetType(done) {
+  getType(function() {
+    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+    done();
+  });
+}
+
+
 function getSlug(cb) {
   function validator(value) {
     if (/[^\w-]/.test(value)) {
@@ -126,4 +134,7 @@ function getBooleanInput(prompt, cb) {
 }
 
 
-module.exports = setup;
+module.exports = {
+  setup: setup,
+  resetType: resetType
+};
