@@ -13,7 +13,7 @@ function renderTemplate(options) {
 
 function renderSingle(options) {
   var content = fs.readFileSync('./build/graphic.html', 'utf-8');
-  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
+  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
   var contentHTML;
   if (config.local_markdown === true) {
     contentHTML = marked(content);
@@ -22,18 +22,14 @@ function renderSingle(options) {
   }
 
   var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
+  html = html.replace('|GRAPHIC_CONTENT|', '');
   return html;
 }
 
 
 function renderMultiple(options) {
-  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8') // todo, configurable
-  var localText;
-  try {
-    localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8');
-  } catch(e) {
-    localText = false;
-  }
+  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
+  var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
   var graphics = getGraphics();
   var headerContent = graphics['header'];

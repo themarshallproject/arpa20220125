@@ -8,5 +8,5 @@
   "inline_threshold": 4000,
   "endrun_host": "https://www.themarshallproject.org",
   "use_es6": false,
-  "multiple_graphics": true
+  "multiple_graphics": false
 }
