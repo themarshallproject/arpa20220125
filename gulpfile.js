@@ -320,7 +320,7 @@ gulp.task('deploy:s3', S3Deploy);
 
 // Credential management
 gulp.task('credentials', credentials.ensureCredentialsTask);
-gulp.task('clearcreds', credentials.clearServicePasswords);
+gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 
