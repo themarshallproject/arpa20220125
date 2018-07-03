@@ -211,7 +211,7 @@ function watch() {
 
 
 function clean() {
-  return del(['dist/**']);
+  return del(['dist/**', 'build/**']);
 }
 
 
