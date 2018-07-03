@@ -98,17 +98,17 @@ function productionHtml() {
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
     .pipe(
-      gulpIf(multipleGraphicsCondition,
+      gulpIf(singleOrHeader,
         insert.prepend(includes.stylesheetIncludeText())))
     .pipe(
-      gulpIf(multipleGraphicsCondition,
+      gulpIf(singleOrHeader,
         insert.append(includes.javascriptIncludeText())))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
 
-function multipleGraphicsCondition(file) {
+function singleOrHeader(file) {
   if (!config.multiple_graphics) {
     return true;
   }
