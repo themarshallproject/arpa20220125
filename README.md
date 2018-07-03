@@ -1,4 +1,4 @@
-# The Marshall Project's Graphics Environment #
+# The Marshall Project's Graphics Environment
 
 ```
                      ________
@@ -17,7 +17,7 @@ M M M M M M M M M   /_/  /_/  \___/_/ /\__/\__/\__/
 
 Our toolchain for building and deploying graphics, custom posts, and post headers.
 
-### Setup ###
+## Setup
 
 - Clone this repo (`themarshallproject/gfx-v2`) into an appropriately named and located folder with this command: `git clone git@github.com:themarshallproject/gfx-v2.git <project name>`
 - `cd <project name>`
@@ -27,29 +27,29 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 - Choose whether or not you want to automatically create a new GitHub repo for this project.
 - Make stuff!
 
-### Setup: for existing projects ###
+### Setup for existing projects
 
 - Clone the project repository with `git clone <repo url>`
 - Run `bash setup.sh`. (Hint: this is almost the same as just running `npm install`)
 - Make stuff!
 
-### Run ###
+## Run
 
 - Run `gulp` which will start the local server, and live-reload your changes.
 - Edit files only inside of the `src` directory.
 - To change post format, edit `config.json` and re-run `gulp`.
 
-### Deploy ###
+## Deploy
 
 - Run `gulp deploy` to send files to S3 and EndRun.
-- You will be prompted for credentials if you have not entered them before. You will need an AWS keypair and an EndRun API key.
+- You will be prompted for credentials if you have not entered them before. You will need an AWS keypair, a Github API token, and an EndRun API key.
 
-### Notes on JavaScript
+## Notes on JavaScript
 
 - Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
 - You can use ES6 by setting the `use_es6` configuration option in `config.json`. This creates a slightly different compilation behavior. Only `graphic.js` will be included automatically, other files should be `import`ed from there. The `src/lib/` folder will be included and concatenated, without being compiled. This provides an easy way to use non-ES6-module code, such as jQuery Mobile.
 
-### Using external data sources in your HTML
+## Using external data sources in your HTML
 
 You may want to use a data file such as a CSV or JSON to populate
 your HTML. The graphics rig makes any CSV or JSON files placed in
@@ -182,9 +182,30 @@ will output like this:
 }
 ```
 
-### Tips ###
+## Deploying multiple graphics from one repo
 
-You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
+You can use a single repo to house multiple graphics and/or a custom header, and deploy them all at once. This is very useful for a post with multiple components. Or when you have several similar charts that would benefit from sharing CSS and/or JS.
+
+1. Set the `multiple_graphics` option in `config.json` to `true`.
+2. Now each html file in `src/` will become it's own graphic. The name of the file will be used to identify it in EndRun.
+3. By default during local development each graphic is concatenated together (with a placeholder paragraph in between) in the template.
+4. You can customize the layout of the graphics in development by editing `post-templates/localtext.md`. This file is designed to work with the same stuff you would put into an EndRun post. You may, in fact, want to just paste in a semi-produced post, graphic shortcodes and all.
+5. Your graphics will be placed according to where the graphic shortcodes appear in `localtext.md`. These shortcodes take the form of `[graphic slug=<graphicreposlug>:<filename>]`. So if you had a file named `intro.html` in a repo with the slug `slugfest`, the shortcode would `[graphic slug=slugfest:intro]`.
+6. Remember that you don't have to use `localtext.md` at all. A normal workflow might be leaving it empty while you develop prototypes of your various graphics, and then deploy and put them in a post. Then copy the produced post's contents back down to `localtext.md`, so that your graphics environment more closely resembles the real post.
+7. When you are ready to deploy, if you are not using a custom hed, you have to manually add the asset include graphic in the post. This will be slugged `<yourmainslug>:includes`. Add it to the bottom of the post.
+
+#### Using custom heds and other graphics
+
+To incorporate a custom hed with multiple graphics:
+
+1. Choose freeform header as the graphic type.
+2. Create a file called `src/header.html`. Your header lives in here. The name is all that identifies it.
+3. Your other graphics can go in other html files, as above.
+4. You do not need to manually include the header in `localtext.md`, and you do not need to include the `includes` graphic in the post, as above. The assets will be included with `header.html`.
+
+## Tips
+
+- You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
 
 ```sh
 function newgraphic() {
@@ -195,7 +216,7 @@ function newgraphic() {
 ```
 Run `source ~/.bashrc` (or just open a new terminal session). Now you can create a new graphic with `newgraphic <slug>`, which will create the repo, put you in it, and then run setup.
 
-Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
+- Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
 
 ```sh
 function clonegraphic() {
@@ -204,26 +225,34 @@ function clonegraphic() {
   bash setup.sh
 }
 ```
+- You can get the most recent version of this tool by running `git pull updates master && npm install`.
 
-### Editing this template ###
+## Other commands
+
+There are a few other commands available that you might find useful. Especially when working on developing this template. Review the bottom of `gulpfile.js` for a full accounting.
+
+1. `gulp reset:type` will allow you to change your initial choices made while setting up the repo. Handy if you made a mistake, or are just rearranging things.
+2. `gulp credentials:endrun` will allow to enter a fresh API token.
+
+## Editing this template
 
 - Clone and push to a branch on this repo, then create a pull request.
 - The setup process leaves behind a remote called `updates`. You can change this template by pushing commits there (`git push updates master`).
-- You can also get the most recent version of the tools by running `git pull updates master && npm install`.
+- In addition to the commands mentioned above, sometimes it is useful to edit this in conjunction with changes to EndRun. You can point deployments at a locally hosted EndRun by changing the `endrun_host` config parameter. Note that even if you do this, assets will still be uploaded to the real production s3 bucket, unless you also change the `bucket` parameter.
 
-### Special Circumstance: ai2html ###
+## Special Circumstance: ai2html
 
-## ai2html DOES NOT YET WORK ##
+### ai2html DOES NOT YET WORK
 
 If you build a graphic using ai2html, you can do so directly from within this rig. Inside `/project_files` is an Adobe Illustrator template (with presized art boards).
 
 You can build your graphic here, run the script (also in the same folder) and the output of ai2html will automatically be dropped into the correct folders in `/src` — including `app.html` which this script will completely overwrite. You’ve been warned. Run ai2html from inside Illustrator, run `grunt`, run `grunt deploy` and then you should see your graphic show up at `localhost:3000`.
 
-### Thoughts? Ideas? Issues? ###
+## Thoughts? Ideas? Issues?
 
-Send Gabe a note. He likes making things better!
+Make an issue in this repo!
 
-### Further reading ###
+## Further reading
 
 [Design Document](https://docs.google.com/document/d/18C_LDshggiozKnZh7Bwn_0Qcq8T6f0TZNvA8Bse2KHg/edit)
 

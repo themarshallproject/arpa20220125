@@ -18,6 +18,7 @@ var concat = require('gulp-concat');
 var sort = require('gulp-sort');
 var notify = require('gulp-notify');
 var RevAll = require('gulp-rev-all');
+var gulpIf = require('gulp-if');
 var del = require('del');
 var urljoin = require('url-join');
 var fs = require('fs');
@@ -30,6 +31,7 @@ var github = require('./scripts/github.js');
 var setup = require('./scripts/setup.js');
 var includes = require('./scripts/includes.js');
 var externalData = require('./scripts/externaldata.js');
+var getGraphics = require('./scripts/localrenderer.js').getGraphics;
 
 var serverPort, lrPort;
 
@@ -79,7 +81,7 @@ function readme() {
 
 
 function html() {
-  return gulp.src('src/graphic.html')
+  return gulp.src('src/*.html')
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
     .pipe(gulp.dest('build'))
@@ -88,13 +90,32 @@ function html() {
 
 
 function productionHtml() {
-  return gulp.src('src/graphic.html')
+  if (config.multiple_graphics) {
+    fs.writeFileSync('./build/includes.html',
+      includes.stylesheetIncludeText() + includes.javascriptIncludeText())
+  }
+  return gulp.src('src/*.html')
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
-    .pipe(insert.prepend(includes.stylesheetIncludeText()))
-    .pipe(insert.append(includes.javascriptIncludeText()))
+    .pipe(
+      gulpIf(singleOrHeader,
+        insert.prepend(includes.stylesheetIncludeText())))
+    .pipe(
+      gulpIf(singleOrHeader,
+        insert.append(includes.javascriptIncludeText())))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
+}
+
+
+function singleOrHeader(file) {
+  if (!config.multiple_graphics) {
+    return true;
+  }
+  if (path.basename(file.path) === 'header.html') {
+    return true;
+  }
+  return false;
 }
 
 
@@ -185,7 +206,7 @@ function watch() {
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  return gulp.watch(['src/graphic.html', 'src/template-files'], html);
+  return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
 
@@ -213,16 +234,23 @@ function endrunDeploy(done, host) {
     host = host || config.endrun_host;
     var endpoint = "/admin/api/v2/deploy-gfx";
     var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
+    var body = {
+      token: creds['gfx-endrun'],
+      type: config.type,
+      slug: config.slug,
+      repo: github.getRemoteUrl()
+    }
+
+    if (config.multiple_graphics) {
+      body['contents'] = getGraphics();
+    } else {
+      body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
+    }
+
     request.post({
       url: host + endpoint,
       json: true,
-      body: {
-        token: creds['gfx-endrun'],
-        type: config.type,
-        slug: config.slug,
-        html: fs.readFileSync(path.join('dist', htmlFile)).toString(),
-        repo: github.getRemoteUrl()
-      }
+      body: body
     }, function(error, response, body) {
       if (error) {
         log.error(error);
@@ -267,7 +295,7 @@ function S3Deploy(done) {
 var defaultTask = gulp.series(clean, startServer, buildDev, openBrowser, watch);
 
 // Public interface
-gulp.task('setup', gulp.series(setup, defaultTask));
+gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
@@ -292,7 +320,9 @@ gulp.task('deploy:s3', S3Deploy);
 
 // Credential management
 gulp.task('credentials', credentials.ensureCredentialsTask);
-gulp.task('clearcreds', credentials.clearServicePasswords);
+gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 
+// Configuration management
+gulp.task('reset:type', setup.resetType);
