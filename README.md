@@ -182,6 +182,27 @@ will output like this:
 }
 ```
 
+## Deploying multiple graphics from one repo
+
+You can use a single repo to house multiple graphics and/or a custom header, and deploy them all at once. This is very useful for a post with multiple components. Or when you have several similar charts that would benefit from sharing CSS and/or JS.
+
+1. Set the `multiple_graphics` option in `config.json` to `true`.
+2. Now each html file in `src/` will become it's own graphic. The name of the file will be used to identify it in EndRun.
+3. By default during local development each graphic is concatenated together (with a placeholder paragraph in between) in the template.
+4. You can customize the layout of the graphics in development by editing `post-templates/localtext.md`. This file is designed to work with the same stuff you would put into an EndRun post. You may, in fact, want to just paste in a semi-produced post, graphic shortcodes and all.
+5. Your graphics will be placed according to where the graphic shortcodes appear in `localtext.md`. These shortcodes take the form of `[graphic slug=<graphicreposlug>:<filename>]`. So if you had a file named `intro.html` in a repo with the slug `slugfest`, the shortcode would `[graphic slug=slugfest:intro]`.
+6. Remember that you don't have to use `localtext.md` at all. A normal workflow might be leaving it empty while you develop prototypes of your various graphics, and then deploy and put them in a post. Then copy the produced post's contents back down to `localtext.md`, so that your graphics environment more closely resembles the real post.
+7. When you are ready to deploy, if you are not using a custom hed, you have to manually add the asset include graphic in the post. This will be slugged `<yourmainslug>:includes`. Add it to the bottom of the post.
+
+#### Using custom heds and other graphics
+
+To incorporate a custom hed with multiple graphics:
+
+1. Choose freeform header as the graphic type.
+2. Create a file called `src/header.html`. Your header lives in here. The name is all that identifies it.
+3. Your other graphics can go in other html files, as above.
+4. You do not need to manually include the header in `localtext.md`, and you do not need to include the `includes` graphic in the post, as above. The assets will be included with `header.html`.
+
 ## Tips
 
 You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
