@@ -205,7 +205,7 @@ To incorporate a custom hed with multiple graphics:
 
 ## Tips
 
-You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
+- You can simplify the setup process a bit by creating a bash function to do the rote steps for you. Add this to your `~/.bashrc` or equivalent:
 
 ```sh
 function newgraphic() {
@@ -216,7 +216,7 @@ function newgraphic() {
 ```
 Run `source ~/.bashrc` (or just open a new terminal session). Now you can create a new graphic with `newgraphic <slug>`, which will create the repo, put you in it, and then run setup.
 
-Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
+- Similarly you can add this function (in the same place), to make the cloning of existing graphics a little easier. h/t @tommeagher
 
 ```sh
 function clonegraphic() {
@@ -225,6 +225,7 @@ function clonegraphic() {
   bash setup.sh
 }
 ```
+- You can get the most recent version of this tool by running `git pull updates master && npm install`.
 
 ## Other commands
 
@@ -237,7 +238,6 @@ There are a few other commands available that you might find useful. Especially 
 
 - Clone and push to a branch on this repo, then create a pull request.
 - The setup process leaves behind a remote called `updates`. You can change this template by pushing commits there (`git push updates master`).
-- You can also get the most recent version of the tools by running `git pull updates master && npm install`.
 - In addition to the commands mentioned above, sometimes it is useful to edit this in conjunction with changes to EndRun. You can point deployments at a locally hosted EndRun by changing the `endrun_host` config parameter. Note that even if you do this, assets will still be uploaded to the real production s3 bucket, unless you also change the `bucket` parameter.
 
 ## Special Circumstance: ai2html
