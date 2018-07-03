@@ -35,13 +35,17 @@ function renderMultiple(options) {
     localText = false;
   }
 
+  var graphics = getGraphics();
+  var headerContent = graphics['header'];
+
   if (localText) {
     content = replaceGraphics(localText);
   } else {
     content = '';
-    var graphics = getGraphics();
     for (key in graphics) {
-      content += graphics[key] + '\n' + loremGraf() + '\n';
+      if (key !== 'header') {
+        content += graphics[key] + '\n' + loremGraf() + '\n';
+      }
     }
   }
   var contentHTML;
@@ -51,7 +55,13 @@ function renderMultiple(options) {
     contentHTML = content;
   }
 
-  var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
+  if (headerContent) {
+    var html = template.replace('|CONTENT|', getIncludes(options) + headerContent);
+    html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
+  } else {
+    var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
+    html = html.replace('|GRAPHIC_CONTENT|', '');
+  }
   return html;
 }
 
