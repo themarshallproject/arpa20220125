@@ -238,6 +238,7 @@ There are a few other commands available that you might find useful. Especially 
 - Clone and push to a branch on this repo, then create a pull request.
 - The setup process leaves behind a remote called `updates`. You can change this template by pushing commits there (`git push updates master`).
 - You can also get the most recent version of the tools by running `git pull updates master && npm install`.
+- In addition to the commands mentioned above, sometimes it is useful to edit this in conjunction with changes to EndRun. You can point deployments at a locally hosted EndRun by changing the `endrun_host` config parameter. Note that even if you do this, assets will still be uploaded to the real production s3 bucket, unless you also change the `bucket` parameter.
 
 ## Special Circumstance: ai2html
 
