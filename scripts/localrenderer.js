@@ -105,7 +105,8 @@ function getGraphics() {
   files.forEach(function(filename) {
     if (filename.match(/[^_].*\.html$/)) {
       var key = filename.replace(/\.html$/, '');
-      graphics[key] = fs.readFileSync('./build/' + filename, 'utf-8');
+      var htmlFile = require('../dist/rev-manifest.json')[filename];
+      graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
     }
   });
   return graphics;
