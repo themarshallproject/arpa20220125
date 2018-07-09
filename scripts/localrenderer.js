@@ -99,13 +99,20 @@ function loremGraf() {
 }
 
 
-function getGraphics() {
+function getGraphics(options) {
   var files = fs.readdirSync('./build/', 'utf-8');
   var graphics = {};
+  var isProduction = options && options.isProduction || false;
+
   files.forEach(function(filename) {
     if (filename.match(/[^_].*\.html$/)) {
       var key = filename.replace(/\.html$/, '');
-      graphics[key] = fs.readFileSync('./build/' + filename, 'utf-8');
+      if (isProduction) {
+        var htmlFile = require('../dist/rev-manifest.json')[filename];
+        graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
+      } else {
+        graphics[key] = fs.readFileSync('./build/' + filename, 'utf-8');
+      }
     }
   });
   return graphics;
