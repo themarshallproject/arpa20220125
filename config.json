@@ -1,8 +1,8 @@
 {
-  "slug": "cecinestpasuneslug",
+  "slug": "gfx-v2",
   "local_markdown": true,
   "local_template": "post",
-  "type": "post",
+  "type": "graphic",
   "bucket": "tmp-production-story-assets",
   "cdn": "https://d63kb4t2ifcex.cloudfront.net",
   "inline_threshold": 4000,
