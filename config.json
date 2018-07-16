@@ -1,6 +1,6 @@
 {
   "slug": "gfx-v2",
-  "local_markdown": true,
+  "local_markdown": false,
   "local_template": "post",
   "type": "graphic",
   "bucket": "tmp-production-story-assets",
