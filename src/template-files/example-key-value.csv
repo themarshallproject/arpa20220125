@@ -1,4 +1,4 @@
-key,value
-title,"A Title Pulled In From Another File"
-dek,"The source for this info is located in src/template-files/example-key-value.csv"
-text,"You can create literally any key-value pairs and access them in your HTML! And you can <strong>write HTML</strong> <em>inside this CSV</em>."
+key,value,number
+title,"A Title Pulled In From Another File",5
+dek,"The source for this info is located in src/template-files/example-key-value.csv",27
+text,"Your data can be accessed by key! And you can <strong>write HTML</strong> <em>inside this CSV</em>.",100
