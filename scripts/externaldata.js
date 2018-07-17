@@ -37,20 +37,28 @@ function getExternalData() {
 
 function convertCSVtoJSON(fileContents) {
   // Convert CSV file contents to JSON, with two output options
-  var formattedData = {};
-  var basicParse = csvParse(fileContents);
-  var parsedFile = csvParse(fileContents, { columns: true });
+  let formattedData = {};
+  let basicParse = csvParse(fileContents);
+  let parsedFile = csvParse(fileContents, { columns: true });
 
   if (basicParse[0][0] == 'key') {
-    // If columns begin with 'key', return an object with each
-    // data object accessible by key
-    let keyedData = {};
+    if (basicParse[0].length == 2) {
+      // If there are only two columns, return an object of
+      // key-value pairs
+      for (var i=1; i<basicParse.length; i++) {
+        formattedData[basicParse[i][0]] = basicParse[i][1];
+      }
+    } else {
+      // If columns begin with 'key', return an object with each
+      // data object accessible by key
+      let keyedData = {};
 
-    for (var i=0; i<parsedFile.length; i++) {
-      keyedData[parsedFile[i]['key']] = parsedFile[i];
+      for (var i=0; i<parsedFile.length; i++) {
+        keyedData[parsedFile[i]['key']] = parsedFile[i];
+      }
+
+      formattedData = keyedData;
     }
-
-    formattedData = keyedData;
   } else {
     // If not keyed, then return an array of objects
     // representing each row with column names serving as keys
