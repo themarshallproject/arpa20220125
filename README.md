@@ -137,8 +137,10 @@ We use two Nunjucks filters, [dump](https://mozilla.github.io/nunjucks/templatin
 #### CSV data formats
 
 CSV files added to `src/template-files` are converted to JSON before
-being passed to the HTML template. There are two formatting options,
+being passed to the HTML template. There are three formatting options,
 depending on how your data is structured.
+
+**Array of objects**
 
 By default, data will be formatted as an array of objects, where each
 object corresponds to a row in the CSV and the object keys correspond
@@ -164,16 +166,56 @@ would appear as:
 ]
 ```
 
-But for simpler data, you can format the JSON as a single object of key-value pairs. Just create a CSV with the headers `key` and `value`, in that order.
+**Keyed lookup**
+
+If you wish to access your data by key rather than as an array, just
+name the first column of your CSV `key` and use a unique value for each
+row.
 
 A CSV formatted like this:
+```
+key,value,char_count
+"Headline","Dewey defeats Truman",20
+"Deck","G.O.P. Sweep Indicated in State",31
+"Description","This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948.",97
+```
+will output like this:
+```
+{
+  Headline: {
+    key: "Headline",
+    value: "Dewey defeats Truman",
+    char_count: "20"
+  },
+  Deck: {
+    key: "Deck",
+    value: "G.O.P. Sweep Indicated in State",
+    char_count: "31"
+  },
+  Description: {
+    key: "Description",
+    value: "This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948.",
+    char_count: "97"
+  }
+}
+```
+
+**Key-value pairs**
+
+Datasets that begin with a `key` column but only have two columns
+overall will be returned as an object of key-value pairs for ease of
+reference.
+
+For example, removing the `char_count` column from our previous example
+CSV:
 ```
 key,value
 "Headline","Dewey defeats Truman"
 "Deck","G.O.P. Sweep Indicated in State"
 "Description","This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948."
 ```
-will output like this:
+
+would return a JSON like this:
 ```
 {
   "Headline": "Dewey defeats Truman",
@@ -181,6 +223,8 @@ will output like this:
   "Description": "This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948."
 }
 ```
+
+
 
 ## Deploying multiple graphics from one repo
 

@@ -36,20 +36,33 @@ function getExternalData() {
 }
 
 function convertCSVtoJSON(fileContents) {
-  var parsedFile = csvParse(fileContents);
-  var formattedData;
+  // Convert CSV file contents to JSON, with two output options
+  let formattedData = {};
+  let basicParse = csvParse(fileContents);
+  let parsedFile = csvParse(fileContents, { columns: true });
 
-  // If columns are ['key', 'value'] then parse as an associative array
-  // of key value pairs
-  if (parsedFile[0][0] == 'key' && parsedFile[0][1] == 'value') {
-    formattedData = {};
-    for (var i=1; i<parsedFile.length; i++) {
-      formattedData[parsedFile[i][0]] = parsedFile[i][1];
+  if (basicParse[0][0] == 'key') {
+    if (basicParse[0].length == 2) {
+      // If there are only two columns, return an object of
+      // key-value pairs
+      for (var i=1; i<basicParse.length; i++) {
+        formattedData[basicParse[i][0]] = basicParse[i][1];
+      }
+    } else {
+      // If columns begin with 'key', return an object with each
+      // data object accessible by key
+      let keyedData = {};
+
+      for (var i=0; i<parsedFile.length; i++) {
+        keyedData[parsedFile[i]['key']] = parsedFile[i];
+      }
+
+      formattedData = keyedData;
     }
   } else {
-    // If not key/value pairs, then return an array of objects
+    // If not keyed, then return an array of objects
     // representing each row with column names serving as keys
-    formattedData = csvParse(fileContents, { columns: true });
+    formattedData = parsedFile;
   }
 
   return formattedData;
