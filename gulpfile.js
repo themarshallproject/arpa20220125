@@ -78,12 +78,7 @@ function productionStyles() {
 function readme() {
   return gulp.src('README.md')
     .pipe(changedInPlace())
-    .pipe(toc({
-      //firsth1: false,
-      //filter: function(str,ele,arr) {
-        //return str.indexOf('Table of Contents') === -1;
-      //}
-    }))
+    .pipe(toc())
     .pipe(gulp.dest('.'))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
