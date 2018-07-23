@@ -32,13 +32,14 @@ Our toolchain for building and deploying graphics, custom posts, and post header
     + [Example: basic table](#example-basic-table)
     + [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
     + [CSV data formats](#csv-data-formats)
+- [Using pre-configured templates](#using-pre-configured-templates)
+  * [ai2html template](#ai2html-template)
+  * [Scrolly template TK](#scrolly-template-tk)
 - [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
     + [Using custom heds and other graphics](#using-custom-heds-and-other-graphics)
 - [Tips](#tips)
 - [Other commands](#other-commands)
 - [Editing this template](#editing-this-template)
-- [Special Circumstance: ai2html](#special-circumstance-ai2html)
-  * [ai2html DOES NOT YET WORK](#ai2html-does-not-yet-work)
 - [Thoughts? Ideas? Issues?](#thoughts-ideas-issues)
 - [Further reading](#further-reading)
 
@@ -252,6 +253,35 @@ would return a JSON like this:
 ```
 
 
+## Using pre-configured templates
+
+Eventually we hope to have a directory of frequently used graphic
+formats to use as templates. You can find these in `templates`.
+
+To use a template, replace the `src` folder of your project with the
+`src` folder within your desired template. NOTE: This will overwrite any
+files you have already modified within `src`!
+
+### ai2html template
+
+If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo.
+
+After you've copied over the template, you can find an Illustrator template in `src/ai2html/base-graphic.ai`. Build your graphic here.
+
+Once you're ready to see it on the page, run the
+`src/ai2html/ai2html.js` script and the output will automatically be
+dropped in the correct location at
+`src/template-files/base-graphic.html`. This file will be completely
+overwritten every time you run the ai2html script. The background images
+are placed in `src/assets`.
+
+The ai2html output is imported into your main `graphic.html` file, so
+you can add additional HTML around your graphic without it being
+overwritten by the script.
+
+### Scrolly template TK
+
+Details TK.
 
 ## Deploying multiple graphics from one repo
 
@@ -310,14 +340,6 @@ There are a few other commands available that you might find useful. Especially 
 - Clone and push to a branch on this repo, then create a pull request.
 - The setup process leaves behind a remote called `updates`. You can change this template by pushing commits there (`git push updates master`).
 - In addition to the commands mentioned above, sometimes it is useful to edit this in conjunction with changes to EndRun. You can point deployments at a locally hosted EndRun by changing the `endrun_host` config parameter. Note that even if you do this, assets will still be uploaded to the real production s3 bucket, unless you also change the `bucket` parameter.
-
-## Special Circumstance: ai2html
-
-### ai2html DOES NOT YET WORK
-
-If you build a graphic using ai2html, you can do so directly from within this rig. Inside `/project_files` is an Adobe Illustrator template (with presized art boards).
-
-You can build your graphic here, run the script (also in the same folder) and the output of ai2html will automatically be dropped into the correct folders in `/src` — including `app.html` which this script will completely overwrite. You’ve been warned. Run ai2html from inside Illustrator, run `grunt`, run `grunt deploy` and then you should see your graphic show up at `localhost:3000`.
 
 ## Thoughts? Ideas? Issues?
 
