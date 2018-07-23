@@ -1,4 +1,0 @@
-key,value,char_count
-title,"A Title Pulled In From Another File",35
-dek,"The source for this info is located in src/template-files/example-key-value.csv",79
-text,"Your data can be accessed by key! And you can <strong>write HTML</strong> <em>inside this CSV</em>.",99
