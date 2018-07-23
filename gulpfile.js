@@ -233,7 +233,6 @@ function endrunDeploy(done, host) {
   credentials.ensureCredentials(function(creds) {
     host = host || config.endrun_host;
     var endpoint = "/admin/api/v2/deploy-gfx";
-    var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
     var body = {
       token: creds['gfx-endrun'],
       type: config.type,
@@ -242,8 +241,9 @@ function endrunDeploy(done, host) {
     }
 
     if (config.multiple_graphics) {
-      body['contents'] = getGraphics();
+      body['contents'] = getGraphics({ isProduction: true });
     } else {
+      var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
       body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
     }
 
