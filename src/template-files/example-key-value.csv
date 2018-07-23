@@ -1,4 +1,0 @@
-key,value
-title,"A Title Pulled In From Another File"
-dek,"The source for this info is located in src/template-files/example-key-value.csv"
-text,"Your data can be accessed by key! And you can <strong>write HTML</strong> <em>inside this CSV</em>."

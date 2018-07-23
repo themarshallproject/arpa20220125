@@ -6,6 +6,7 @@ var csvParse = require('csv-parse/lib/sync');
 var nunjucksRender = require('gulp-nunjucks-render');
 var data = require('gulp-data');
 var notify = require('gulp-notify');
+var marked = require('marked');
 
 function getExternalData() {
   var fullData = {};
@@ -38,8 +39,11 @@ function getExternalData() {
 function convertCSVtoJSON(fileContents) {
   // Convert CSV file contents to JSON, with two output options
   let formattedData = {};
-  let basicParse = csvParse(fileContents);
-  let parsedFile = csvParse(fileContents, { columns: true });
+  let basicParse = csvParse(fileContents, { relax_column_count: true });
+  let parsedFile = csvParse(fileContents, {
+    columns: true,
+    relax_column_count: true
+  });
 
   if (basicParse[0][0] == 'key') {
     if (basicParse[0].length == 2) {
@@ -71,8 +75,15 @@ function convertCSVtoJSON(fileContents) {
 function renderGraphicHTML(data) {
   return nunjucksRender({
     path: 'src/',
-    data: data
+    data: data,
+    manageEnv: manageNunjucksEnvironment
   }).on('error', notify.onError("Nunjucks <%= error %>"));
+}
+
+function manageNunjucksEnvironment(environment) {
+  environment.addFilter('md', function(text) {
+    return marked(text);
+  });
 }
 
 function printParseError(error, dataFilePath) {

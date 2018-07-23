@@ -32,6 +32,7 @@ var setup = require('./scripts/setup.js');
 var includes = require('./scripts/includes.js');
 var externalData = require('./scripts/externaldata.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
+var sheets = require('./scripts/sheets.js');
 
 var serverPort, lrPort;
 
@@ -313,6 +314,7 @@ gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
+gulp.task('sheets:download', sheets.downloadData);
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);
@@ -323,6 +325,7 @@ gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
+gulp.task('credentials:google', credentials.resetGoogleKeys);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
