@@ -36,36 +36,5 @@
 
     document.addEventListener('DOMContentLoaded', resizer);
     // feel free to replace throttle with _.throttle, if available
-    window.addEventListener('resize', throttle(resizer, 200));        
-
-    function throttle(func, wait) {
-        // from underscore.js
-        var _now = Date.now || function() { return new Date().getTime(); },
-            context, args, result, timeout = null, previous = 0;
-        var later = function() {
-            previous = _now();
-            timeout = null;
-            result = func.apply(context, args);
-            if (!timeout) context = args = null;
-        };
-        return function() {
-            var now = _now(), remaining = wait - (now - previous);
-            context = this;
-            args = arguments;
-            if (remaining <= 0 || remaining > wait) {
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                }
-                previous = now;
-                result = func.apply(context, args);
-                if (!timeout) context = args = null;
-            } else if (!timeout && options.trailing !== false) {
-                timeout = setTimeout(later, remaining);
-            }
-            return result;
-        };
-    }
-
-   
+    window.addEventListener('resize', _.throttle(resizer, 200));
 })();
