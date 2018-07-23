@@ -17,6 +17,33 @@ M M M M M M M M M   /_/  /_/  \___/_/ /\__/\__/\__/
 
 Our toolchain for building and deploying graphics, custom posts, and post headers.
 
+<!-- Auto-generated table of contents! -->
+<!-- This section will update itself if you make changes to the headers. -->
+## Table of Contents
+
+<!-- toc -->
+
+- [Setup](#setup)
+  * [Setup for existing projects](#setup-for-existing-projects)
+- [Run](#run)
+- [Deploy](#deploy)
+- [Notes on JavaScript](#notes-on-javascript)
+- [Using external data sources in your HTML](#using-external-data-sources-in-your-html)
+    + [Example: basic table](#example-basic-table)
+    + [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
+    + [CSV data formats](#csv-data-formats)
+- [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
+    + [Using custom heds and other graphics](#using-custom-heds-and-other-graphics)
+- [Tips](#tips)
+- [Other commands](#other-commands)
+- [Editing this template](#editing-this-template)
+- [Special Circumstance: ai2html](#special-circumstance-ai2html)
+  * [ai2html DOES NOT YET WORK](#ai2html-does-not-yet-work)
+- [Thoughts? Ideas? Issues?](#thoughts-ideas-issues)
+- [Further reading](#further-reading)
+
+<!-- tocstop -->
+
 ## Setup
 
 - Clone this repo (`themarshallproject/gfx-v2`) into an appropriately named and located folder with this command: `git clone git@github.com:themarshallproject/gfx-v2.git <project name>`
