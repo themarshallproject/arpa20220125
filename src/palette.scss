@@ -1,0 +1,113 @@
+/**
+ * This file is intended for re-usable classes, variables, and mixins.  If
+ * you encounter something in the course of your project that seems broadly
+ * useful, please feel free to add it here.
+ */
+
+
+/*
+ * VARIABLES
+ */
+
+// Site stuff
+$header-height: 64px;
+$highlight: #ff0b3a;
+$med-gray: #888;
+$transition-timing: 0.25s ease-in-out;
+
+$screen-large-above: "screen and (min-width: 940px)";
+$screen-large-below: "screen and (max-width: 939px)";
+$screen-medium-above: "screen and (min-width: 768px)";
+$screen-medium-below: "screen and (max-width: 767px)";
+$screen-small-above: "screen and (min-width: 580px)";
+$screen-small-below: "screen and (max-width: 579px)";
+$screen-tiny-above: "screen and (min-width: 420px)";
+$screen-tiny-below: "screen and (max-width: 419px)";
+$screen-tiniest-above: "screen and (min-width: 360px)";
+$screen-tiniest-below: "screen and (max-width: 359px)";
+
+
+@mixin font-smooth {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin acumin {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 400;
+}
+
+@mixin acumin-light {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 300;
+}
+
+@mixin acumin-semibold {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 600;
+}
+
+@mixin acumin-bold {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 700;
+}
+
+@mixin pressura {
+  font-family: 'Pressura', monospace;
+  font-weight: 400;
+}
+
+@mixin pressura-light {
+  font-family: 'PressuraLight', monospace;
+  font-weight: 400;
+}
+
+@mixin a-color($text-color, $hover-color) {
+  a {
+    color: $text-color;
+    text-decoration: none;
+    border-bottom: 1px solid $hover-color;
+    &:hover {
+      color: $hover-color;
+      text-decoration: none;
+      border-bottom: 1px solid $hover-color;
+    }
+    &:visited {
+      color: #888;
+      &:hover {
+        color: $hover-color;
+        text-decoration: none;
+        border-bottom: 1px solid $hover-color;
+      }
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.invisible {
+  opacity: 0;
+}
+
+.hide-mobile {
+  display: block;
+  @media #{$screen-small-below} {
+    display: none;
+  }
+}
+
+.hide-tablet {
+  display: block;
+  @media #{$screen-large-below} {
+    display: none;
+  }
+}
+
+.hide-desktop {
+  display: block;
+  @media #{$screen-large-above} {
+    display: none;
+  }
+}
