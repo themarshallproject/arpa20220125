@@ -109,6 +109,10 @@ function resetEndrunKey(done) {
   resetServicePassword(ENDRUN, done);
 }
 
+function resetGithubKey(done) {
+  resetServicePassword(GITHUB, done);
+}
+
 function resetAWSKeys(done) {
   resetServicePassword(AWS_ACCESS, function() {
     resetServicePassword(AWS_SECRET, done);
@@ -121,5 +125,6 @@ module.exports = {
   clearServicePasswords: clearServicePasswords,
   getCredentials: getCredentials,
   resetEndrunKey: resetEndrunKey,
-  resetAWSKeys: resetAWSKeys
+  resetAWSKeys: resetAWSKeys,
+  resetGithubKey: resetGithubKey
 }

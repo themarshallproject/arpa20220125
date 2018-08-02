@@ -328,6 +328,7 @@ gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
+gulp.task('credentials:github', credentials.resetGithubKey);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
