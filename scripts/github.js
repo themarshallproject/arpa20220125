@@ -39,10 +39,28 @@ function createAndSetRepository(done) {
     log('Repo successfully created at ' + repo.html_url);
     log('Setting new repo to origin remote');
     log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]).toString());
-    log('Adding original gfx repo as remote updates');
-    log(child_process.execFileSync('git', ['remote', 'add', 'updates', 'git@github.com:themarshallproject/gfx-v2.git']).toString());
-    done();
+    ensureUpdatesRemote(done);
   });
+}
+
+
+function ensureUpdatesRemote(done) {
+  log('Adding original gfx repo as remote updates');
+  try {
+    log(child_process.execFileSync('git', ['remote', 'add', 'updates', 'git@github.com:themarshallproject/gfx-v2.git']).toString());
+  } catch (error) {
+    log('Got error, assuming remote already exists. Carry on.')
+  }
+  done();
+}
+
+
+function pullUpdates(done) {
+  ensureUpdatesRemote(() => {
+    log(child_process.execFileSync('git', ['pull', 'updates', 'master']).toString());
+    log(child_process.execFileSync('npm', ['install']).toString());
+  });
+  done();
 }
 
 
@@ -81,5 +99,7 @@ module.exports = {
   createRepository,
   createAndSetRepository,
   ensureRepoCleanAndPushed,
-  getRemoteUrl
+  getRemoteUrl,
+  ensureUpdatesRemote,
+  pullUpdates
 };

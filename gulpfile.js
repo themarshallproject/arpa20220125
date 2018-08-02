@@ -331,3 +331,7 @@ gulp.task('credentials:aws', credentials.resetAWSKeys);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
+
+// Rig updates management
+gulp.task('remote:add', github.ensureUpdatesRemote);
+gulp.task('update', github.pullUpdates);
