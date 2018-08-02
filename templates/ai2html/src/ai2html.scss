@@ -1,0 +1,15 @@
+.g-ai2html-wrapper {
+  margin-bottom: 3em;
+}
+
+// Make the tiniest breakpoints display responsively instead of fixed
+@media screen and (max-width: 330px) {
+  #g-base-graphic-box .g-artboard {
+    max-width: 100%;
+    height: auto;
+
+    .g-aiImg.g-aiAbs {
+      position: relative;
+    }
+  }
+}

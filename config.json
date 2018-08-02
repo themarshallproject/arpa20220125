@@ -1,6 +1,6 @@
 {
   "slug": "cecinestpasuneslug",
-  "local_markdown": true,
+  "local_markdown": false,
   "local_template": "post",
   "type": "post",
   "bucket": "tmp-production-story-assets",

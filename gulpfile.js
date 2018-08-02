@@ -23,6 +23,8 @@ var del = require('del');
 var urljoin = require('url-join');
 var fs = require('fs');
 var path = require('path');
+var toc = require('gulp-markdown-toc');
+var changedInPlace = require('gulp-changed-in-place');
 
 var config = require('./config.json');
 var server = require('./scripts/server.js');
@@ -76,6 +78,9 @@ function productionStyles() {
 
 function readme() {
   return gulp.src('README.md')
+    .pipe(changedInPlace())
+    .pipe(toc())
+    .pipe(gulp.dest('.'))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
