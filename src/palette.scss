@@ -1,4 +1,4 @@
-/** 
+/**
  * This file is intended for re-usable classes, variables, and mixins.  If
  * you encounter something in the course of your project that seems broadly
  * useful, please feel free to add it here.
@@ -13,7 +13,6 @@
 $header-height: 64px;
 $highlight: #ff0b3a;
 $med-gray: #888;
-$lighter-gray: #bbb;
 $transition-timing: 0.25s ease-in-out;
 
 $screen-large-above: "screen and (min-width: 940px)";
@@ -24,6 +23,8 @@ $screen-small-above: "screen and (min-width: 580px)";
 $screen-small-below: "screen and (max-width: 579px)";
 $screen-tiny-above: "screen and (min-width: 420px)";
 $screen-tiny-below: "screen and (max-width: 419px)";
+$screen-tiniest-above: "screen and (min-width: 360px)";
+$screen-tiniest-below: "screen and (max-width: 359px)";
 
 
 @mixin font-smooth {
@@ -36,8 +37,28 @@ $screen-tiny-below: "screen and (max-width: 419px)";
   font-weight: 400;
 }
 
+@mixin acumin-light {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 300;
+}
+
+@mixin acumin-semibold {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 600;
+}
+
+@mixin acumin-bold {
+  font-family: 'acumin-pro', sans-serif;
+  font-weight: 700;
+}
+
 @mixin pressura {
   font-family: 'Pressura', monospace;
+  font-weight: 400;
+}
+
+@mixin pressura-light {
+  font-family: 'PressuraLight', monospace;
   font-weight: 400;
 }
 
