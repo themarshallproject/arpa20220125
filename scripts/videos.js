@@ -61,11 +61,18 @@ function writeManifest(data) {
 
 function transcodeAll(creds) {
   const existingTranscodings = getManifest();
-  console.log(existingTranscodings);
+  const videoUrls = getVideoUrls();
+  let alreadyExistingCount = 0;
 
-  const promises = getVideoUrls().map((url) => {
+  if (videoUrls.length == 0) {
+    console.log("No uploaded videos found.");
+    return;
+  }
+
+  const promises = videoUrls.map((url) => {
     if (existingTranscodings[url]) {
       console.log(`Found existing transcoding for ${url}, at ${existingTranscodings[url]}`);
+      alreadyExistingCount += 1;
       return Promise.resolve({ [url]: existingTranscodings[url] });
     } else {
       return axios.post('https://api.mux.com/video/v1/assets',
@@ -84,6 +91,13 @@ function transcodeAll(creds) {
         });
     }
   });
+
+  if (alreadyExistingCount === videoUrls.length) {
+    console.log(`All videos already transcoded. You can check ${MANIFEST_LOCATION} for the urls.`)
+  } else {
+    console.log("Successfully uploaded videos to Mux, they are now transcoding. This shouldn't take too long. If it fails, the video won't work. You can check for errors here:");
+    console.log("\nhttps://dashboard.mux.com/activity/events");
+  }
 
   return Promise.all(promises).then((outputs) => {
     const manifest = outputs.reduce((accumulator, value) => {
@@ -111,4 +125,15 @@ function formatOutput(url, responseData) {
 }
 
 
-getCredentials().then(transcodeAll).then(console.log);
+function transcodeUploadedVideos() {
+  return getCredentials()
+    .then(transcodeAll)
+    .then((output) => {
+      console.log("\n\n", JSON.stringify(output, null, 2), "\n\n");
+    });
+}
+
+
+module.exports = {
+  transcodeUploadedVideos
+}
