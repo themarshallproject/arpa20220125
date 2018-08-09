@@ -5,6 +5,8 @@ const config = require('../config.json');
 const axios = require('axios');
 
 
+const MANIFEST_LOCATION = './video-manifest.json';
+
 function getVideoUrls() {
   const results = [];
   fs.readdirSync('./dist/assets').forEach((file) => {
@@ -31,28 +33,73 @@ function getTranscodingParams(url) {
 }
 
 
-function transcodeAll() {
+function getManifest() {
+  let manifestText;
+  let manifest = {};
+  try {
+    manifestText = fs.readFileSync(MANIFEST_LOCATION);
+  } catch (e) {
+    console.log("Couldn't find video-manifest.json, assuming none exists.");
+  }
+
+  if (manifestText) {
+    try {
+      manifest = JSON.parse(manifestText);
+    } catch (e) {
+      console.log("Error parsing video-manifest.json.");
+    }
+  }
+
+  return manifest;
+}
+
+
+function writeManifest(data) {
+  fs.writeFileSync(MANIFEST_LOCATION, JSON.stringify(data));
+}
+
+
+function transcodeAll(creds) {
+  const existingTranscodings = getManifest();
+  console.log(existingTranscodings);
+
   const promises = getVideoUrls().map((url) => {
-    return axios.post('https://api.mux.com/video/v1/assets',
-      getTranscodingParams(url),
-      {
-        auth: {
-          // TODO implement credentials
-          username: '',
-          password: '',
-        }
-      })
-      .then((res) => {
-        return formatOutput(url, res.data);
-      })
-      .catch((error) => {
-        return error.message;
-      });
+    if (existingTranscodings[url]) {
+      console.log(`Found existing transcoding for ${url}, at ${existingTranscodings[url]}`);
+      return Promise.resolve({ [url]: existingTranscodings[url] });
+    } else {
+      return axios.post('https://api.mux.com/video/v1/assets',
+        getTranscodingParams(url),
+        {
+          auth: {
+            username: creds['gfx-mux-access'],
+            password: creds['gfx-mux-secret'],
+          }
+        })
+        .then((res) => {
+          return formatOutput(url, res.data);
+        })
+        .catch((error) => {
+          return error.message;
+        });
+    }
   });
+
   return Promise.all(promises).then((outputs) => {
-    return outputs.reduce((accumulator, value) => {
+    const manifest = outputs.reduce((accumulator, value) => {
       return Object.assign(accumulator, value);
     }, {});
+    writeManifest(manifest);
+    return manifest;
+  });
+}
+
+
+function getCredentials() {
+  return new Promise((resolve, reject) => {
+    credentials.getMuxCredentials((creds) => {
+      resolve(creds);
+    });
   });
 }
 
@@ -64,4 +111,4 @@ function formatOutput(url, responseData) {
 }
 
 
-transcodeAll().then(console.log);
+getCredentials().then(transcodeAll).then(console.log);
