@@ -35,6 +35,7 @@ var includes = require('./scripts/includes.js');
 var externalData = require('./scripts/externaldata.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
 var sheets = require('./scripts/sheets.js');
+var videos = require('./scripts/videos.js');
 
 var serverPort, lrPort;
 
@@ -320,6 +321,7 @@ gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
+gulp.task('videos:transcode', videos.transcodeUploadedVideos)
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);
