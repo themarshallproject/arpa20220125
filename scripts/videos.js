@@ -55,7 +55,7 @@ function getManifest() {
 
 
 function writeManifest(data) {
-  fs.writeFileSync(MANIFEST_LOCATION, JSON.stringify(data));
+  fs.writeFileSync(MANIFEST_LOCATION, JSON.stringify(data, null, 2));
 }
 
 
