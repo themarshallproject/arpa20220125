@@ -288,6 +288,9 @@ function S3Deploy(done) {
       secretAccessKey: creds['gfx-aws-secret']
     });
     gulp.src('dist/**', { base: 'dist' })
+      // TODO Need to figure out how this interacts with video transcoding. The
+      // fallback videos should be maybe be compressed (but it's not critical),
+      // however Mux does NOT like gzipped videos as source material.
       .pipe(gzip({ append: false }))
       .pipe(s3({
         bucket: config.bucket,
