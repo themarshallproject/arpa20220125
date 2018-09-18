@@ -288,9 +288,12 @@ function S3Deploy(done) {
       secretAccessKey: creds['gfx-aws-secret']
     });
     gulp.src('dist/**', { base: 'dist' })
+      .pipe(gzip({ append: false }))
       .pipe(s3({
         bucket: config.bucket,
         ACL: 'public-read',
+        ContentEncoding: 'gzip',
+        CacheControl: 'max-age=2592000', // One month
         keyTransform: function(filename) {
           var key = config.slug + '/' + filename;
           console.log(config.cdn + '/' + key);
