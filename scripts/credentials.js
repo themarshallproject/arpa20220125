@@ -1,4 +1,3 @@
-
 const keychain = require('keychain');
 const readline = require('readline');
 const log = require('fancy-log');
@@ -33,6 +32,14 @@ const GOOGLE_TOKEN = {
   scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 }
+const MUX_SECRET = {
+  key: 'gfx-mux-secret',
+  name: 'Mux Secret Token'
+};
+const MUX_ACCESS = {
+  key: 'gfx-mux-access',
+  name: 'Mux Access token'
+};
 const REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
 
 
@@ -80,35 +87,52 @@ function clearServicePasswords(cb) {
 
 
 function getCredentials(cb) {
+  getRequestedCredentials(REQUIRED_CREDS, cb);
+}
+
+
+function getMuxCredentials(callback) {
+  const MUX_CREDENTIALS = [MUX_ACCESS, MUX_SECRET];
+  ensureRequestedCredentials(MUX_CREDENTIALS, () => {
+    getRequestedCredentials(MUX_CREDENTIALS, callback);
+  });
+}
+
+
+function getRequestedCredentials(requestedKeys, cb) {
   var keys = {};
   var keyCount = 0;
 
   function checkDone(key, secret) {
     keys[key] = secret;
     keyCount++;
-    if (keyCount == REQUIRED_CREDS.length) {
+    if (keyCount == requestedKeys.length) {
       cb(keys);
     }
   }
-  REQUIRED_CREDS.forEach(function(service) {
+  requestedKeys.forEach(function(service) {
     keychain.getPassword({ account: 'gfx', service: service.key }, function(err, password) {
       checkDone(service.key, password);
     });
   });
-
 }
 
 
 function ensureCredentials(done) {
+  ensureRequestedCredentials(REQUIRED_CREDS, done);
+};
+
+
+function ensureRequestedCredentials(requestedKeys, done) {
   function ensureNextCredential(index) {
-    if (index >= REQUIRED_CREDS.length) {
+    if (index >= requestedKeys.length) {
       return getCredentials(done);
     }
 
-    ensureCredential(REQUIRED_CREDS[index], ensureNextCredential.bind(undefined, index + 1));
+    ensureCredential(requestedKeys[index], ensureNextCredential.bind(undefined, index + 1));
   }
   ensureNextCredential(0);
-};
+}
 
 
 // This is necessary because there need to be no arguments to done, or gulp will assume error
@@ -211,13 +235,14 @@ function getNewToken(oAuth2Client, callback) {
 
 
 module.exports = {
-  ensureCredentials: ensureCredentials,
-  ensureCredentialsTask: ensureCredentialsTask,
-  clearServicePasswords: clearServicePasswords,
-  getCredentials: getCredentials,
-  resetEndrunKey: resetEndrunKey,
-  resetAWSKeys: resetAWSKeys,
-  resetGithubKey: resetGithubKey,
-  getGoogleClient: getGoogleClient,
-  resetGoogleKeys: resetGoogleKeys
+  clearServicePasswords,
+  ensureCredentials,
+  ensureCredentialsTask,
+  getCredentials,
+  getGoogleClient,
+  getMuxCredentials,
+  resetAWSKeys,
+  resetEndrunKey,
+  resetGithubKey,
+  resetGoogleKeys,
 }
