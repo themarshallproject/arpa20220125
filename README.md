@@ -264,7 +264,11 @@ files you have already modified within `src`!
 
 ### ai2html template
 
-If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo.
+If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo. Or use this command:
+
+```
+cp -r templates/ai2html/src .
+```
 
 After you've copied over the template, you can find an Illustrator template in `src/ai2html/base-graphic.ai`. Build your graphic here.
 
@@ -278,6 +282,28 @@ are placed in `src/assets`.
 The ai2html output is imported into your main `graphic.html` file, so
 you can add additional HTML around your graphic without it being
 overwritten by the script.
+
+In most cases, you can refer to the [ai2html documentation](http://ai2html.org/)
+from the New York Times graphics desk. However, we have one additional
+feature: constrained artboard widths.
+
+Our ai2html template defaults to using "dynamic" responsive sizing --
+that is, the graphic will always fill 100% of the width of its
+container. But sometimes this leads to graphics looking too stretched
+out. To constrain an artboard to a maximum width, you can add a
+`data-constrain-` attribute to the parent element in `src/graphic.html`.
+
+For example, to constrain an artboard named "small" to stretch no more
+than 350px, your code would look like this:
+
+```
+  <div class="g-ai2html-wrapper" data-constrain-small="350">
+    {% include "template-files/base-graphic.html" %}
+  </div>
+```
+
+To do away with these constraints altogether, just remove the
+data-attributes from the parent.
 
 ### Scrolly template TK
 

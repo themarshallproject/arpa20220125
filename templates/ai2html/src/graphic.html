@@ -1,5 +1,13 @@
-<div class="g-ai2html-wrapper">
+<div class="g-graphic-wrapper">
   <h1>A headline for the graphic</h1>
 
-  {% include "template-files/base-graphic.html" %}
+  {# <!--
+    The data-constrain attributes on this container allow you to set a maximum width
+    that each artboard can stretch to before displaying as a fixed-width graphic. Each
+    attribute corresponds to the artboard name. To remove all size constraints, delete
+    the data attributes.
+  --> #}
+  <div class="g-ai2html-wrapper" data-constrain-small="350" data-constrain-medium="610" data-constrain-wide="" >
+    {% include "template-files/base-graphic.html" %}
+  </div>
 </div>

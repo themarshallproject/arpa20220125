@@ -45,7 +45,7 @@ function main() {
 // - Update the version number in package.json
 // - Add an entry to CHANGELOG.md
 // - Run 'npm publish' to create a new GitHub release
-var scriptVersion = "0.75.0";
+var scriptVersion = "0.76.0";
 
 // ================================================
 // ai2html and config settings
@@ -55,25 +55,25 @@ var scriptVersion = "0.75.0";
 // https://docs.google.com/spreadsheets/d/13ESQ9ktfkdzFq78FkWLGaZr2s3lNbv2cN25F2pYf5XM/edit?usp=sharing
 // Make a copy of the spreadsheet for yourself.
 // Modify the settings to taste.
-  //
+//
   // The Marshall Project's settings can be found here:
-  // https://docs.google.com/spreadsheets/d/1ZSa8WF8r0WPDJRzNRTGEzPTVCns7dNy_uu3R-b1lkms/edit#gid=0
-  //
+  // https://docs.google.com/spreadsheets/d/13ESQ9ktfkdzFq78FkWLGaZr2s3lNbv2cN25F2pYf5XM/edit?usp=sharing
+//
 // Copy the contents from column Images and replace the settings statements:
-var tmpBaseSettings = {
+var nytBaseSettings = {
   settings_version: {defaultValue: scriptVersion, includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "text", possibleValues: "", notes: ""},
   create_promo_image: {defaultValue: "no", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "text", possibleValues: "", notes: ""},
   promo_image_width: {defaultValue: 1024, includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "integer", possibleValues: "", notes: ""},
   image_format: {defaultValue: ["auto"], includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "array", possibleValues: "jpg, png, png24", notes: "Images will be generated in mulitple formats if multiple formats are listed, separated by commas. The first format will be used in the html. Sometimes this is useful to compare which format will have a smaller file size."},
   write_image_files: {defaultValue: "yes", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "yesNo", possibleValues: "", notes: "Set this to “no” to skip writing the image files. Generally only use this after you have run the script once with this setting set to “yes.”"},
-  responsiveness: {defaultValue: "fixed", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "text", possibleValues: "fixed, dynamic", notes: "Dynamic responsiveness means ai graphics will scale to fill the container they are placed in."},
+  responsiveness: {defaultValue: "dynamic", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "text", possibleValues: "fixed, dynamic", notes: "Dynamic responsiveness means ai graphics will scale to fill the container they are placed in."},
   max_width: {defaultValue: "", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "integer", possibleValues: "", notes: "Blank or any positive number in pixels, but do not write “px” - blank means artboards will set max size, the max width is not included in the html stub, instead it is written to the config file so that the max width can be applied to the template’s container."},
   output: {defaultValue: "one-file", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "text", possibleValues: "one-file, multiple-files", notes: "One html file containing all the artboards or a separate html file for each artboard."},
   project_name: {defaultValue: "", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "text", possibleValues: "", notes: "Use this to set a custom project name. The project name is being used in output filenames, class names, etc."},
   html_output_path: {defaultValue: "../template-files/", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "folderPath", possibleValues: "", notes: "Allows user to change folder to write html files, path should be written relative to ai file location. This is ignored if the project_type in the yml is ai2html."},
   html_output_extension: {defaultValue: ".html", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "fileExtension", possibleValues: "", notes: "This is ignored if the project_type in the yml is ai2html."},
-  image_output_path: {defaultValue: "assets/", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "folderPath", possibleValues: "", notes: "This is where the image files get written to locally and should be written as if the html_output is the starting point."},
-  image_source_path: {defaultValue: null, includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "folderPath", possibleValues: "", notes: "Use this setting to specify from where the images are being loaded from the HTML file. Defaults to image_output_path"},
+  image_output_path: {defaultValue: "../assets/", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "folderPath", possibleValues: "", notes: "This is where the image files get written to locally and should be written as if the html_output is the starting point."},
+  image_source_path: {defaultValue: "assets/", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "folderPath", possibleValues: "", notes: "Use this setting to specify from where the images are being loaded from the HTML file. Defaults to image_output_path"},
   create_config_file: {defaultValue: "false", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "trueFalse", possibleValues: "", notes: "This is ignored in env=nyt."},
   config_file_path: {defaultValue: "", includeInSettingsBlock: false, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "filePath", possibleValues: "", notes: "This only gets used to write the config file. It’s not used in the nyt mode to read the config.yml. Path should written relative to the ai file location."},
   local_preview_template: {defaultValue: "", includeInSettingsBlock: true, includeInConfigFile: false, useQuoteMarksInConfigFile: false, inputType: "filePath", possibleValues: "", notes: ""},
@@ -183,7 +183,7 @@ var defaultBaseSettings = {
 var htmlCharacterCodes = [["\xA0","&nbsp;"], ["\xA1","&iexcl;"], ["\xA2","&cent;"], ["\xA3","&pound;"], ["\xA4","&curren;"], ["\xA5","&yen;"], ["\xA6","&brvbar;"], ["\xA7","&sect;"], ["\xA8","&uml;"], ["\xA9","&copy;"], ["\xAA","&ordf;"], ["\xAB","&laquo;"], ["\xAC","&not;"], ["\xAD","&shy;"], ["\xAE","&reg;"], ["\xAF","&macr;"], ["\xB0","&deg;"], ["\xB1","&plusmn;"], ["\xB2","&sup2;"], ["\xB3","&sup3;"], ["\xB4","&acute;"], ["\xB5","&micro;"], ["\xB6","&para;"], ["\xB7","&middot;"], ["\xB8","&cedil;"], ["\xB9","&sup1;"], ["\xBA","&ordm;"], ["\xBB","&raquo;"], ["\xBC","&frac14;"], ["\xBD","&frac12;"], ["\xBE","&frac34;"], ["\xBF","&iquest;"], ["\xD7","&times;"], ["\xF7","&divide;"], ["\u0192","&fnof;"], ["\u02C6","&circ;"], ["\u02DC","&tilde;"], ["\u2002","&ensp;"], ["\u2003","&emsp;"], ["\u2009","&thinsp;"], ["\u200C","&zwnj;"], ["\u200D","&zwj;"], ["\u200E","&lrm;"], ["\u200F","&rlm;"], ["\u2013","&ndash;"], ["\u2014","&mdash;"], ["\u2018","&lsquo;"], ["\u2019","&rsquo;"], ["\u201A","&sbquo;"], ["\u201C","&ldquo;"], ["\u201D","&rdquo;"], ["\u201E","&bdquo;"], ["\u2020","&dagger;"], ["\u2021","&Dagger;"], ["\u2022","&bull;"], ["\u2026","&hellip;"], ["\u2030","&permil;"], ["\u2032","&prime;"], ["\u2033","&Prime;"], ["\u2039","&lsaquo;"], ["\u203A","&rsaquo;"], ["\u203E","&oline;"], ["\u2044","&frasl;"], ["\u20AC","&euro;"], ["\u2111","&image;"], ["\u2113",""], ["\u2116",""], ["\u2118","&weierp;"], ["\u211C","&real;"], ["\u2122","&trade;"], ["\u2135","&alefsym;"], ["\u2190","&larr;"], ["\u2191","&uarr;"], ["\u2192","&rarr;"], ["\u2193","&darr;"], ["\u2194","&harr;"], ["\u21B5","&crarr;"], ["\u21D0","&lArr;"], ["\u21D1","&uArr;"], ["\u21D2","&rArr;"], ["\u21D3","&dArr;"], ["\u21D4","&hArr;"], ["\u2200","&forall;"], ["\u2202","&part;"], ["\u2203","&exist;"], ["\u2205","&empty;"], ["\u2207","&nabla;"], ["\u2208","&isin;"], ["\u2209","&notin;"], ["\u220B","&ni;"], ["\u220F","&prod;"], ["\u2211","&sum;"], ["\u2212","&minus;"], ["\u2217","&lowast;"], ["\u221A","&radic;"], ["\u221D","&prop;"], ["\u221E","&infin;"], ["\u2220","&ang;"], ["\u2227","&and;"], ["\u2228","&or;"], ["\u2229","&cap;"], ["\u222A","&cup;"], ["\u222B","&int;"], ["\u2234","&there4;"], ["\u223C","&sim;"], ["\u2245","&cong;"], ["\u2248","&asymp;"], ["\u2260","&ne;"], ["\u2261","&equiv;"], ["\u2264","&le;"], ["\u2265","&ge;"], ["\u2282","&sub;"], ["\u2283","&sup;"], ["\u2284","&nsub;"], ["\u2286","&sube;"], ["\u2287","&supe;"], ["\u2295","&oplus;"], ["\u2297","&otimes;"], ["\u22A5","&perp;"], ["\u22C5","&sdot;"], ["\u2308","&lceil;"], ["\u2309","&rceil;"], ["\u230A","&lfloor;"], ["\u230B","&rfloor;"], ["\u2329","&lang;"], ["\u232A","&rang;"], ["\u25CA","&loz;"], ["\u2660","&spades;"], ["\u2663","&clubs;"], ["\u2665","&hearts;"], ["\u2666","&diams;"]];
 
 // Add to the fonts array to make the script work with your own custom fonts.
-  // To make it easier to add to this array, use the "fonts" worksheet of this Google Spreadsheet:
+// To make it easier to add to this array, use the "fonts" worksheet of this Google Spreadsheet:
   // https://docs.google.com/spreadsheets/d/13ESQ9ktfkdzFq78FkWLGaZr2s3lNbv2cN25F2pYf5XM/edit?usp=sharing
   // Make a copy of the spreadsheet for yourself.
   // Modify the settings to taste.
@@ -1203,7 +1203,7 @@ function initDocumentSettings(textBlockSettings) {
   // initialize from default settings
   settings.config_file = [];
   settings.settings_block = [];
-  baseSettings = scriptEnvironment == 'nyt-preview' ? tmpBaseSettings : defaultBaseSettings;
+  baseSettings = scriptEnvironment == 'nyt-preview' ? nytBaseSettings : defaultBaseSettings;
   forEachProperty(baseSettings, function(o, key) {
     settings[key] = o.defaultValue;
     if (o.includeInSettingsBlock) settings.settings_block.push(key);
@@ -2701,10 +2701,10 @@ function exportSymbols(lyr, ab, masks, opts) {
 
   function forPageItem(item) {
     var singleGeom, geometries;
-    if (item.typename != 'PathItem') return;
     if (item.hidden || !testBoundsIntersection(item.visibleBounds, ab.artboardRect)) return;
     // try to convert to circle or rectangle
     // note: filled shapes aren't necessarily closed
+    if (item.typename != 'PathItem') return;
     singleGeom = getRectangleData(item.pathPoints) || getCircleData(item.pathPoints);
     if (singleGeom) {
       geometries = [singleGeom];
@@ -2951,7 +2951,7 @@ function convertArtItems(activeArtboard, textFrames, masks, settings) {
     svgNames = [];
     forEach(svgLayers, function(lyr) {
       var svgName = uniqAssetName(getLayerImageName(lyr, activeArtboard), svgNames);
-      var svgHtml = exportImage(svgName, 'svg', activeArtboard, masks, [lyr], settings);
+      var svgHtml = exportImage(svgName, 'svg', activeArtboard, masks, lyr, settings);
       if (svgHtml) {
         svgNames.push(svgName);
         html += svgHtml;
@@ -2964,7 +2964,8 @@ function convertArtItems(activeArtboard, textFrames, masks, settings) {
     });
   }
 
-  html += captureArtboardImage(imgName, activeArtboard, masks, settings);
+  // placing ab image before other elements
+  html = captureArtboardImage(imgName, activeArtboard, masks, settings) + html;
 
   // unhide svg export layers (if any)
   forEach(svgLayers, function(lyr) {
@@ -3002,25 +3003,33 @@ function getImageFileName(name, fmt) {
   return name + '.' + fmt.substring(0, 3);
 }
 
+function getLayerOpacityCSS(layer) {
+  var o = getComputedOpacity(layer);
+  return o < 100 ? 'opacity:' + roundTo(o / 100, 2) + ';' : '';
+}
+
 // Capture and save an image to the filesystem and return html embed code
 //
-function exportImage(imgName, format, ab, masks, layers, settings) {
+function exportImage(imgName, format, ab, masks, layer, settings) {
   var imgFile = getImageFileName(imgName, format);
   var outputPath = pathJoin(getImageFolder(settings), imgFile);
   var imgId = getImageId(imgName);
   // all images are now absolutely positioned (before, artboard images were
   // position:static to set the artboard height)
   var imgClass = nameSpace + 'aiImg ' + nameSpace + 'aiAbs';
+  var imgStyle = '';
   var created, html;
   if (format == 'svg') {
-    created = exportSVG(outputPath, ab, masks, layers, settings);
+    if (layer) {
+      imgStyle = getLayerOpacityCSS(layer);
+    }
+    created = exportSVG(outputPath, ab, masks, [layer], settings);
     if (!created) {
       return ''; // no image was created
     }
     rewriteSVGFile(outputPath, imgId);
 
-    if (layers) {
-
+    if (layer) {
       message('Exported a layer as ' + outputPath.replace(/.*\//, ''));
     }
 
@@ -3029,17 +3038,21 @@ function exportImage(imgName, format, ab, masks, layers, settings) {
   }
 
   if (format == 'svg' && settings.inline_svg) {
-    html = generateInlineSvg(outputPath, imgClass, settings);
+    html = generateInlineSvg(outputPath, imgClass, imgStyle, settings);
   } else {
-    html = generateImageHtml(imgFile, imgId, imgClass, ab, settings);
+    html = generateImageHtml(imgFile, imgId, imgClass, imgStyle, ab, settings);
   }
   return html;
 }
 
-function generateInlineSvg(imgPath, imgClass, settings) {
+function generateInlineSvg(imgPath, imgClass, imgStyle, settings) {
   var svg = readFile(imgPath) || '';
+  var attr = ' class="' + imgClass + '"';
+  if (imgStyle) {
+    attr += ' style="' + imgStyle + '"';
+  }
   svg = svg.replace(/<\?xml.*?\?>/, '');
-  svg = svg.replace('<svg', '<svg class="' + imgClass + '"');
+  svg = svg.replace('<svg', '<svg' + attr);
   svg = replaceSvgIds(svg, settings.svg_id_prefix);
   return svg;
 }
@@ -3117,7 +3130,7 @@ function captureArtboardImage(imgName, ab, masks, settings) {
 
 
 // Create an <img> tag for the artboard image
-function generateImageHtml(imgFile, imgId, imgClass, ab, settings) {
+function generateImageHtml(imgFile, imgId, imgClass, imgStyle, ab, settings) {
   var abPos = convertAiBounds(ab.artboardRect),
       imgDir = settings.image_source_path,
       html, src;
@@ -3129,6 +3142,9 @@ function generateImageHtml(imgFile, imgId, imgClass, ab, settings) {
     src += '?v=' + settings.cache_bust_token;
   }
   html = '\t\t<img id="' + imgId + '" class="' + imgClass + '"';
+  if (imgStyle) {
+    html += ' style="' + imgStyle + '"';
+  }
   if (isTrue(settings.use_lazy_loader)) {
     html += ' data-src="' + src + '"';
     // placeholder while image loads
