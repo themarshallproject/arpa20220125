@@ -148,6 +148,11 @@ function resetEndrunKey(done) {
 }
 
 
+function resetGithubKey(done) {
+  resetServicePassword(GITHUB, done);
+}
+
+
 function resetAWSKeys(done) {
   resetServicePassword(AWS_ACCESS, function() {
     resetServicePassword(AWS_SECRET, done);
@@ -238,5 +243,6 @@ module.exports = {
   getMuxCredentials,
   resetAWSKeys,
   resetEndrunKey,
+  resetGithubKey,
   resetGoogleKeys,
 }

@@ -11,7 +11,7 @@ function setup(done) {
 
   if (!argv.force && config.slug !== 'cecinestpasuneslug') {
     console.log("\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n")
-    return done();
+    return github.ensureUpdatesRemote(done);
   }
 
   function cleanup() {
