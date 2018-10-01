@@ -11,7 +11,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.0.0-beta.42",
-    "@octokit/rest": "^14.0.5",
+    "@octokit/rest": "^15.12.1",
     "axios": "^0.18.0",
     "babelify": "^10.0.0",
     "csv-parse": "^2.5.0",
