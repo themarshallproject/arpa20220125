@@ -24,7 +24,7 @@
     "googleapis": "^34.0.0",
     "gulp": "^4.0.0",
     "gulp-asset-manifest": "0.0.6",
-    "gulp-autoprefixer": "^4.1.0",
+    "gulp-autoprefixer": "^6.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-bro": "^1.0.3",
     "gulp-changed-in-place": "^2.3.0",
