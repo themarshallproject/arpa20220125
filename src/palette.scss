@@ -14,6 +14,7 @@ $header-height: 64px;
 $highlight: #ff0b3a;
 $med-gray: #888;
 $transition-timing: 0.25s ease-in-out;
+$text-shadow: 1px 1px 10px rgba(0,0,0,0.8);
 
 $screen-large-above: "screen and (min-width: 940px)";
 $screen-large-below: "screen and (max-width: 939px)";
@@ -26,6 +27,12 @@ $screen-tiny-below: "screen and (max-width: 419px)";
 $screen-tiniest-above: "screen and (min-width: 360px)";
 $screen-tiniest-below: "screen and (max-width: 359px)";
 
+@mixin absolute-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 
 @mixin font-smooth {
   -webkit-font-smoothing: antialiased;
@@ -60,6 +67,12 @@ $screen-tiniest-below: "screen and (max-width: 359px)";
 @mixin pressura-light {
   font-family: 'PressuraLight', monospace;
   font-weight: 400;
+}
+
+@mixin safari-animation {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
 }
 
 @mixin a-color($text-color, $hover-color) {
