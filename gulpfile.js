@@ -1,39 +1,40 @@
-var gulp = require('gulp');
-var sass = require('gulp-sass');
+var RevAll = require('gulp-rev-all');
 var autoprefixer = require('gulp-autoprefixer');
-var bro = require('gulp-bro');
 var babel = require('gulp-babel');
 var babelify = require('babelify');
-var mergeStream = require('merge-stream');
-var sourcemaps = require('gulp-sourcemaps');
-var livereload = require('gulp-livereload');
-var firstOpenPort = require('first-open-port');
-var opn = require('opn');
-var log = require('fancy-log');
-var request = require('request');
-var checkFileSize = require('gulp-check-filesize');
-var uglify = require('gulp-uglify');
-var insert = require('gulp-insert');
-var concat = require('gulp-concat');
-var sort = require('gulp-sort');
-var notify = require('gulp-notify');
-var RevAll = require('gulp-rev-all');
-var gulpIf = require('gulp-if');
-var del = require('del');
-var urljoin = require('url-join');
-var fs = require('fs');
-var path = require('path');
-var toc = require('gulp-markdown-toc');
+var bro = require('gulp-bro');
 var changedInPlace = require('gulp-changed-in-place');
+var checkFileSize = require('gulp-check-filesize');
+var concat = require('gulp-concat');
+var del = require('del');
+var firstOpenPort = require('first-open-port');
+var fs = require('fs');
+var gulp = require('gulp');
+var gulpIf = require('gulp-if');
+var gzip = require('gulp-gzip');
+var insert = require('gulp-insert');
+var livereload = require('gulp-livereload');
+var log = require('fancy-log');
+var mergeStream = require('merge-stream');
+var notify = require('gulp-notify');
+var opn = require('opn');
+var path = require('path');
+var request = require('request');
+var sass = require('gulp-sass');
+var sort = require('gulp-sort');
+var sourcemaps = require('gulp-sourcemaps');
+var toc = require('gulp-markdown-toc');
+var uglify = require('gulp-uglify');
+var urljoin = require('url-join');
 
 var config = require('./config.json');
-var server = require('./scripts/server.js');
 var credentials = require('./scripts/credentials.js');
-var github = require('./scripts/github.js');
-var setup = require('./scripts/setup.js');
-var includes = require('./scripts/includes.js');
 var externalData = require('./scripts/externaldata.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
+var github = require('./scripts/github.js');
+var includes = require('./scripts/includes.js');
+var server = require('./scripts/server.js');
+var setup = require('./scripts/setup.js');
 var sheets = require('./scripts/sheets.js');
 var videos = require('./scripts/videos.js');
 
@@ -287,13 +288,27 @@ function S3Deploy(done) {
       secretAccessKey: creds['gfx-aws-secret']
     });
     gulp.src('dist/**', { base: 'dist' })
+      .pipe(
+        gulpIf(
+          (file) => { return !file.path.match(/\.mp4$/) },
+          gzip({ append: false })))
       .pipe(s3({
         bucket: config.bucket,
         ACL: 'public-read',
+        CacheControl: 'max-age=2592000', // One month
         keyTransform: function(filename) {
           var key = config.slug + '/' + filename;
           console.log(config.cdn + '/' + key);
           return key;
+        },
+        maps: {
+          ContentEncoding: (keyname) => {
+            if (keyname.match(/\.mp4$/)) {
+              console.log('Skipping gzip for mp4');
+              return null;
+            }
+            return 'gzip';
+          }
         }
       })).on('end', done);
   });
