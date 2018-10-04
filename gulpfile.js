@@ -357,3 +357,4 @@ gulp.task('reset:type', setup.resetType);
 gulp.task('repo:create', github.createAndSetRepository);
 gulp.task('remote:add', github.ensureUpdatesRemote);
 gulp.task('update', github.pullUpdates);
+gulp.task('repo:labels', github.setupDefaultLabels);

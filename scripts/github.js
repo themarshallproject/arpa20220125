@@ -2,6 +2,7 @@ const github = require('@octokit/rest')();
 const credentials = require('./credentials.js');
 const child_process = require('child_process');
 const log = require('fancy-log');
+const gitLabel = require('git-label');
 
 
 function createRepository(name, cb) {
@@ -20,8 +21,6 @@ function createRepository(name, cb) {
       has_wiki: false,
       description: 'Repo automatically created by gfx rig.',
     }).then((result) => {
-      log('Promise successfully returned after creating repo');
-      setupDefaultLabels(name);
       cb(result.data);
     }).catch((error) => {
       if (error.code == 422) {
@@ -48,18 +47,32 @@ function createAndSetRepository(done) {
 
 function setupDefaultLabels(name) {
   log('Removing default labels');
-  github.issues.removeAllLabels({
-    owner: 'themarshallproject',
-    repo: name
-  }).then((result) => {
-    log('Setting up a test label');
-    github.issues.createLabel({
-      owner: 'themarshallproject',
-      repo: name,
-      name: 'Test label',
-      color: '9233FF',
-      description: 'I am testing out making github labels.'
-    })
+  credentials.ensureCredentials(function(creds) {
+    const repoConfig = {
+      api: 'https://api.github.com',
+      repo: `themarshallproject/${name}`,
+      token: creds['gfx-github']
+    };
+
+    const defaultLabelsToRemove = [
+      { "name": "bug", "color": "#fc2929" },
+      { "name": "duplicate", "color": "#cccccc" },
+      { "name": "enhancement", "color": "#84b6eb" },
+      { "name": "help wanted", "color": "#159818" },
+      { "name": "invalid", "color": "#e6e6e6" },
+      { "name": "question", "color": "#cc317c" },
+      { "name": "wontfix", "color": "#ffffff" }
+    ];
+
+    const newLabelsToAdd = [
+      { "name": "bug", "color": "#fc2929" },
+      { "name": "question", "color": "#cc317c" },
+      { "name": "wontfix", "color": "#ffffff" },
+      { "name": "test label", "color": "#9233FF" }
+    ];
+
+    gitLabel.remove(repoConfig, defaultLabelsToRemove);
+    gitLabel.add(repoConfig, newLabelsToAdd);
   });
 }
 
