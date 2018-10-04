@@ -20,6 +20,7 @@ function createRepository(name, cb) {
       has_wiki: false,
       description: 'Repo automatically created by gfx rig.',
     }).then((result) => {
+      setupDefaultLabels(name);
       cb(result.data);
     }).catch((error) => {
       if (error.code == 422) {
@@ -40,6 +41,22 @@ function createAndSetRepository(done) {
     log('Setting new repo to origin remote');
     log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]).toString());
     ensureUpdatesRemote(done);
+  });
+}
+
+
+function setupDefaultLabels() {
+  github.issues.removeAllLabels({
+    owner: 'themarshallproject',
+    repo: name
+  }).then((result) => {
+    github.issues.createLabel({
+      owner: 'themarshallproject',
+      repo: name,
+      name: 'Test label',
+      color: '9233FF',
+      description: 'I am testing out making github labels.'
+    })
   });
 }
 
