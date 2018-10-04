@@ -45,7 +45,7 @@ function createAndSetRepository(done) {
 }
 
 
-function setupDefaultLabels() {
+function setupDefaultLabels(name) {
   github.issues.removeAllLabels({
     owner: 'themarshallproject',
     repo: name
