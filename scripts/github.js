@@ -45,12 +45,14 @@ function createAndSetRepository(done) {
 }
 
 
-function setupDefaultLabels(name) {
+function setupDefaultLabels(done) {
   log('Removing default labels');
+  var config = require('../config.json');
+
   credentials.ensureCredentials(function(creds) {
     const repoConfig = {
       api: 'https://api.github.com',
-      repo: `themarshallproject/${name}`,
+      repo: `themarshallproject/${config.slug}`,
       token: creds['gfx-github']
     };
 
@@ -71,8 +73,18 @@ function setupDefaultLabels(name) {
       { "name": "test label", "color": "#9233FF" }
     ];
 
-    gitLabel.remove(repoConfig, defaultLabelsToRemove);
-    gitLabel.add(repoConfig, newLabelsToAdd);
+    gitLabel.remove(repoConfig, defaultLabelsToRemove)
+      .then((result) => {
+        log('Replacing default issue labels with more helpful ones');
+        gitLabel.add(repoConfig, newLabelsToAdd)
+          .then(result => {
+            done(result.data);
+          }).catch(error => {
+            log.error('Error when creating new issue labels:', error);
+          })
+      }).catch(error => {
+        log.error('Error when removing default issue labels: ', error)
+      });
   });
 }
 
@@ -131,6 +143,7 @@ function getRemoteUrl() {
 module.exports = {
   createRepository,
   createAndSetRepository,
+  setupDefaultLabels,
   ensureRepoCleanAndPushed,
   getRemoteUrl,
   ensureUpdatesRemote,
