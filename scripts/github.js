@@ -20,6 +20,7 @@ function createRepository(name, cb) {
       has_wiki: false,
       description: 'Repo automatically created by gfx rig.',
     }).then((result) => {
+      log('Promise successfully returned after creating repo');
       setupDefaultLabels(name);
       cb(result.data);
     }).catch((error) => {
