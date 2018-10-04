@@ -46,10 +46,12 @@ function createAndSetRepository(done) {
 
 
 function setupDefaultLabels(name) {
+  log('Removing default labels');
   github.issues.removeAllLabels({
     owner: 'themarshallproject',
     repo: name
   }).then((result) => {
+    log('Setting up a test label');
     github.issues.createLabel({
       owner: 'themarshallproject',
       repo: name,
