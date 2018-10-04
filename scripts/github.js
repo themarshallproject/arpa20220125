@@ -61,6 +61,7 @@ function setupDefaultLabels(done) {
       { "name": "duplicate", "color": "#cccccc" },
       { "name": "enhancement", "color": "#84b6eb" },
       { "name": "help wanted", "color": "#159818" },
+      { "name": "good first issue", "color": "#7057ff" },
       { "name": "invalid", "color": "#e6e6e6" },
       { "name": "question", "color": "#cc317c" },
       { "name": "wontfix", "color": "#ffffff" }
@@ -68,9 +69,18 @@ function setupDefaultLabels(done) {
 
     const newLabelsToAdd = [
       { "name": "bug", "color": "#fc2929" },
-      { "name": "question", "color": "#cc317c" },
+      { "name": "question", "color": "#5177fd" },
+      { "name": "major feature", "color": "#f34dfc" },
+      { "name": "nice to have", "color": "#d1bcf9" },
+      { "name": "in progress", "color": "#f8e400" },
+      { "name": "pending review", "color": "#00d0a9" },
       { "name": "wontfix", "color": "#ffffff" },
-      { "name": "test label", "color": "#9233FF" }
+      { "name": "android", "color": "#baffac" },
+      { "name": "ie/edge", "color": "#b2f9fc" },
+      { "name": "chrome", "color": "#ffc6c8" },
+      { "name": "safari", "color": "#8ec1eb" },
+      { "name": "firefox", "color": "#ffcb8b" },
+      { "name": "mobile", "color": "#333333" }
     ];
 
     gitLabel.remove(repoConfig, defaultLabelsToRemove)
