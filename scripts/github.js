@@ -69,7 +69,7 @@ function setupDefaultLabels(done) {
 
     const newLabelsToAdd = [
       { "name": "Type: Bug", "color": "#fc2929" },
-      { "name": "Type: Question", "color": "#576bb2" },
+      { "name": "Type: Question", "color": "#5783b2" },
       { "name": "Type: Major feature", "color": "#f34dfc" },
       { "name": "Type: Minor feature", "color": "#a574f4" },
       { "name": "Type: Nice to have", "color": "#e1d2fd" },
