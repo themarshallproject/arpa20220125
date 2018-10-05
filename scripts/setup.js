@@ -26,7 +26,8 @@ function setup(done) {
       fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
       getBooleanInput('Do you want to create a matching Github repo?', function(repo) {
         if (repo) {
-          github.createAndSetRepository(cleanup);
+          github.createAndSetRepository();
+          github.setupDefaultLabels(cleanup);
         } else {
           cleanup();
         }
