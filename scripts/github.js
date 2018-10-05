@@ -68,19 +68,21 @@ function setupDefaultLabels(done) {
     ];
 
     const newLabelsToAdd = [
-      { "name": "bug", "color": "#fc2929" },
-      { "name": "question", "color": "#5177fd" },
-      { "name": "major feature", "color": "#f34dfc" },
-      { "name": "nice to have", "color": "#d1bcf9" },
-      { "name": "in progress", "color": "#f8e400" },
-      { "name": "pending review", "color": "#00d0a9" },
-      { "name": "wontfix", "color": "#ffffff" },
-      { "name": "android", "color": "#baffac" },
-      { "name": "ie/edge", "color": "#b2f9fc" },
-      { "name": "chrome", "color": "#ffc6c8" },
-      { "name": "safari", "color": "#8ec1eb" },
-      { "name": "firefox", "color": "#ffcb8b" },
-      { "name": "mobile", "color": "#333333" }
+      { "name": "Type: Bug", "color": "#fc2929" },
+      { "name": "Type: Question", "color": "#576bb2" },
+      { "name": "Type: Major feature", "color": "#f34dfc" },
+      { "name": "Type: Minor feature", "color": "#a574f4" },
+      { "name": "Type: Nice to have", "color": "#e1d2fd" },
+      { "name": "Status: Blocked", "color": "#f4782f" },
+      { "name": "Status: In progress", "color": "#f8e400" },
+      { "name": "Status: Pending review", "color": "#00d0a9" },
+      { "name": "Status: wontfix", "color": "#ffffff" },
+      { "name": "Browser: Android", "color": "#baffac" },
+      { "name": "Browser: IE/Edge", "color": "#b2f9fc" },
+      { "name": "Browser: Chrome", "color": "#ffc6c8" },
+      { "name": "Browser: Safari", "color": "#8ec1eb" },
+      { "name": "Browser: Firefox", "color": "#ffcb8b" },
+      { "name": "Browser: Mobile", "color": "#aaaaaa" }
     ];
 
     gitLabel.remove(repoConfig, defaultLabelsToRemove)
