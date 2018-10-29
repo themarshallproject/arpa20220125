@@ -2,6 +2,7 @@ const github = require('@octokit/rest')();
 const credentials = require('./credentials.js');
 const child_process = require('child_process');
 const log = require('fancy-log');
+const gitLabel = require('git-label');
 
 
 function createRepository(name, cb) {
@@ -40,6 +41,63 @@ function createAndSetRepository(done) {
     log('Setting new repo to origin remote');
     log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]).toString());
     ensureUpdatesRemote(done);
+  });
+}
+
+
+function setupDefaultLabels(done) {
+  log('Removing default labels');
+  var config = require('../config.json');
+
+  credentials.ensureCredentials(function(creds) {
+    const repoConfig = {
+      api: 'https://api.github.com',
+      repo: `themarshallproject/${config.slug}`,
+      token: creds['gfx-github']
+    };
+
+    const defaultLabelsToRemove = [
+      { "name": "bug", "color": "#fc2929" },
+      { "name": "duplicate", "color": "#cccccc" },
+      { "name": "enhancement", "color": "#84b6eb" },
+      { "name": "help wanted", "color": "#159818" },
+      { "name": "good first issue", "color": "#7057ff" },
+      { "name": "invalid", "color": "#e6e6e6" },
+      { "name": "question", "color": "#cc317c" },
+      { "name": "wontfix", "color": "#ffffff" }
+    ];
+
+    const newLabelsToAdd = [
+      { "name": "Type: Bug", "color": "#fc2929" },
+      { "name": "Type: Duplicate", "color": "#ffa6e8" },
+      { "name": "Type: Question", "color": "#5783b2" },
+      { "name": "Type: Major feature", "color": "#f34dfc" },
+      { "name": "Type: Minor feature", "color": "#a574f4" },
+      { "name": "Type: Nice to have", "color": "#e1d2fd" },
+      { "name": "Status: Blocked", "color": "#f4782f" },
+      { "name": "Status: In progress", "color": "#f8e400" },
+      { "name": "Status: Pending review", "color": "#00d0a9" },
+      { "name": "Status: wontfix", "color": "#ffffff" },
+      { "name": "Browser: Android", "color": "#baffac" },
+      { "name": "Browser: IE/Edge", "color": "#b2f9fc" },
+      { "name": "Browser: Chrome", "color": "#ffc6c8" },
+      { "name": "Browser: Safari", "color": "#8ec1eb" },
+      { "name": "Browser: Firefox", "color": "#ffcb8b" },
+      { "name": "Browser: Mobile", "color": "#aaaaaa" }
+    ];
+
+    gitLabel.remove(repoConfig, defaultLabelsToRemove)
+      .then((result) => {
+        log('Replacing default issue labels with more helpful ones');
+        gitLabel.add(repoConfig, newLabelsToAdd)
+          .then(result => {
+            done(result.data);
+          }).catch(error => {
+            log.error('Error when creating new issue labels:', error);
+          })
+      }).catch(error => {
+        log.error('Error when removing default issue labels: ', error)
+      });
   });
 }
 
@@ -98,6 +156,7 @@ function getRemoteUrl() {
 module.exports = {
   createRepository,
   createAndSetRepository,
+  setupDefaultLabels,
   ensureRepoCleanAndPushed,
   getRemoteUrl,
   ensureUpdatesRemote,

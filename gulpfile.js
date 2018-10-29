@@ -355,5 +355,6 @@ gulp.task('reset:type', setup.resetType);
 
 // Rig updates management
 gulp.task('repo:create', github.createAndSetRepository);
+gulp.task('repo:labels', github.setupDefaultLabels);
 gulp.task('remote:add', github.ensureUpdatesRemote);
 gulp.task('update', github.pullUpdates);
