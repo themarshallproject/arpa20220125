@@ -10,7 +10,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.1.5",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.1.5",
     "@octokit/rest": "^15.17.0",
     "axios": "^0.18.0",
     "babelify": "^10.0.0",
