@@ -202,7 +202,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.parallel(clean, html, styles, scripts, assets, readme);
+const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
