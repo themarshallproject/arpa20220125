@@ -1,4 +1,4 @@
-const github = require('@octokit/rest')();
+const Octokit = require('@octokit/rest');
 const credentials = require('./credentials.js');
 const child_process = require('child_process');
 const log = require('fancy-log');
@@ -7,12 +7,11 @@ const gitLabel = require('git-label');
 
 function createRepository(name, cb) {
   credentials.ensureCredentials(function(creds) {
-    github.authenticate({
-      type: 'token',
-      token: creds['gfx-github']
+    const client = new Octokit({
+      auth: `token ${creds['gfx-github']}`
     });
     log('Creating github repo themarshallproject/' + name);
-    github.repos.createForOrg({
+    client.repos.createInOrg({
       org: 'themarshallproject',
       name: name,
       private: true,
