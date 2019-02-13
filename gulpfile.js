@@ -15,6 +15,7 @@ var gzip = require('gulp-gzip');
 var insert = require('gulp-insert');
 var livereload = require('gulp-livereload');
 var log = require('fancy-log');
+var markdown = require('gulp-markdown');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
 var opn = require('opn');
@@ -105,6 +106,7 @@ function productionHtml() {
   return gulp.src('src/*.html')
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
+    .pipe(gulpIf(config.local_markdown, markdown()))
     .pipe(
       gulpIf(singleOrHeader,
         insert.prepend(includes.stylesheetIncludeText())))
