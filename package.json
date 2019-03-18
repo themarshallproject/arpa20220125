@@ -41,7 +41,7 @@
     "gulp-markdown": "^3.0.0",
     "gulp-markdown-toc": "^1.1.0",
     "gulp-notify": "^3.2.0",
-    "gulp-nunjucks-render": "^2.2.2",
+    "gulp-nunjucks-render": "^2.2.3",
     "gulp-rev-all": "git+https://github.com/smysnk/gulp-rev-all.git",
     "gulp-s3-upload": "^1.7.3",
     "gulp-sass": "^4.0.2",
