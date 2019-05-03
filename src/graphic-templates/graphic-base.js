@@ -96,16 +96,16 @@ export default class GraphicBase {
 
   // Set the size of the SVG and offset the chart group by the top and left margins.
   sizeBaseSVG() {
-    const size = this.getBaseMeasurements();
+    this.size = this.getBaseMeasurements();
 
     // The SVG should include margins in its width and height.
     this.svg
-      .attr('width', size.chartWidth + size.marginLeft + size.marginRight)
-      .attr('height', size.chartHeight + size.marginTop + size.marginBottom);
+      .attr('width', this.size.chartWidth + this.size.marginLeft + this.size.marginRight)
+      .attr('height', this.size.chartHeight + this.size.marginTop + this.size.marginBottom);
 
     // Offset the chart group by top and left margins.
     this.chart
-      .attr('transform', `translate(${ size.marginLeft }, ${ size.marginTop })`);
+      .attr('transform', `translate(${ this.size.marginLeft }, ${ this.size.marginTop })`);
   }
 
 
