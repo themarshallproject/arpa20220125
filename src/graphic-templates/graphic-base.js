@@ -14,7 +14,7 @@ export default class GraphicBase {
   constructor(config) {
     this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
-    this.config = this.setConfigDefaults(config);
+    this.setConfigDefaults(config);
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
@@ -26,9 +26,11 @@ export default class GraphicBase {
   }
 
 
-  // Fill in default values for undefined config options
+  // Fill in default values for undefined config options. This preserves any
+  // already-defined config options, which means you can pass literally any
+  // sort of data through to your graphic.
   setConfigDefaults(config) {
-    return _.defaults(config, {
+    this.config = _.defaults(config, {
       responsive: true,
       aspectRatio: .75,
       marginTop: 10,
