@@ -8,19 +8,29 @@ import * as d3 from 'd3';
  * is meant to be extended into all sorts of wacky, beautiful charts.
  * * * * */
 export default class GraphicBase {
+
+  // Constructor: Sets the most basic class properties and fills in config defaults.
+  // Listens for resize.
   constructor(config) {
     this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
     this.config = this.setConfigDefaults(config);
-
-    this.initBaseGraphic();
-    this.sizeBaseSVG();
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
         this.redrawGraphic();
       });
     }
+
+    this.initGraphic();
+  }
+
+
+  // Initialize the graphic and size it. We call this separately from the
+  // constructor because this will differ from template to template.
+  initGraphic() {
+    this.initBaseGraphic();
+    this.sizeBaseSVG();
   }
 
 
