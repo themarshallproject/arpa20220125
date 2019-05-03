@@ -1,5 +1,12 @@
 import * as d3 from 'd3';
 
+/* * * * *
+ * GRAPHIC BASE
+ *
+ * The most basic graphic template class. This adds an SVG to the given container
+ * and sets it up with a chart group, config options and responsive sizing. This
+ * is meant to be extended into all sorts of wacky, beautiful charts.
+ * * * * */
 export default class GraphicBase {
   constructor(config) {
     this.$containerEl = $(`#${config.containerId}`);
@@ -16,6 +23,7 @@ export default class GraphicBase {
     }
   }
 
+
   // Fill in default values for undefined config options
   setConfigDefaults(config) {
     return _.defaults(config, {
@@ -28,16 +36,19 @@ export default class GraphicBase {
     });
   }
 
+
   // Add the SVG and a chart container to the page
   initBaseGraphic() {
     this.svg = this.containerEl.append('svg');
     this.chart = this.svg.append('g').attr('class', 'chart-g');
   }
 
+
   // Graphics default to filling their container width
   getChartWidth() {
     return this.$containerEl.width();
   }
+
 
   // Graphics default to basing their height as a proportion of the chart width.
   getChartHeight() {
@@ -48,6 +59,7 @@ export default class GraphicBase {
 
     return aspectMultiplier * chartWidth;
   }
+
 
   // Return a chartWidth/chartHeight that is useful in scale calculations, so
   // we don't have to worry about calculating around margins.
@@ -69,6 +81,7 @@ export default class GraphicBase {
     }
   }
 
+
   // Set the size of the SVG and offset the chart group by the top and left margins.
   sizeBaseSVG() {
     const size = this.getBaseMeasurements();
@@ -83,11 +96,13 @@ export default class GraphicBase {
       .attr('transform', `translate(${ size.marginLeft }, ${ size.marginTop })`);
   }
 
+
   // Redraw the graphic, re-calculating the size and positions. This is called
   // on `tmp_resize` in the constructor.
   redrawGraphic() {
     this.sizeBaseSVG();
   }
+
 
   // Some config options might be a fixed value, some might be a function.
   // Here's a wrapper to get the value given the config option name only.
@@ -101,4 +116,6 @@ export default class GraphicBase {
 
     return configValue;
   }
+
+
 }
