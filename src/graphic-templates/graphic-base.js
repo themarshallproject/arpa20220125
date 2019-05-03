@@ -7,6 +7,7 @@ export default class GraphicBase {
     this.config = this.setConfigDefaults(config);
 
     this.initBaseGraphic();
+    this.sizeBaseSVG();
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
@@ -53,11 +54,33 @@ export default class GraphicBase {
   getBaseMeasurements() {
     const chartWidth = this.getChartWidth();
     const chartHeight = this.getChartHeight();
+    const marginTop = this.evalConfigOption('marginTop');
+    const marginRight = this.evalConfigOption('marginRight');
+    const marginBottom = this.evalConfigOption('marginBottom');
+    const marginLeft = this.evalConfigOption('marginLeft');
 
     return {
-      chartWidth: chartWidth - this.config.marginLeft - this.config.marginRight,
-      chartHeight: chartHeight - this.config.marginTop - this.config.marginBottom,
+      chartWidth: chartWidth - marginLeft + marginRight,
+      chartHeight: chartHeight - marginTop + marginBottom,
+      marginTop: marginTop,
+      marginRight: marginRight,
+      marginBottom: marginBottom,
+      marginLeft: marginLeft,
     }
+  }
+
+  // Set the size of the SVG and offset the chart group by the top and left margins.
+  sizeBaseSVG() {
+    const size = this.getBaseMeasurements();
+
+    // The SVG should include margins in its width and height.
+    this.svg
+      .attr('width', size.chartWidth + size.marginLeft + size.marginRight)
+      .attr('height', size.chartHeight + size.marginTop + size.marginBottom);
+
+    // Offset the chart group by top and left margins.
+    this.chart
+      .attr('transform', `translate(${ size.marginLeft }, ${ size.marginTop })`);
   }
 
   // Some config options might be a fixed value, some might be a function.
