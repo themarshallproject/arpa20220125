@@ -26,14 +26,6 @@ export default class GraphicBase {
   }
 
 
-  // Initialize the graphic and size it. We call this separately from the
-  // constructor because this will differ from template to template.
-  initGraphic() {
-    this.initBaseGraphic();
-    this.sizeBaseSVG();
-  }
-
-
   // Fill in default values for undefined config options
   setConfigDefaults(config) {
     return _.defaults(config, {
@@ -44,6 +36,14 @@ export default class GraphicBase {
       marginBottom: 10,
       marginLeft: 10,
     });
+  }
+
+
+  // Initialize the graphic and size it. We call this separately from the
+  // constructor because this will differ from template to template.
+  initGraphic() {
+    this.initBaseGraphic();
+    this.sizeBaseSVG();
   }
 
 
