@@ -1,1 +1,7 @@
-// Write your JS here. You can use ES6.
+import GraphicBase from './graphic-templates/graphic-base.js';
+
+$(document).ready(() => {
+  const graphic = new GraphicBase({
+    containerId: 'g-chart-canvas'
+  });
+});
