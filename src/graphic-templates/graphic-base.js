@@ -11,7 +11,7 @@ export default class GraphicBase {
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
-        //this.redrawGraphic();
+        this.redrawGraphic();
       });
     }
   }
@@ -81,6 +81,12 @@ export default class GraphicBase {
     // Offset the chart group by top and left margins.
     this.chart
       .attr('transform', `translate(${ size.marginLeft }, ${ size.marginTop })`);
+  }
+
+  // Redraw the graphic, re-calculating the size and positions. This is called
+  // on `tmp_resize` in the constructor.
+  redrawGraphic() {
+    this.sizeBaseSVG();
   }
 
   // Some config options might be a fixed value, some might be a function.
