@@ -1,13 +1,14 @@
 import GraphicBase from './graphic-templates/graphic-base.js';
+import GraphicWithAxes from './graphic-templates/axis-base.js';
 
 $(document).ready(() => {
   createBaseExample();
+  createAxesExample();
 });
 
 // Kind of a silly example, but let's say we wanna draw stuff on an SVG
 // without it being a real chart-chart
 function createBaseExample() {
-
   const exampleBaseGraphic = new GraphicBase({
     containerId: 'g-chart-example-base',
     aspectRatio: 0.5,
@@ -19,4 +20,13 @@ function createBaseExample() {
     .attr('r', 100)
     .attr('cx', .5 * exampleBaseGraphic.size.chartWidth)
     .attr('cy', .5 * exampleBaseGraphic.size.chartHeight);
+}
+
+function createAxesExample() {
+  const exampleAxisGraphic = new GraphicWithAxes({
+    containerId: 'g-chart-example-axes',
+    aspectRatio: 0.75,
+    marginTop: 40,
+    marginLeft: 40
+  });
 }
