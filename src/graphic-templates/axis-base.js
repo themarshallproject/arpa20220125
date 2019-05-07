@@ -64,14 +64,14 @@ export default class GraphicWithAxes extends GraphicBase {
       .tickFormat('');
 
     // Add SVG containers for axes
+    this.yGridElement = this.chart.append('g')
+      .attr('class', 'y grid');
+
     this.xAxisElement = this.chart.append('g')
       .attr('class', 'x axis');
 
     this.yAxisElement = this.chart.append('g')
       .attr('class', 'y axis');
-
-    this.yGridElement = this.chart.append('g')
-      .attr('class', 'y grid');
   }
 
 
@@ -98,7 +98,7 @@ export default class GraphicWithAxes extends GraphicBase {
       .call(this.xAxis);
 
     this.xAxisElement.select('.domain')
-      .attr('transform', `translate(0, ${ this.yScale(0) })`);
+      .attr('transform', `translate(0, ${ this.yScale(0) - this.size.chartHeight })`);
 
     this.yAxisElement
       .call(this.yAxis);
