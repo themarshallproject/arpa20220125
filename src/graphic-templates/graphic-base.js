@@ -15,6 +15,7 @@ export default class GraphicBase {
     this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
     this.setConfigDefaults(config);
+    this.data = this.config.data;
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
@@ -31,6 +32,7 @@ export default class GraphicBase {
   // sort of data through to your graphic.
   setConfigDefaults(config) {
     this.config = _.defaults(config, {
+      data: [],
       responsive: true,
       aspectRatio: .75,
       marginTop: 10,
@@ -51,6 +53,7 @@ export default class GraphicBase {
 
   // Add the SVG and a chart container to the page
   initBaseGraphic() {
+    this.containerEl.classed('g-tmp-chart', true);
     this.svg = this.containerEl.append('svg');
     this.chart = this.svg.append('g').attr('class', 'chart-g');
   }
