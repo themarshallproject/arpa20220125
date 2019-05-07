@@ -53,10 +53,12 @@ export default class GraphicWithAxes extends GraphicBase {
     // Add axis methods to the class
     this.xAxis = d3.axisBottom()
       .scale(this.xScale)
+      .tickSizeOuter(0)
       //.tickFormat(this.config.xAxisTickFormat);
 
     this.yAxis = d3.axisLeft()
       .scale(this.yScale)
+      .tickSizeOuter(0)
       //.tickFormat(this.config.yAxisTickFormat);
 
     this.yGrid = d3.axisLeft()
