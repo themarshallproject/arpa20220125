@@ -6,13 +6,14 @@
   }
 
   .x.axis path {
-    stroke-width: 2px;
+    stroke-width: 1px;
     stroke: $med-gray;
   }
 
   .y.axis {
-    .domain {
-      //display: none;
+    path {
+      stroke-width: 1px;
+      stroke: $med-gray;
     }
 
     .tick line {
@@ -22,10 +23,6 @@
 
   .y.grid {
     .domain {
-      display: none;
-    }
-
-    .tick:first-of-type {
       display: none;
     }
 
