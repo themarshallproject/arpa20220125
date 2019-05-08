@@ -36,16 +36,28 @@ export default class GraphicWithAxes extends GraphicBase {
 
 
   initScales() {
-    const xMin = this.evalConfigOption('roundedXMin') || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
-    const xMax = this.evalConfigOption('roundedXMax') || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
-    const yMin = this.evalConfigOption('roundedYMin') || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
-    const yMax = this.evalConfigOption('roundedYMax') || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
+    const { xMin, xMax, yMin, yMax } = this.getScaleExtents();
 
     this.xScale = d3.scaleLinear()
       .domain([xMin, xMax]);
 
     this.yScale = d3.scaleLinear()
       .domain([yMin, yMax]);
+  }
+
+
+  getScaleExtents() {
+    const xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
+    const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
+    const yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
+    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
+
+    return {
+      xMin: xMin,
+      xMax: xMax,
+      yMin: yMin,
+      yMax: yMax
+    }
   }
 
 
