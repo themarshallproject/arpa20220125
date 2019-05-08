@@ -36,10 +36,10 @@ export default class GraphicWithAxes extends GraphicBase {
 
 
   initScales() {
-    const xMax = d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
-    const xMin = d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
-    const yMax = d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
-    const yMin = d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
+    const xMin = this.evalConfigOption('roundedXMin') || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
+    const xMax = this.evalConfigOption('roundedXMax') || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
+    const yMin = this.evalConfigOption('roundedYMin') || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
+    const yMax = this.evalConfigOption('roundedYMax') || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
 
     this.xScale = d3.scaleLinear()
       .domain([xMin, xMax]);

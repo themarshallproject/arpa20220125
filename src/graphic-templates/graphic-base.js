@@ -126,7 +126,7 @@ export default class GraphicBase {
     let configValue = configOption;
 
     if (typeof(configOption) === 'function') {
-      configValue = configOption();
+      configValue = configOption.call(this);
     }
 
     return configValue;
