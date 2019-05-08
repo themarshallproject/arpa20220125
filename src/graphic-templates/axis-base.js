@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import utilities from './utilities.js';
+import * as utilities from './utilities.js';
 import GraphicBase from './graphic-base.js';
 
 export default class GraphicWithAxes extends GraphicBase {
@@ -66,12 +66,12 @@ export default class GraphicWithAxes extends GraphicBase {
     this.xAxis = d3.axisBottom()
       .scale(this.xScale)
       .tickSizeOuter(0)
-      //.tickFormat(this.config.xAxisTickFormat);
+      .tickFormat(this.config.xAxisTickFormat);
 
     this.yAxis = d3.axisLeft()
       .scale(this.yScale)
       .tickSizeOuter(0)
-      //.tickFormat(this.config.yAxisTickFormat);
+      .tickFormat(this.config.yAxisTickFormat);
 
     this.yGrid = d3.axisLeft()
       .scale(this.yScale)

@@ -33,8 +33,5 @@ function createAxesExample() {
     aspectRatio: function() { return this.$containerEl.width() < 600 ? 0.5 : 0.7; },
     marginTop: 40,
     marginLeft: 40,
-    roundedXMax: 10,
-    roundedYMin: -10,
-    roundedYMax: 10,
   });
 }
