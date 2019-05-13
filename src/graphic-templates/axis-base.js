@@ -5,7 +5,6 @@ import GraphicBase from './graphic-base.js';
 export default class GraphicWithAxes extends GraphicBase {
   constructor(config) {
     super(config);
-    console.log(this.config);
   }
 
 
@@ -36,13 +35,13 @@ export default class GraphicWithAxes extends GraphicBase {
 
 
   initScales() {
-    const { xMin, xMax, yMin, yMax } = this.getScaleExtents();
+    const { xDomain, yDomain } = this.getScaleExtents();
 
     this.xScale = d3.scaleLinear()
-      .domain([xMin, xMax]);
+      .domain(xDomain);
 
     this.yScale = d3.scaleLinear()
-      .domain([yMin, yMax]);
+      .domain(yDomain);
   }
 
 
@@ -53,10 +52,8 @@ export default class GraphicWithAxes extends GraphicBase {
     const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
 
     return {
-      xMin: xMin,
-      xMax: xMax,
-      yMin: yMin,
-      yMax: yMax
+      xDomain: [xMin, xMax],
+      yDomain: [yMin, yMax]
     }
   }
 
@@ -117,15 +114,9 @@ export default class GraphicWithAxes extends GraphicBase {
     this.yAxisElement
       .call(this.yAxis);
 
-    this.yAxisElement.select('.domain')
-      .attr('transform', `translate(${ this.xScale(0) }, 0)`);
-
     this.yGridElement
       .call(this.yGrid
         .tickSize(-this.size.chartWidth, 0));
-
-    //const tickLabels = this.xAxisElement.selectAll('.tick text')
-      //.call(utilities.wrapText, 40);
   }
 
 
