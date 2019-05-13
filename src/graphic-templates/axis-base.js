@@ -30,6 +30,7 @@ export default class GraphicWithAxes extends GraphicBase {
     this.initBaseGraphic();
     this.initScales();
     this.initAxes();
+    this.initAxisElements();
     this.sizeAndPositionGraphic();
   }
 
@@ -73,7 +74,10 @@ export default class GraphicWithAxes extends GraphicBase {
     this.yGrid = d3.axisLeft()
       .scale(this.yScale)
       .tickFormat('');
+  }
 
+
+  initAxisElements() {
     // Add SVG containers for axes
     this.yGridElement = this.chart.append('g')
       .attr('class', 'y grid');

@@ -44,10 +44,11 @@ function createBarExample() {
     data: BARS_DATA,
     keyX: 'value_x',
     keyY: 'value_y',
+    orientation: 'horizontal',
     aspectRatio: function() { return this.$containerEl.width() < 600 ? 0.5 : 0.7; },
     marginTop: 40,
     marginBottom: 40,
-    marginLeft: 40,
+    marginLeft: 80,
     roundedYMax: 8000
   });
 }

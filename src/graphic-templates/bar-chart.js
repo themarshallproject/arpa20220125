@@ -13,6 +13,7 @@ export default class BarChart extends GraphicWithAxes {
     const classConfig = _.defaults(config, {
       barWidth: 20,
       barPadding: 0.1,
+      orientation: 'vertical',
       roundBarSize: false,
       xDataFormat: (d) => { return d },
       yDataFormat: (d) => { return +d },
@@ -30,6 +31,7 @@ export default class BarChart extends GraphicWithAxes {
     this.initBaseGraphic();
     this.initScales();
     this.initAxes();
+    this.initAxisElements();
     this.initDataElements();
     this.initLabels();
     this.sizeAndPositionGraphic();
@@ -48,6 +50,27 @@ export default class BarChart extends GraphicWithAxes {
 
     this.yScale = d3.scaleLinear()
       .domain([yMin, yDomain[1]]);
+  }
+
+
+  initAxes() {
+    if (this.evalConfigOption('orientation') === 'vertical') {
+      super.initAxes();
+    } else {
+      this.xAxis = d3.axisLeft()
+        .scale(this.xScale)
+        .tickSizeOuter(0)
+        .tickFormat(this.config.xAxisTickFormat);
+
+      this.yAxis = d3.axisBottom()
+        .scale(this.yScale)
+        .tickSizeOuter(0)
+        .tickFormat(this.config.yAxisTickFormat);
+
+      this.yGrid = d3.axisBottom()
+        .scale(this.yScale)
+        .tickFormat('');
+    }
   }
 
 
@@ -79,44 +102,108 @@ export default class BarChart extends GraphicWithAxes {
 
 
   updateDataElements() {
-    this.barRects
-      .attr('x', (d) => {
-        return this.xScale(d[this.config.keyX]);
-      })
-      .attr('y', (d) => {
-        return this.yScale(d[this.config.keyY]);
-      })
-      .attr('width', this.xScale.bandwidth())
-      .attr('height', (d) => {
-        return this.yScale(0) - this.yScale(d[this.config.keyY]);
-      })
+    if (this.evalConfigOption('orientation') === 'vertical') {
+      this.barRects
+        .attr('x', (d) => {
+          return this.xScale(d[this.config.keyX]);
+        })
+        .attr('y', (d) => {
+          return this.yScale(d[this.config.keyY]);
+        })
+        .attr('width', this.xScale.bandwidth())
+        .attr('height', (d) => {
+          return this.yScale(0) - this.yScale(d[this.config.keyY]);
+        })
+    } else {
+      this.barRects
+        .attr('x', (d) => {
+          return this.yScale(0);
+        })
+        .attr('y', (d) => {
+          return this.xScale(d[this.config.keyX]);
+        })
+        .attr('width', (d) => {
+          return this.yScale(d[this.config.keyY]);
+        })
+        .attr('height', this.xScale.bandwidth())
+    }
   }
 
 
   updateLabels() {
-    this.barLabels
-      .attr('x', (d) => {
-        return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
-      })
-      .attr('y', (d,i) => {
-        const yPos = this.yScale(d[this.config.keyY]) - 5;
-        const barHeight = this.barRects.filter((bar_d,bar_i) => { return bar_i == i; }).attr('height');
-        const textHeight = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
-          .node()
-            .getBoundingClientRect()
-              .height;
+    if (this.evalConfigOption('orientation') === 'vertical') {
+      this.barLabels
+        .attr('x', (d) => {
+          return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
+        })
+        .attr('y', (d,i) => {
+          const yPos = this.yScale(d[this.config.keyY]) - 5;
+          const barHeight = this.barRects.filter((bar_d,bar_i) => { return bar_i == i; }).attr('height');
+          const textHeight = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+            .node()
+              .getBoundingClientRect()
+                .height;
 
-        if (yPos < textHeight - this.size.marginTop) {
-          return yPos + 5 + textHeight;
-        } else {
-          return yPos;
-        }
-      })
+          if (yPos < textHeight - this.size.marginTop) {
+            return yPos + 5 + textHeight;
+          } else {
+            return yPos;
+          }
+        })
+    } else {
+      this.barLabels
+        .attr('x', (d,i) => {
+          const yPos = this.yScale(d[this.config.keyY]) + 5;
+          const barSize = this.barRects.filter((bar_d,bar_i) => { return bar_i == i; }).attr('width');
+          const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+            .node()
+              .getBoundingClientRect()
+                .width;
+
+          if (yPos + textSize > this.size.chartWidth + this.size.marginRight) {
+            return yPos - 5 - textSize;
+          } else {
+            return yPos;
+          }
+        })
+        .attr('y', (d) => {
+          return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
+        })
+    }
+  }
+
+
+  calculateScales() {
+    if (this.evalConfigOption('orientation') === 'vertical') {
+      super.calculateScales();
+    } else {
+      this.xScale.range([this.size.chartHeight, 0]);
+      this.yScale.range([0, this.size.chartWidth]);
+    }
+  }
+
+  updateAxisElements() {
+    if (this.evalConfigOption('orientation') === 'vertical') {
+      super.updateAxisElements();
+    } else {
+      this.xAxisElement
+        .call(this.xAxis);
+
+      this.yAxisElement
+        .attr('transform', `translate(0, ${ this.size.chartHeight })`)
+        .call(this.yAxis);
+
+      this.yGridElement
+        .call(this.yGrid
+          .tickSize(this.size.chartHeight, 0));
+    }
   }
 
 
   sizeAndPositionGraphic() {
     super.sizeAndPositionGraphic();
+    this.containerEl.classed(`g-tmp-bar-chart-vertical g-tmp-bar-chart-horizontal`, false);
+    this.containerEl.classed(`g-tmp-bar-chart-${ this.evalConfigOption('orientation') }`, true);
     this.updateDataElements();
     this.updateLabels();
   }
