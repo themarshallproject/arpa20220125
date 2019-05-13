@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 
 export function addCommas(s) {
-  return s.toLocaleString("en-US").replace(/\.0+$/, "");
+  const num_s = +s;
+  return num_s.toLocaleString("en-US").replace(/\.0+$/, "");
 }
 
 export function slugify(text) {
