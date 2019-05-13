@@ -18,6 +18,7 @@ export default class BarChart extends GraphicWithAxes {
       yDataFormat: (d) => { return +d },
       xAxisTickFormat: (d) => { return d },
       yAxisTickFormat: (d) => { return utilities.addCommas(d) },
+      labelFormat: (d) => { return utilities.addCommas(d) }
     });
 
     // Then set the basic defaults
@@ -30,6 +31,7 @@ export default class BarChart extends GraphicWithAxes {
     this.initScales();
     this.initAxes();
     this.initDataElements();
+    this.initLabels();
     this.sizeAndPositionGraphic();
   }
 
@@ -50,13 +52,29 @@ export default class BarChart extends GraphicWithAxes {
 
 
   initDataElements() {
-    this.barRects = this.chart.selectAll('.bar-rect')
+    this.barRects = this.chart.append('g').attr('class', 'g-chart-bars')
+      .selectAll('.bar-rect')
       .data(this.data)
         .enter()
       .append('rect')
         .attr('class', (d) => {
           return `bar-rect bar-${ utilities.slugify(d[this.config.keyX]) }`;
         })
+  }
+
+
+  initLabels() {
+    this.barLabels = this.chart.append('g').attr('class', 'g-chart-labels')
+      .selectAll('.data-label')
+      .data(this.data)
+        .enter()
+      .append('text')
+        .attr('class', (d) => {
+          return `data-label data-label-${ utilities.slugify(d[this.config.keyX]) }`;
+        })
+        .text((d) => {
+          return this.config.labelFormat(d[this.config.keyY]);
+        });
   }
 
 
@@ -75,8 +93,31 @@ export default class BarChart extends GraphicWithAxes {
   }
 
 
+  updateLabels() {
+    this.barLabels
+      .attr('x', (d) => {
+        return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
+      })
+      .attr('y', (d,i) => {
+        const yPos = this.yScale(d[this.config.keyY]) - 5;
+        const barHeight = this.barRects.filter((bar_d,bar_i) => { return bar_i == i; }).attr('height');
+        const textHeight = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+          .node()
+            .getBoundingClientRect()
+              .height;
+
+        if (yPos < textHeight - this.size.marginTop) {
+          return yPos + 5 + textHeight;
+        } else {
+          return yPos;
+        }
+      })
+  }
+
+
   sizeAndPositionGraphic() {
     super.sizeAndPositionGraphic();
     this.updateDataElements();
+    this.updateLabels();
   }
 }

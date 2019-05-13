@@ -1,0 +1,9 @@
+.g-tmp-chart {
+  @include acumin;
+
+  .data-label {
+    font-size: 13px;
+    fill: $med-gray;
+    text-anchor: middle;
+  }
+}
