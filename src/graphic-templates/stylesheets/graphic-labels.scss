@@ -1,16 +1,20 @@
 .g-tmp-chart {
   @include acumin;
 
-  &.g-tmp-bar-chart-horizontal {
-    .data-label {
-      text-anchor: start;
-    }
-  }
-
   .data-label {
     font-size: 13px;
     fill: $med-gray;
     text-anchor: middle;
+  }
+
+  &.g-tmp-bar-chart-horizontal {
+    .data-label {
+      text-anchor: start;
+
+      &.label-in {
+        text-anchor: end;
+      }
+    }
   }
 
 }

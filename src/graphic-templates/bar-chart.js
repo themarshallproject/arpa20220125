@@ -136,34 +136,36 @@ export default class BarChart extends GraphicWithAxes {
         .attr('x', (d) => {
           return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
         })
-        .attr('y', (d,i) => {
-          const yPos = this.yScale(d[this.config.keyY]) - 5;
-          const barHeight = this.barRects.filter((bar_d,bar_i) => { return bar_i == i; }).attr('height');
-          const textHeight = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+        .attr('y', (d,i,labelArray) => {
+          const yPos = this.yScale(d[this.config.keyY]);
+          const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
             .node()
               .getBoundingClientRect()
                 .height;
 
-          if (yPos < textHeight - this.size.marginTop) {
-            return yPos + 5 + textHeight;
+          if (yPos < textSize - this.size.marginTop) {
+            d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+            return yPos + 5 + textSize;
           } else {
-            return yPos;
+            d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+            return yPos - 5;
           }
         })
     } else {
       this.barLabels
-        .attr('x', (d,i) => {
-          const yPos = this.yScale(d[this.config.keyY]) + 5;
-          const barSize = this.barRects.filter((bar_d,bar_i) => { return bar_i == i; }).attr('width');
+        .attr('x', (d,i,labelArray) => {
+          const yPos = this.yScale(d[this.config.keyY]);
           const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
             .node()
               .getBoundingClientRect()
                 .width;
 
           if (yPos + textSize > this.size.chartWidth + this.size.marginRight) {
-            return yPos - 5 - textSize;
+            d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+            return yPos - 5;
           } else {
-            return yPos;
+            d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+            return yPos + 5;
           }
         })
         .attr('y', (d) => {
