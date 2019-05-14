@@ -87,8 +87,8 @@ export default class GraphicBase {
     const marginLeft = this.evalConfigOption('marginLeft');
 
     return {
-      chartWidth: chartWidth - marginLeft + marginRight,
-      chartHeight: chartHeight - marginTop + marginBottom,
+      chartWidth: chartWidth - marginLeft - marginRight,
+      chartHeight: chartHeight - marginTop - marginBottom,
       marginTop: marginTop,
       marginRight: marginRight,
       marginBottom: marginBottom,
