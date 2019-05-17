@@ -2,12 +2,28 @@ import * as d3 from 'd3';
 import * as utilities from './utilities.js';
 import GraphicBase from './graphic-base.js';
 
+/* * * * *
+ * GRAPHIC WITH AXES
+ *
+ * Extends GraphicBase.
+ *
+ * Some scaffolding for setting up data-driven graphics with axes. This module
+ * won't serve all axis-based graphics because it defaults to linear scales, but
+ * it can be easily extended by specific graphic classes to incorporate other
+ * data formats.
+ * * * * */
 export default class GraphicWithAxes extends GraphicBase {
+
+  // Constructor: Use the original GraphicBase constructor.
   constructor(config) {
     super(config);
   }
 
 
+  // Fill in default values for undefined config options. Some are already
+  // defined in the GraphicBase class. This function preserves any
+  // already-defined config options, which means you can pass literally any
+  // sort of data through to your graphic.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
@@ -26,6 +42,8 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Initialize the graphic, set up scales and axis objects, add axis elements
+  // to the DOM and size/position the SVG elements.
   initGraphic() {
     this.initBaseGraphic();
     this.initScales();
@@ -34,6 +52,8 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Initialize scale properties on the class instance. We're only using values
+  // from the data; any values specific to DOM elements will be set in `calculateSales`.
   initScales() {
     const { xDomain, yDomain } = this.getScaleExtents();
 
@@ -45,6 +65,9 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Get the extent of x and y values for setting scale domain. We return a min/max
+  // array for each domain by default, but in an extended version of the class, this
+  // function could be rewritten to return domains in different formats.
   getScaleExtents() {
     const xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
     const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
@@ -58,8 +81,9 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Add axis methods to the class. We add not only an x axis and a yaxis but
+  // also a "grid" that just stretches tick lines across the chart.
   initAxes() {
-    // Add axis methods to the class
     this.xAxis = d3.axisBottom()
       .scale(this.xScale)
       .tickSizeOuter(0)
@@ -74,7 +98,8 @@ export default class GraphicWithAxes extends GraphicBase {
       .scale(this.yScale)
       .tickFormat('');
 
-    // Add SVG containers for axes
+  // Add SVG groups where axes will be initialized.
+  initAxisElements() {
     this.yGridElement = this.chart.append('g')
       .attr('class', 'y grid');
 
@@ -86,6 +111,9 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Getting the correct size of all SVG elements and putting them in the right
+  // place. In the process this updates the `this.size` object and the range
+  // of our scales.
   sizeAndPositionGraphic() {
     // This gets the base measurements (width, height, margins) and assigns them
     // to `this.size`, then sets the size and position of the svg and the chart.
@@ -97,12 +125,15 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Set scale ranges to the latest pixel values.
   calculateScales() {
     this.xScale.range([0, this.size.chartWidth]);
     this.yScale.range([this.size.chartHeight, 0]);
   }
 
 
+  // Call the axis methods on our axis containers to apply them to the latest
+  // pixel sizes.
   updateAxisElements() {
     this.xAxisElement
       .attr('transform', `translate(0, ${ this.size.chartHeight })`)
@@ -120,6 +151,8 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
+  // Redraw the graphic, re-calculating the size and positions. This is called
+  // on `tmp_resize` in the constructor.
   redrawGraphic() {
     this.sizeAndPositionGraphic();
   }
