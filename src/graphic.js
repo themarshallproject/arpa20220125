@@ -45,10 +45,11 @@ function createBarExample() {
     keyX: 'value_x',
     keyY: 'value_y',
     orientation: 'horizontal',
-    aspectRatio: function() { return this.$containerEl.width() < 600 ? 0.5 : 0.7; },
+    aspectRatio: function() { return this.$containerEl.width() < 600 ? 0.9 : 0.7; },
     marginTop: 40,
     marginBottom: 40,
-    marginLeft: 80,
+    marginLeft: 70,
+    marginRight: 40,
     roundedYMax: 8000
   });
 }
