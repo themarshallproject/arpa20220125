@@ -14,7 +14,6 @@ import GraphicBase from './graphic-base.js';
  * * * * */
 export default class GraphicWithAxes extends GraphicBase {
 
-  // Constructor: Use the original GraphicBase constructor.
   constructor(config) {
     super(config);
   }
