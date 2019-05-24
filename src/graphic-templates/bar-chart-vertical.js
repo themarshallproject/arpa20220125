@@ -10,7 +10,7 @@ import GraphicWithAxes from './axis-base.js';
  * A basic responsive bar chart that can display either horizontal bars
  * or vertical bars.
  * * * * */
-export default class BarChart extends GraphicWithAxes {
+export default class VerticalBarChart extends GraphicWithAxes {
 
   constructor(config) {
     super(config);
@@ -26,7 +26,6 @@ export default class BarChart extends GraphicWithAxes {
     const classConfig = _.defaults(config, {
       barWidth: 20,
       barPadding: 0.1,
-      orientation: 'vertical',
       roundBarSize: false,
       xDataFormat: (d) => { return d },
       yDataFormat: (d) => { return +d },

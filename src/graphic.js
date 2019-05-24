@@ -1,11 +1,13 @@
 import GraphicBase from './graphic-templates/graphic-base.js';
 import GraphicWithAxes from './graphic-templates/axis-base.js';
-import BarChart from './graphic-templates/bar-chart.js';
+import VerticalBarChart from './graphic-templates/bar-chart-vertical.js';
+import HorizontalBarChart from './graphic-templates/bar-chart-horizontal.js';
 
 $(document).ready(() => {
   createBaseExample();
   createAxesExample();
   createBarExample();
+  createVerticalBarExample();
 });
 
 // Kind of a silly example, but let's say we wanna draw stuff on an SVG
@@ -27,6 +29,7 @@ function createBaseExample() {
 }
 
 function createAxesExample() {
+  /*
   const exampleAxisGraphic = new GraphicWithAxes({
     containerId: 'g-chart-example-axes',
     data: AXIS_DATA,
@@ -36,20 +39,35 @@ function createAxesExample() {
     marginTop: 40,
     marginLeft: 40,
   });
+  */
 }
 
 function createBarExample() {
-  const exampleBarChart = new BarChart({
+  const exampleHorizontalBarChart = new HorizontalBarChart({
     containerId: 'g-chart-example-bars',
     data: BARS_DATA,
     keyX: 'value_x',
     keyY: 'value_y',
-    orientation: 'horizontal',
     aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
     marginTop: function(size) { return 0.1 * size.svgWidth; },
     marginBottom: 40,
     marginLeft: function(size) { return 0.2 * size.svgWidth; },
     marginRight: 40,
+    roundedYMax: 8000
+  });
+}
+
+function createVerticalBarExample() {
+  const exampleVerticalBarChart = new VerticalBarChart({
+    containerId: 'g-chart-example-vertical-bars',
+    data: BARS_DATA,
+    keyX: 'value_x',
+    keyY: 'value_y',
+    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
+    marginTop: 20,
+    marginRight: 40,
+    marginBottom: 40,
+    marginLeft: 40,
     roundedYMax: 8000
   });
 }
