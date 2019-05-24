@@ -32,7 +32,7 @@ function createAxesExample() {
     data: AXIS_DATA,
     keyX: 'value_x',
     keyY: 'value_y',
-    aspectRatio: function() { return this.$containerEl.width() < 600 ? 0.5 : 0.7; },
+    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.5 : 0.7; },
     marginTop: 40,
     marginLeft: 40,
   });
@@ -45,10 +45,10 @@ function createBarExample() {
     keyX: 'value_x',
     keyY: 'value_y',
     orientation: 'horizontal',
-    aspectRatio: function() { return this.$containerEl.width() < 600 ? 0.9 : 0.7; },
-    marginTop: 40,
+    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
+    marginTop: function(size) { return 0.1 * size.svgWidth; },
     marginBottom: 40,
-    marginLeft: 70,
+    marginLeft: function(size) { return 0.2 * size.svgWidth; },
     marginRight: 40,
     roundedYMax: 8000
   });

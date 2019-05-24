@@ -60,35 +60,35 @@ export default class GraphicBase {
 
 
   // Graphics default to filling their container width
-  getChartWidth() {
+  getSVGWidth() {
     return this.$containerEl.width();
   }
 
 
   // Graphics default to basing their height as a proportion of the chart width.
-  getChartHeight() {
-    const chartWidth = this.getChartWidth();
+  getSVGHeight() {
+    const svgWidth = this.getSVGWidth();
     // However, this proportion may need to be expressed through a function
     // rather than a set value.
-    const aspectMultiplier = this.evalConfigOption('aspectRatio');
+    const aspectMultiplier = this.evalConfigOption('aspectRatio', { svgWidth: svgWidth });
 
-    return aspectMultiplier * chartWidth;
+    return aspectMultiplier * svgWidth;
   }
 
 
   // Return a chartWidth/chartHeight that is useful in scale calculations, so
   // we don't have to worry about calculating around margins.
   getBaseMeasurements() {
-    const chartWidth = this.getChartWidth();
-    const chartHeight = this.getChartHeight();
-    const marginTop = this.evalConfigOption('marginTop');
-    const marginRight = this.evalConfigOption('marginRight');
-    const marginBottom = this.evalConfigOption('marginBottom');
-    const marginLeft = this.evalConfigOption('marginLeft');
+    const svgWidth = this.getSVGWidth();
+    const svgHeight = this.getSVGHeight();
+    const marginTop = this.evalConfigOption('marginTop', { svgWidth: svgWidth });
+    const marginRight = this.evalConfigOption('marginRight', { svgWidth: svgWidth });
+    const marginBottom = this.evalConfigOption('marginBottom', { svgWidth: svgWidth });
+    const marginLeft = this.evalConfigOption('marginLeft', { svgWidth: svgWidth });
 
     return {
-      chartWidth: chartWidth - marginLeft - marginRight,
-      chartHeight: chartHeight - marginTop - marginBottom,
+      chartWidth: svgWidth - marginLeft - marginRight,
+      chartHeight: svgHeight - marginTop - marginBottom,
       marginTop: marginTop,
       marginRight: marginRight,
       marginBottom: marginBottom,
@@ -121,12 +121,12 @@ export default class GraphicBase {
 
   // Some config options might be a fixed value, some might be a function.
   // Here's a wrapper to get the value given the config option name only.
-  evalConfigOption(optionName) {
+  evalConfigOption(optionName, args) {
     const configOption = this.config[optionName];
     let configValue = configOption;
 
     if (typeof(configOption) === 'function') {
-      configValue = configOption.call(this);
+      configValue = configOption.call(this, args);
     }
 
     return configValue;
