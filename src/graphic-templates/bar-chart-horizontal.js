@@ -2,18 +2,27 @@ import * as d3 from 'd3';
 import * as utilities from './utilities.js';
 import VerticalBarChart from './bar-chart-vertical.js';
 
+/* * * * *
+ * HORIZONTAL BAR CHART
+ *
+ * Extends VerticalBarChart.
+ *
+ * A basic responsive bar chart that displays horizontal bars. For vertical
+ * bars, see the VerticalBarChart class that this extends.
+ * * * * */
 export default class HorizontalBarChart extends VerticalBarChart {
 
   constructor(config) {
     super(config);
 
+    // Set this class so chart styles apply properly
     this.containerEl.classed('g-tmp-bar-chart-vertical', false);
     this.containerEl.classed('g-tmp-bar-chart-horizontal', true);
   }
 
 
-  // Fill in default values for undefined config options. Some are already
-  // defined in the GraphicWithAxes class. This function preserves any
+  // Fill in default values for undefined config options. Most are already
+  // defined in the VerticalBarChart class. This function preserves any
   // already-defined config options, which means you can pass literally any
   // sort of data through to your graphic.
   setConfigDefaults(config) {
@@ -42,6 +51,8 @@ export default class HorizontalBarChart extends VerticalBarChart {
   }
 
 
+  // Get the extent of x and y values for setting scale domain. The y domain
+  // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
     const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
     let xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
@@ -88,8 +99,6 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
 
   // Update the size and positioning of any data-driven elements of the chart.
-  // This depends on the `orientation` setting, which runs the bars vertically or
-  // horizontally.
   updateDataElements() {
     this.barRects
       .attr('x', (d) => {
@@ -107,6 +116,8 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
   // This updates the positioning of the labels on our bars.
   updateLabels() {
+    // Bars are sized horizontally, so labels will run inside or outside the
+    // side edge of the bar.
     this.barLabels
       .attr('x', (d,i,labelArray) => {
         const xPos = this.xScale(d[this.config.valueKey]);

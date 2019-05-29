@@ -3,12 +3,12 @@ import * as utilities from './utilities.js';
 import GraphicWithAxes from './axis-base.js';
 
 /* * * * *
- * BAR CHART
+ * VERTICAL BAR CHART
  *
  * Extends GraphicWithAxes.
  *
- * A basic responsive bar chart that can display either horizontal bars
- * or vertical bars.
+ * A basic responsive bar chart that displays vertical bars. For horizontal
+ * bars, see the HorizontalBarChart class that extends this one.
  * * * * */
 export default class VerticalBarChart extends GraphicWithAxes {
 
@@ -70,9 +70,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
   }
 
 
-  // Get the extent of x and y values for setting scale domain. We return a min/max
-  // array for each domain by default, but in an extended version of the class, this
-  // function could be rewritten to return domains in different formats.
+  // Get the extent of x and y values for setting scale domain. The x domain
+  // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
     const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
     const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
@@ -117,10 +116,7 @@ export default class VerticalBarChart extends GraphicWithAxes {
 
 
   // Update the size and positioning of any data-driven elements of the chart.
-  // This depends on the `orientation` setting, which runs the bars vertically or
-  // horizontally.
   updateDataElements() {
-    // Bars are sized vertically
     this.barRects
       .attr('x', (d) => {
         return this.xScale(d[this.config.bandKey]);
@@ -136,8 +132,6 @@ export default class VerticalBarChart extends GraphicWithAxes {
 
 
   // This updates the positioning of the labels on our bars.
-  // This depends on the `orientation` setting, which runs the bars vertically or
-  // horizontally.
   updateLabels() {
     // Bars are sized vertically, so labels will run at the top or bottom of a bar
     this.barLabels
@@ -173,6 +167,5 @@ export default class VerticalBarChart extends GraphicWithAxes {
 
     this.updateDataElements();
     this.updateLabels();
-    console.log(this);
   }
 }
