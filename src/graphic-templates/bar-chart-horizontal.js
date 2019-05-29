@@ -159,6 +159,9 @@ export default class HorizontalBarChart extends VerticalBarChart {
     this.yAxisElement
       .call(this.yAxis);
 
+    this.yAxisElement.select('.domain')
+      .attr('transform', `translate(${ this.xScale(0) }, 0)`);
+
     this.xAxisElement
       .attr('transform', `translate(0, ${ this.size.chartHeight })`)
       .call(this.xAxis);
