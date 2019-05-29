@@ -54,11 +54,14 @@ export default class HorizontalBarChart extends VerticalBarChart {
   // Get the extent of x and y values for setting scale domain. The y domain
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
-    const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
-    let xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
-    // For bar charts, always use a zero baseline
-    xMin = xMin > 0 ? 0 : xMin;
     const yDomain = this.data.map((d) => { return d[this.config.bandKey] })
+    // Get max/min values for x axis, defaulting to the specified values if present
+    let xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+
+    // For bar charts, always include a zero baseline
+    xMin = xMin > 0 ? 0 : xMin;
+    xMax = xMax < 0 ? 0 : xMax;
 
     return {
       xDomain: [xMin, xMax],
@@ -102,13 +105,18 @@ export default class HorizontalBarChart extends VerticalBarChart {
   updateDataElements() {
     this.barRects
       .attr('x', (d) => {
-        return this.xScale(0);
+        const thisValue = d[this.config.valueKey];
+        if (thisValue >= 0) {
+          return this.xScale(0);
+        } else {
+          return this.xScale(d[this.config.valueKey]);
+        }
       })
       .attr('y', (d) => {
         return this.yScale(d[this.config.bandKey]);
       })
       .attr('width', (d) => {
-        return this.xScale(d[this.config.valueKey]) - this.xScale(0);
+        return Math.abs(this.xScale(d[this.config.valueKey]) - this.xScale(0));
       })
       .attr('height', this.yScale.bandwidth())
   }
@@ -159,5 +167,5 @@ export default class HorizontalBarChart extends VerticalBarChart {
       .call(this.xGrid
         .tickSize(this.size.chartHeight, 0));
   }
-  
+
 }

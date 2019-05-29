@@ -75,16 +75,16 @@ function createBarExample() {
   const exampleNegativeVerticalBars = new VerticalBarChart({
     containerId: 'g-chart-example-negative-vertical-bars',
     data: NEG_BARS_DATA,
-    bandKey: 'value_x',
-    valueKey: 'value_y',
+    bandKey: 'animal',
+    valueKey: 'score',
     aspectRatio: 0.6,
   });
 
   const exampleNegativeHorizontalBars = new HorizontalBarChart({
     containerId: 'g-chart-example-negative-horizontal-bars',
     data: NEG_BARS_DATA,
-    bandKey: 'value_x',
-    valueKey: 'value_y',
+    bandKey: 'animal',
+    valueKey: 'score',
     aspectRatio: 0.6,
     marginLeft: 80
   });

@@ -74,10 +74,13 @@ export default class VerticalBarChart extends GraphicWithAxes {
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
     const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
-    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    // Get max/min values for y axis, defaulting to the specified values if present
+    let yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
     let yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
-    // For bar charts, always use a zero baseline
+
+    // For bar charts, always include a zero baseline
     yMin = yMin > 0 ? 0 : yMin;
+    yMax = yMax < 0 ? 0 : yMax;
 
     return {
       xDomain: xDomain,
@@ -122,11 +125,16 @@ export default class VerticalBarChart extends GraphicWithAxes {
         return this.xScale(d[this.config.bandKey]);
       })
       .attr('y', (d) => {
-        return this.yScale(d[this.config.valueKey]);
+        const thisValue = d[this.config.valueKey];
+        if (thisValue >= 0) {
+          return this.yScale(d[this.config.valueKey]);
+        } else {
+          return this.yScale(0);
+        }
       })
       .attr('width', this.xScale.bandwidth())
       .attr('height', (d) => {
-        return this.yScale(0) - this.yScale(d[this.config.valueKey]);
+        return Math.abs(this.yScale(0) - this.yScale(d[this.config.valueKey]));
       })
   }
 
