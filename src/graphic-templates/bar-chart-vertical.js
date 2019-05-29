@@ -27,8 +27,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
       barWidth: 20,
       barPadding: 0.1,
       roundBarSize: false,
-      xDataFormat: (d) => { return d },
-      yDataFormat: (d) => { return +d },
+      bandDataFormat: (d) => { return d },
+      valueDataFormat: (d) => { return +d },
       xAxisTickFormat: (d) => { return d },
       yAxisTickFormat: (d) => { return utilities.addCommas(d) },
       labelFormat: (d) => { return utilities.addCommas(d) }
@@ -57,10 +57,7 @@ export default class VerticalBarChart extends GraphicWithAxes {
   // the domain is set to each of the x values of the data.
   initScales() {
     // Use the default getScaleExtents() to get y extent
-    const { yDomain } = this.getScaleExtents();
-    const xDomain = BARS_DATA.map((d) => { return d[this.config.keyX] })
-    // For bar charts, always use a zero baseline
-    const yMin = yDomain[0] > 0 ? 0 : yDomain[0];
+    const { xDomain, yDomain } = this.getScaleExtents();
 
     this.xScale = d3.scaleBand()
       .round(this.config.roundBarSize)
@@ -68,7 +65,24 @@ export default class VerticalBarChart extends GraphicWithAxes {
       .domain(xDomain);
 
     this.yScale = d3.scaleLinear()
-      .domain([yMin, yDomain[1]]);
+      .domain(yDomain);
+  }
+
+
+  // Get the extent of x and y values for setting scale domain. We return a min/max
+  // array for each domain by default, but in an extended version of the class, this
+  // function could be rewritten to return domains in different formats.
+  getScaleExtents() {
+    const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
+    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    // For bar charts, always use a zero baseline
+    yMin = yMin > 0 ? 0 : yMin;
+
+    return {
+      xDomain: xDomain,
+      yDomain: [yMin, yMax]
+    }
   }
 
 
@@ -111,7 +125,7 @@ export default class VerticalBarChart extends GraphicWithAxes {
         .enter()
       .append('rect')
         .attr('class', (d) => {
-          return `bar-rect bar-${ utilities.slugify(d[this.config.keyX]) }`;
+          return `bar-rect bar-${ utilities.slugify(d[this.config.bandKey]) }`;
         })
   }
 
@@ -124,10 +138,10 @@ export default class VerticalBarChart extends GraphicWithAxes {
         .enter()
       .append('text')
         .attr('class', (d) => {
-          return `data-label data-label-${ utilities.slugify(d[this.config.keyX]) }`;
+          return `data-label data-label-${ utilities.slugify(d[this.config.bandKey]) }`;
         })
         .text((d) => {
-          return this.config.labelFormat(d[this.config.keyY]);
+          return this.config.labelFormat(d[this.config.valueKey]);
         });
   }
 
@@ -140,14 +154,14 @@ export default class VerticalBarChart extends GraphicWithAxes {
       // Bars are sized vertically
       this.barRects
         .attr('x', (d) => {
-          return this.xScale(d[this.config.keyX]);
+          return this.xScale(d[this.config.bandKey]);
         })
         .attr('y', (d) => {
-          return this.yScale(d[this.config.keyY]);
+          return this.yScale(d[this.config.valueKey]);
         })
         .attr('width', this.xScale.bandwidth())
         .attr('height', (d) => {
-          return this.yScale(0) - this.yScale(d[this.config.keyY]);
+          return this.yScale(0) - this.yScale(d[this.config.valueKey]);
         })
     } else {
       // Bars are sized horizontally
@@ -179,10 +193,10 @@ export default class VerticalBarChart extends GraphicWithAxes {
       this.barLabels
         .attr('x', (d) => {
           // Position in the horizontal center of the bar
-          return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
+          return this.xScale(d[this.config.bandKey]) + (this.xScale.bandwidth() / 2);
         })
         .attr('y', (d,i,labelArray) => {
-          const yPos = this.yScale(d[this.config.keyY]);
+          const yPos = this.yScale(d[this.config.valueKey]);
           const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
             .node()
               .getBoundingClientRect()

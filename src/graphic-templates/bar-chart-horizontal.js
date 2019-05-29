@@ -16,17 +16,30 @@ export default class HorizontalBarChart extends VerticalBarChart {
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
-      barHeight: 20,
-      barPadding: 0.1,
-      roundBarSize: false,
-      xDataFormat: (d) => { return +d },
-      yDataFormat: (d) => { return d },
-      xAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      yAxisTickFormat: (d) => { return d },
-      labelFormat: (d) => { return utilities.addCommas(d) }
     });
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);
   }
+
+
+  // Initialize scale properties on the class instance. Rather than the
+  // default linearScale for the xScale, we are using a band scale where
+  // the domain is set to each of the x values of the data.
+  initScales() {
+    // Use the default getScaleExtents() to get y extent
+    const { yDomain } = this.getScaleExtents();
+    const xDomain = BARS_DATA.map((d) => { return d[this.config.keyX] })
+    // For bar charts, always use a zero baseline
+    const yMin = yDomain[0] > 0 ? 0 : yDomain[0];
+
+    this.xScale = d3.scaleBand()
+      .round(this.config.roundBarSize)
+      .padding(this.config.barPadding)
+      .domain(xDomain);
+
+    this.yScale = d3.scaleLinear()
+      .domain([yMin, yDomain[1]]);
+  }
+
 }

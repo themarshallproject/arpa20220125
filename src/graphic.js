@@ -43,11 +43,12 @@ function createAxesExample() {
 }
 
 function createBarExample() {
+  /*
   const exampleHorizontalBarChart = new HorizontalBarChart({
     containerId: 'g-chart-example-bars',
     data: BARS_DATA,
-    keyX: 'value_x',
-    keyY: 'value_y',
+    bucketKey: 'value_x',
+    valueKey: 'value_y',
     aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
     marginTop: function(size) { return 0.1 * size.svgWidth; },
     marginBottom: 40,
@@ -55,14 +56,16 @@ function createBarExample() {
     marginRight: 40,
     roundedYMax: 8000
   });
+  */
 }
 
 function createVerticalBarExample() {
   const exampleVerticalBarChart = new VerticalBarChart({
     containerId: 'g-chart-example-vertical-bars',
     data: BARS_DATA,
-    keyX: 'value_x',
-    keyY: 'value_y',
+    bandKey: 'value_x',
+    valueKey: 'value_y',
+    orientation: 'vertical',
     aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
     marginTop: 20,
     marginRight: 40,
