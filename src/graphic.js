@@ -43,20 +43,19 @@ function createAxesExample() {
 }
 
 function createBarExample() {
-  /*
   const exampleHorizontalBarChart = new HorizontalBarChart({
-    containerId: 'g-chart-example-bars',
+    containerId: 'g-chart-example-horizontal-bars',
     data: BARS_DATA,
-    bucketKey: 'value_x',
+    bandKey: 'value_x',
     valueKey: 'value_y',
     aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
-    marginTop: function(size) { return 0.1 * size.svgWidth; },
+    marginTop: 20,
+    marginRight: 10,
     marginBottom: 40,
-    marginLeft: function(size) { return 0.2 * size.svgWidth; },
-    marginRight: 40,
-    roundedYMax: 8000
+    marginLeft: 80,
+    roundedXMax: 8000
+
   });
-  */
 }
 
 function createVerticalBarExample() {

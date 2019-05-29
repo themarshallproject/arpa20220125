@@ -14,6 +14,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
 
   constructor(config) {
     super(config);
+
+    this.containerEl.classed('g-tmp-bar-chart-vertical', true);
   }
 
 
@@ -56,7 +58,6 @@ export default class VerticalBarChart extends GraphicWithAxes {
   // default linearScale for the xScale, we are using a band scale where
   // the domain is set to each of the x values of the data.
   initScales() {
-    // Use the default getScaleExtents() to get y extent
     const { xDomain, yDomain } = this.getScaleExtents();
 
     this.xScale = d3.scaleBand()
@@ -82,37 +83,6 @@ export default class VerticalBarChart extends GraphicWithAxes {
     return {
       xDomain: xDomain,
       yDomain: [yMin, yMax]
-    }
-  }
-
-
-  // Add axis methods to the class.
-  initAxes() {
-    // The bar chart defaults to a "vertical" orientation, in which bars are
-    // scaled vertically in accordance with the data value.
-    if (this.evalConfigOption('orientation') === 'vertical') {
-      super.initAxes();
-    } else {
-      // However, if the chart's orientation is `horizontal`, the axes need to
-      // be flipped. I'm not sure there's any good way to do this without being
-      // confusing. Under the `horizontal` setting, `x` refers to the independent
-      // variable and `y` refers to the dependent variable, rather than meaning
-      // horizontal or vertical positioning.
-
-      // So the x axis runs along the left side of the chart.
-      this.xAxis = d3.axisLeft()
-        .scale(this.xScale)
-        .tickSizeOuter(0)
-        .tickFormat(this.config.xAxisTickFormat);
-
-      this.yAxis = d3.axisBottom()
-        .scale(this.yScale)
-        .tickSizeOuter(0)
-        .tickFormat(this.config.yAxisTickFormat);
-
-      this.yGrid = d3.axisBottom()
-        .scale(this.yScale)
-        .tickFormat('');
     }
   }
 
@@ -150,37 +120,18 @@ export default class VerticalBarChart extends GraphicWithAxes {
   // This depends on the `orientation` setting, which runs the bars vertically or
   // horizontally.
   updateDataElements() {
-    if (this.evalConfigOption('orientation') === 'vertical') {
-      // Bars are sized vertically
-      this.barRects
-        .attr('x', (d) => {
-          return this.xScale(d[this.config.bandKey]);
-        })
-        .attr('y', (d) => {
-          return this.yScale(d[this.config.valueKey]);
-        })
-        .attr('width', this.xScale.bandwidth())
-        .attr('height', (d) => {
-          return this.yScale(0) - this.yScale(d[this.config.valueKey]);
-        })
-    } else {
-      // Bars are sized horizontally
-      //
-      // When `orientation` is `horizontal`, `x` refers to the independent
-      // variable and `y` refers to the dependent variable, rather than meaning
-      // horizontal or vertical positioning.
-      this.barRects
-        .attr('x', (d) => {
-          return this.yScale(0);
-        })
-        .attr('y', (d) => {
-          return this.xScale(d[this.config.keyX]);
-        })
-        .attr('width', (d) => {
-          return this.yScale(d[this.config.keyY]);
-        })
-        .attr('height', this.xScale.bandwidth())
-    }
+    // Bars are sized vertically
+    this.barRects
+      .attr('x', (d) => {
+        return this.xScale(d[this.config.bandKey]);
+      })
+      .attr('y', (d) => {
+        return this.yScale(d[this.config.valueKey]);
+      })
+      .attr('width', this.xScale.bandwidth())
+      .attr('height', (d) => {
+        return this.yScale(0) - this.yScale(d[this.config.valueKey]);
+      })
   }
 
 
@@ -188,104 +139,31 @@ export default class VerticalBarChart extends GraphicWithAxes {
   // This depends on the `orientation` setting, which runs the bars vertically or
   // horizontally.
   updateLabels() {
-    if (this.evalConfigOption('orientation') === 'vertical') {
-      // Bars are sized vertically, so labels will run at the top or bottom of a bar
-      this.barLabels
-        .attr('x', (d) => {
-          // Position in the horizontal center of the bar
-          return this.xScale(d[this.config.bandKey]) + (this.xScale.bandwidth() / 2);
-        })
-        .attr('y', (d,i,labelArray) => {
-          const yPos = this.yScale(d[this.config.valueKey]);
-          const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
-            .node()
-              .getBoundingClientRect()
-                .height;
+    // Bars are sized vertically, so labels will run at the top or bottom of a bar
+    this.barLabels
+      .attr('x', (d) => {
+        // Position in the horizontal center of the bar
+        return this.xScale(d[this.config.bandKey]) + (this.xScale.bandwidth() / 2);
+      })
+      .attr('y', (d,i,labelArray) => {
+        const yPos = this.yScale(d[this.config.valueKey]);
+        const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+          .node()
+            .getBoundingClientRect()
+              .height;
 
-          // If there is no room for the label to run above the bar, place it just inside
-          // the top of the bar.
-          if (yPos < textSize - this.size.marginTop) {
-            d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
-            return yPos + 5 + textSize;
-          } else {
-            // Otherwise, place the label directly on top of the bar.
-            d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
-            return yPos - 5;
-          }
-          // TODO negative bar positioning
-        })
-    } else {
-      // Bars are sized horizontally, so labels will run beside the bar.
-      // When `orientation` is `horizontal`, `x` refers to the independent
-      // variable and `y` refers to the dependent variable, rather than meaning
-      // horizontal or vertical positioning.
-      this.barLabels
-        .attr('x', (d,i,labelArray) => {
-          const yPos = this.yScale(d[this.config.keyY]);
-          const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
-            .node()
-              .getBoundingClientRect()
-                .width;
-
-          // If there is no room for the label to fit next to the bar, place it just inside
-          // the bar.
-          if (yPos + textSize > this.size.chartWidth + this.size.marginRight) {
-            d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
-            return yPos - 5;
-          } else {
-            // Otherwise, place the label just outside the bar.
-            d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
-            return yPos + 5;
-          }
-          // TODO negative bar positioning
-        })
-        .attr('y', (d) => {
-          return this.xScale(d[this.config.keyX]) + (this.xScale.bandwidth() / 2);
-        })
-    }
-  }
-
-
-  // Set the scale ranges to the latest pixel values.
-  // This depends on the `orientation` setting, which runs the bars vertically or
-  // horizontally.
-  calculateScales() {
-    // Default to using width for xScale range and height for yScale range.
-    if (this.evalConfigOption('orientation') === 'vertical') {
-      super.calculateScales();
-    } else {
-      // When `orientation` is `horizontal`, `x` refers to the independent
-      // variable and `y` refers to the dependent variable, rather than meaning
-      // horizontal or vertical positioning.
-      // So we use height for the independent variable range and width for the
-      // dependent variable range.
-      this.xScale.range([this.size.chartHeight, 0]);
-      this.yScale.range([0, this.size.chartWidth]);
-    }
-  }
-
-
-  // Call the axis methods on our axis containers to apply them to the latest
-  // pixel sizes. This depends on the `orientation` setting, which runs the
-  // bars vertically or horizontally.
-  updateAxisElements() {
-    if (this.evalConfigOption('orientation') === 'vertical') {
-      super.updateAxisElements();
-    } else {
-      // This function does some translating of elements to get the axes in the
-      // right places. Here we use chartHeight instead of chartWidth for those
-      // translations.
-      this.xAxisElement
-        .call(this.xAxis);
-
-      this.yAxisElement
-        .attr('transform', `translate(0, ${ this.size.chartHeight })`)
-        .call(this.yAxis);
-
-      this.yGridElement
-        .call(this.yGrid
-          .tickSize(this.size.chartHeight, 0));
-    }
+        // If there is no room for the label to run above the bar, place it just inside
+        // the top of the bar.
+        if (yPos < textSize - this.size.marginTop) {
+          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          return yPos + 5 + textSize;
+        } else {
+          // Otherwise, place the label directly on top of the bar.
+          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          return yPos - 5;
+        }
+        // TODO negative bar positioning
+      })
   }
 
 
@@ -293,10 +171,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
   sizeAndPositionGraphic() {
     super.sizeAndPositionGraphic();
 
-    // Reset the orientation class, which is used by the CSS.
-    this.containerEl.classed(`g-tmp-bar-chart-vertical g-tmp-bar-chart-horizontal`, false);
-    this.containerEl.classed(`g-tmp-bar-chart-${ this.evalConfigOption('orientation') }`, true);
     this.updateDataElements();
     this.updateLabels();
+    console.log(this);
   }
 }

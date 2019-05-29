@@ -21,6 +21,17 @@
     }
   }
 
+  .x.grid {
+    .domain {
+      display: none;
+    }
+
+    .tick line {
+      stroke: $light-gray;
+      stroke-dasharray: 2px 3px;
+    }
+  }
+
   .y.grid {
     .domain {
       display: none;
