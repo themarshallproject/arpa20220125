@@ -7,7 +7,6 @@ $(document).ready(() => {
   createBaseExample();
   createAxesExample();
   createBarExample();
-  createVerticalBarExample();
 });
 
 // Kind of a silly example, but let's say we wanna draw stuff on an SVG
@@ -48,7 +47,7 @@ function createBarExample() {
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
-    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
+    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.7 : 0.5; },
     marginTop: 20,
     marginRight: 10,
     marginBottom: 40,
@@ -56,9 +55,8 @@ function createBarExample() {
     roundedXMax: 8000
 
   });
-}
 
-function createVerticalBarExample() {
+  /*
   const exampleVerticalBarChart = new VerticalBarChart({
     containerId: 'g-chart-example-vertical-bars',
     data: BARS_DATA,
@@ -71,5 +69,23 @@ function createVerticalBarExample() {
     marginBottom: 40,
     marginLeft: 40,
     roundedYMax: 8000
+  });
+  */
+
+  const exampleNegativeVerticalBars = new VerticalBarChart({
+    containerId: 'g-chart-example-negative-vertical-bars',
+    data: NEG_BARS_DATA,
+    bandKey: 'value_x',
+    valueKey: 'value_y',
+    aspectRatio: 0.6,
+  });
+
+  const exampleNegativeHorizontalBars = new HorizontalBarChart({
+    containerId: 'g-chart-example-negative-horizontal-bars',
+    data: NEG_BARS_DATA,
+    bandKey: 'value_x',
+    valueKey: 'value_y',
+    aspectRatio: 0.6,
+    marginLeft: 80
   });
 }
