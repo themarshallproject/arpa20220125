@@ -78,6 +78,7 @@ function createBarExample() {
     bandKey: 'animal',
     valueKey: 'score',
     aspectRatio: 0.6,
+    marginLeft: 40
   });
 
   const exampleNegativeHorizontalBars = new HorizontalBarChart({

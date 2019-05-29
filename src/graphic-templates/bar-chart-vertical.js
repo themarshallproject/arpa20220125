@@ -148,7 +148,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
         return this.xScale(d[this.config.bandKey]) + (this.xScale.bandwidth() / 2);
       })
       .attr('y', (d,i,labelArray) => {
-        const yPos = this.yScale(d[this.config.valueKey]);
+        const yValue = d[this.config.valueKey];
+        const yPos = this.yScale(yValue);
         const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
           .node()
             .getBoundingClientRect()
@@ -159,12 +160,22 @@ export default class VerticalBarChart extends GraphicWithAxes {
         if (yPos < textSize - this.size.marginTop) {
           d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
           return yPos + 5 + textSize;
-        } else {
-          // Otherwise, place the label directly on top of the bar.
+        } else if ( yPos > this.size.chartHeight - textSize) {
+          // Or if the label is placed lower than the height of the chart itself, place it
+          // just inside the bottom of the bar (for negative bars).
+          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          return yPos - 5;
+        } else if (yValue >= 0) {
+          // If the value is positive and doesn't exceed the bounds of the chart, place it
+          // just above the top of the bar
           d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
           return yPos - 5;
+        } else {
+          // If the value is negative and doesn't exceed the bounds of the chart, place it
+          // just below the bottom of the bar.
+          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          return yPos + textSize;
         }
-        // TODO negative bar positioning
       })
   }
 

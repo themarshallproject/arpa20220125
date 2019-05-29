@@ -8,11 +8,19 @@
   }
 
   &.g-tmp-bar-chart-horizontal {
-    .data-label {
+    .data-label.label-positive {
       text-anchor: start;
 
       &.label-in {
         text-anchor: end;
+      }
+    }
+
+    .data-label.label-negative {
+      text-anchor: end;
+
+      &.label-in {
+        text-anchor: start;
       }
     }
   }

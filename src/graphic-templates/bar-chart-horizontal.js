@@ -128,23 +128,40 @@ export default class HorizontalBarChart extends VerticalBarChart {
     // side edge of the bar.
     this.barLabels
       .attr('x', (d,i,labelArray) => {
-        const xPos = this.xScale(d[this.config.valueKey]);
+        const xValue = d[this.config.valueKey];
+        const xPos = this.xScale(xValue);
         const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
           .node()
             .getBoundingClientRect()
               .width;
 
-        // If there is no room for the label to fit next to the bar, place it just inside
+        if (xValue >= 0) {
+          d3.select(labelArray[i]).classed('label-positive', true);
+        } else {
+          d3.select(labelArray[i]).classed('label-negative', true);
+        }
+
+        // If there is no room for the label to fit to the right of the bar, place it just inside
         // the bar.
         if (xPos + textSize > this.size.chartWidth + this.size.marginRight) {
           d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
           return xPos - 5;
-        } else {
-          // Otherwise, place the label just outside the bar.
+        } else if (xPos <= 0) {
+          // Of it there is no room for the label to fit to the left of the bar, place it
+          // just inside the left edge.
+          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          return xPos + 5;
+        } else if (xValue >= 0) {
+          // If the value is positive and doesn't exceed the right boundary of the chart,
+          // place it just right of the bar.
           d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
           return xPos + 5;
+        } else {
+          // If the value is negative and doesn't exceed the left boundary of the chart,
+          // place it just left of the bar.
+          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          return xPos - 5;
         }
-        // TODO negative bar positioning
       })
       .attr('y', (d) => {
         return this.yScale(d[this.config.bandKey]) + (this.yScale.bandwidth() / 2);
