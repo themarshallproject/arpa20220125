@@ -56,7 +56,6 @@ function createBarExample() {
 
   });
 
-  /*
   const exampleVerticalBarChart = new VerticalBarChart({
     containerId: 'g-chart-example-vertical-bars',
     data: BARS_DATA,
@@ -70,7 +69,6 @@ function createBarExample() {
     marginLeft: 40,
     roundedYMax: 8000
   });
-  */
 
   const exampleNegativeVerticalBars = new VerticalBarChart({
     containerId: 'g-chart-example-negative-vertical-bars',

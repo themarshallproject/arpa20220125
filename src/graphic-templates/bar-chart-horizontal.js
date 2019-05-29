@@ -146,7 +146,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
         if (xPos + textSize > this.size.chartWidth + this.size.marginRight) {
           d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
           return xPos - 5;
-        } else if (xPos <= 0) {
+        } else if (xValue < 0 && xPos <= 0) {
           // Of it there is no room for the label to fit to the left of the bar, place it
           // just inside the left edge.
           d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
