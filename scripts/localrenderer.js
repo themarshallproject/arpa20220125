@@ -128,6 +128,15 @@ function renderReadme(options) {
 }
 
 
+function renderGraphicsReadme(options) {
+  var content = fs.readFileSync('./build/graphic-templates/README.md', 'utf8')
+  var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
+  var contentHTML = marked(content);
+  var html = template.replace('|CONTENT|', getLRScript(options) + contentHTML);
+  return html;
+}
+
+
 function getIncludes(options) {
   return [
     getLRScript(options),
@@ -146,5 +155,6 @@ function getLRScript(options) {
 module.exports = {
   renderTemplate: renderTemplate,
   renderReadme: renderReadme,
+  renderGraphicsReadme: renderGraphicsReadme,
   getGraphics: getGraphics
 }

@@ -21,6 +21,10 @@ module.exports = function(options) {
     res.send(renderer.renderReadme({ lrPort: lrPort }))
   });
 
+  app.get('/graphic-templates/readme/', function(req, res) {
+    res.send(renderer.renderGraphicsReadme({ lrPort: lrPort }))
+  });
+
   port = options.port || 3000;
 
   app.listen(port);
