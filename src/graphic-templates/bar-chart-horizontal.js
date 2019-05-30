@@ -131,9 +131,14 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
   // This updates the positioning of the labels on our bars.
   updateLabels() {
+    // To get labels to line up with the axis labels, we should use the same `dy`
+    // value as axis text.
+    const labelDy = this.yAxisElement.select('.tick').select('text').attr('dy');
+
     // Bars are sized horizontally, so labels will run inside or outside the
     // side edge of the bar.
     this.barLabels
+      .attr('dy', labelDy)
       .attr('x', (d,i,labelArray) => {
         const xValue = d[this.config.valueKey];
         const xPos = this.xScale(xValue);
@@ -141,38 +146,39 @@ export default class HorizontalBarChart extends VerticalBarChart {
           .node()
             .getBoundingClientRect()
               .width;
+        const thisLabel = d3.select(labelArray[i]);
 
         if (xValue >= 0) {
-          d3.select(labelArray[i]).classed('label-positive', true);
+          thisLabel.classed('label-positive', true);
         } else {
-          d3.select(labelArray[i]).classed('label-negative', true);
+          thisLabel.classed('label-negative', true);
         }
 
         // If there is no room for the label to fit to the right of the bar, place it just inside
         // the bar.
         if (xPos + textSize > this.size.chartWidth + this.size.marginRight) {
-          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          thisLabel.classed('label-out', false).classed('label-in', true);
           return xPos - 5;
         } else if (xValue < 0 && xPos <= 0) {
           // Of it there is no room for the label to fit to the left of the bar, place it
           // just inside the left edge.
-          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          thisLabel.classed('label-out', false).classed('label-in', true);
           return xPos + 5;
         } else if (xValue >= 0) {
           // If the value is positive and doesn't exceed the right boundary of the chart,
           // place it just right of the bar.
-          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          thisLabel.classed('label-in', false).classed('label-out', true);
           return xPos + 5;
         } else {
           // If the value is negative and doesn't exceed the left boundary of the chart,
           // place it just left of the bar.
-          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          thisLabel.classed('label-in', false).classed('label-out', true);
           return xPos - 5;
         }
       })
       .attr('y', (d) => {
         return this.yScale(d[this.config.bandKey]) + (this.yScale.bandwidth() / 2);
-      })
+      });
   }
 
 
