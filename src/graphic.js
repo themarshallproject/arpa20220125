@@ -47,7 +47,6 @@ function createBarExample() {
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
-    orientation: 'vertical',
     aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
     marginTop: 20,
     marginRight: 10,
