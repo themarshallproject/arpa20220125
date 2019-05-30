@@ -16,6 +16,7 @@ export default class GraphicWithAxes extends GraphicBase {
 
   constructor(config) {
     super(config);
+    console.log(this);
   }
 
 
@@ -34,6 +35,12 @@ export default class GraphicWithAxes extends GraphicBase {
       yDataFormat: (d) => { return +d },
       xAxisTickFormat: (d) => { return utilities.addCommas(d) },
       yAxisTickFormat: (d) => { return utilities.addCommas(d) },
+      xAxisTicks: null,
+      yAxisTicks: null,
+      xAxisTickArguments: null,
+      yAxisTickArguments: null,
+      xAxisTickValues: null,
+      yAxisTickValues: null,
     });
 
     // Then set the basic defaults
@@ -87,15 +94,24 @@ export default class GraphicWithAxes extends GraphicBase {
     this.xAxis = d3.axisBottom()
       .scale(this.xScale)
       .tickSizeOuter(0)
+      .tickArguments(this.config.xAxisTickArguments)
+      .tickValues(this.config.xAxisTickValues)
+      .ticks(this.config.xAxisTicks)
       .tickFormat(this.config.xAxisTickFormat);
 
     this.yAxis = d3.axisLeft()
       .scale(this.yScale)
       .tickSizeOuter(0)
+      .tickArguments(this.config.yAxisTickArguments)
+      .tickValues(this.config.yAxisTickValues)
+      .ticks(this.config.yAxisTicks)
       .tickFormat(this.config.yAxisTickFormat);
 
     this.yGrid = d3.axisLeft()
       .scale(this.yScale)
+      .tickArguments(this.config.yAxisTickArguments)
+      .tickValues(this.config.yAxisTickValues)
+      .ticks(this.config.yAxisTicks)
       .tickFormat('');
   }
 

@@ -72,15 +72,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
   // Add axis methods to the class.
   initAxes() {
-    this.yAxis = d3.axisLeft()
-      .scale(this.yScale)
-      .tickSizeOuter(0)
-      .tickFormat(this.config.yAxisTickFormat);
-
-    this.xAxis = d3.axisBottom()
-      .scale(this.xScale)
-      .tickSizeOuter(0)
-      .tickFormat(this.config.xAxisTickFormat);
+    super.initAxes();
 
     this.xGrid = d3.axisBottom()
       .scale(this.xScale)
