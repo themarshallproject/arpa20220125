@@ -101,6 +101,13 @@ export default class HorizontalBarChart extends VerticalBarChart {
   }
 
 
+  // Set scale ranges to the latest pixel values.
+  calculateScales() {
+    this.xScale.range([0, this.size.chartWidth]);
+    this.yScale.range([0, this.size.chartHeight]);
+  }
+
+
   // Update the size and positioning of any data-driven elements of the chart.
   updateDataElements() {
     this.barRects
