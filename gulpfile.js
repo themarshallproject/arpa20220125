@@ -88,7 +88,7 @@ function graphicsReadme() {
 
 function readme() {
   return gulp.src('README.md')
-    .pipe(changedInPlace())
+    .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
     .pipe(gulp.dest('.'))
     .pipe(gulp.dest('build'))
