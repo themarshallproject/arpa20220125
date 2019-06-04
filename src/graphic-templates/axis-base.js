@@ -27,8 +27,8 @@ export default class GraphicWithAxes extends GraphicBase {
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
-      keyX: 'x',
-      keyY: 'y',
+      xKey: 'x',
+      yKey: 'y',
       marginLeft: 20,
       marginBottom: 20,
       xDataFormat: (d) => { return +d },
@@ -76,10 +76,10 @@ export default class GraphicWithAxes extends GraphicBase {
   // array for each domain by default, but in an extended version of the class, this
   // function could be rewritten to return domains in different formats.
   getScaleExtents() {
-    const xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
-    const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.keyX]) });
-    const yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
-    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.keyY]) });
+    const xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
+    const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
+    const yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
+    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
 
     return {
       xDomain: [xMin, xMax],

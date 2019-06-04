@@ -102,29 +102,92 @@ itself is drawn.
 Options for the <a href="axis-base.js">graphic with axes template</a>,
 which extends `GraphicBase` and draws X and Y axes onto the SVG.
 
-      data: [],
-      keyX: 'x',
-      keyY: 'y',
-      responsive: true,
-      aspectRatio: .75,
-      marginTop: 10,
-      marginRight: 10,
-      marginBottom: 10,
-      marginLeft: 10,
-      xDataFormat: (d) => { return +d },
-      yDataFormat: (d) => { return +d },
-      xAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      yAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      xAxisTicks: null,
-      yAxisTicks: null,
-      xAxisTickArguments: null,
-      yAxisTickArguments: null,
-      xAxisTickValues: null,
-      yAxisTickValues: null,
-      roundedXMin
-      roundedXMax
-      roundedYMin
-      roundedYMax
+Inherits all config options made available by `GraphicBase`.
+
+<a name="data" href="#data">#</a>
+<strong>config.data</strong> - <em>Array</em>. Default value: `[]`
+
+An array of data. If no rounded min/max values are defined, the range of
+any data scales will calculate the maximum and minimum values from this
+data to serve as the range.
+
+<a name="xKey" href="#xKey">#</a>
+<strong>config.xKey</strong> - <em>String</em>. Default value: `x`
+
+The name of the property through which the x value can be accessed
+in each datum.
+
+<a name="yKey" href="#yKey">#</a>
+<strong>config.yKey</strong> - <em>String</em>. Default value: `y`
+
+The name of the property through which the y value can be accessed
+in each datum.
+
+<a name="xDataFormat" href="#xDataFormat">#</a>
+<strong>config.xDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
+
+A function that accesses and/or formats the x data value.
+
+<a name="yDataFormat" href="#yDataFormat">#</a>
+<strong>config.yDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
+
+A function that accesses and/or formats the y data value.
+
+<a name="roundedXMin" href="#roundedXMin">#</a>
+<strong>config.roundedXMin</strong> - <em>Number, Date</em>. Default value:
+`null`
+
+If the x data uses a numeric scale, this value will be used to set the
+minimum value of the xScale range (and thus the minimum value displayed
+on the x axis). Useful for setting your axes to tidy, rounded values.
+
+<a name="roundedYMin" href="#roundedYMin">#</a>
+<strong>config.roundedYMin</strong> - <em>Number, Date</em>. Default value:
+`null`
+
+If the y data uses a numeric scale, this value will be used to set the
+minimum value of the yScale range (and thus the minimum value displayed
+on the y axis). Useful for setting your axes to tidy, rounded values.
+
+<a name="roundedXMax" href="#roundedXMax">#</a>
+<strong>config.roundedXMax</strong> - <em>Number, Date</em>. Default value:
+`null`
+
+If the x data uses a numeric scale, this value will be used to set the
+maximum value of the xScale range (and thus the maximum value displayed
+on the x axis). Useful for setting your axes to tidy, rounded values.
+
+<a name="roundedYMax" href="#roundedYMax">#</a>
+<strong>config.roundedYMax</strong> - <em>Number, Date</em>. Default value:
+`null`
+
+If the y data uses a numeric scale, this value will be used to set the
+maximum value of the yScale range (and thus the maximum value displayed
+on the y axis). Useful for setting your axes to tidy, rounded values.
+
+<a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
+<strong>config.xAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d) => { return utilities.addCommas(d) }`
+
+A function that formats the tick labels along the x axis.
+
+<a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
+<strong>config.yAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d) => { return utilities.addCommas(d) }`
+
+A function that formats the tick labels along the y axis.
+
+<a name="axisTickOptions" href="#axisTickOptions">#</a>
+<strong>config.xAxisTicks, config.yAxisTicks</strong> - Default value:
+`null`<br>
+<strong>config.xAxisTickArguments, config.yAxisTickArguments</strong> - Default value:
+`null`<br>
+<strong>config.xAxisTickValues, config.yAxisTickValues</strong> - Default value:
+`null`
+
+Implementing d3.js's axis tick options for the x and y axes,
+respectively. [See the d3 documentation.](#TODO)
+
 
 
 ### Vertical bar chart
