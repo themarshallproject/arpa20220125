@@ -189,16 +189,70 @@ Implementing d3.js's axis tick options for the x and y axes,
 respectively. [See the d3 documentation.](#TODO)
 
 
-
 ### Vertical bar chart
 
-      bandKey: 'value_x',
-      valueKey: 'value_y',
-      barWidth: 20,
-      barPadding: 0.1,
-      roundBarSize: false,
-      bandDataFormat: (d) => { return d },
-      valueDataFormat: (d) => { return +d },
+Options for the <a href="bar-chart-vertical.js">vertical bar chart template</a>,
+which extends `GraphicWithAxes` and draws a bar chart with bars running
+vertically.
+
+Inherits all config options made available by `GraphicBase` and
+`GraphicWithAxes`, with some new default values noted below.
+
+To make it as easy as possible to convert from a vertical bar chart to a
+horizontal bar chart, the config options reference data by `band` and
+`value` rather than `x` and `y`. `band` refers to the category or
+name of each bar (i.e. the independent variable), while `value`
+refers to the size of each bar (the dependent variable).
+
+<a name="barWidth" href="#barWidth">#</a>
+<strong>config.barWidth</strong> - <em>Number</em>. Default value:
+`20`
+
+The width of a single bar.
+
+<a name="barPadding" href="#barPadding">#</a>
+<strong>config.barPadding</strong> - <em>Number</em>. Default value:
+`0.1`
+
+TKTKTKTK.
+
+<a name="roundBarSize" href="#roundBarSize">#</a>
+<strong>config.roundBarSize</strong> - <em>Boolean</em>. Default value:
+`false`
+
+TKTKTKTK.
+
+<a name="bandKey" href="#bandKey">#</a>
+<strong>config.bandKey</strong> - <em>String</em>. Default value: `x`
+
+The name of the property through which the bar's band can be accessed
+in each datum.
+
+<a name="valueKey" href="#valueKey">#</a>
+<strong>config.valueKey</strong> - <em>String</em>. Default value: `y`
+
+The name of the property through which the bar's value can be accessed
+in each datum.
+
+<a name="bandDataFormat" href="#bandDataFormat">#</a>
+<strong>config.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
+
+A function that accesses and/or formats the band data value.
+
+<a name="valueDataFormat" href="#valueDataFormat">#</a>
+<strong>config.valueDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
+
+A function that accesses and/or formats the value data value.
+
+<a name="labelFormat" href="#labelFormat">#</a>
+<strong>config.labelFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+
+A function that formats the label displayed with each bar.
+
+
+TKTK: What to do about axis tick functions?
+- should labelformat receive entire datum?
+
       xAxisTickFormat: (d) => { return d },
       yAxisTickFormat: (d) => { return utilities.addCommas(d) },
       labelFormat: (d) => { return utilities.addCommas(d) }
