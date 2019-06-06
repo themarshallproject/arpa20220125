@@ -81,6 +81,9 @@ function productionStyles() {
 
 function graphicsReadme() {
   return gulp.src('src/graphic-templates/README.md')
+    .pipe(changedInPlace({ firstPass: true }))
+    .pipe(toc())
+    .pipe(gulp.dest('src/graphic-templates'))
     .pipe(gulp.dest('build/graphic-templates'))
     .pipe(livereload());
 }

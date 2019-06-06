@@ -1,8 +1,25 @@
 # Graphic templates
 
-## Table of contents
+This is the documentation for our graphic templates, which can be found
+in `src/graphic-templates/`.
 
-TK
+<!-- Auto-generated table of contents! -->
+<!-- This section will update itself if you make changes to the headers. -->
+## Table of Contents
+
+<!-- toc -->
+
+- [Getting started](#getting-started)
+  * [Importing templates](#importing-templates)
+  * [Importing styles](#importing-styles)
+- [Individual template config options](#individual-template-config-options)
+  * [Required options](#required-options)
+  * [GraphicBase](#graphicbase)
+  * [GraphicWithAxes](#graphicwithaxes)
+  * [VerticalBarChart](#verticalbarchart)
+  * [HorizontalBarChart](#horizontalbarchart)
+
+<!-- tocstop -->
 
 ## Getting started
 
@@ -12,6 +29,8 @@ installed:
 ```
 npm install --save-dev d3
 ```
+
+### Importing templates
 
 Each template can be imported into your javascript as an ES6 module and
 instantiated as a graphic object. For example, here's how you would
@@ -39,8 +58,18 @@ const exampleChart = new HorizontalBarChart({
 });
 ```
 
+### Importing styles
 
-## Config options
+Stylesheets can be found in `src/graphic-templates/stylesheets/` and
+imported in your `graphic.scss` file.
+
+```
+@import "graphic-templates/stylesheets/graphic-with-axes.scss";
+@import "graphic-templates/stylesheets/graphic-labels.scss";
+```
+
+
+## Individual template config options
 
 Each chart type accepts an object of config options to customize the
 chart. All charts must include a `containerId`, which is used to select
@@ -53,7 +82,7 @@ the DOM element where the chart will be drawn.
 The id of the DOM element where the chart will be drawn. Should not
 include the `#` identifier.
 
-### GraphicBase options
+### GraphicBase
 
 Options for the <a href="graphic-base.js">base template</a>, which just draws an SVG. All of these
 options will be available to other templates.
@@ -97,7 +126,7 @@ The space between the left edge of the SVG and the area where the chart
 itself is drawn.
 
 
-### GraphicWithAxes options
+### GraphicWithAxes
 
 Options for the <a href="axis-base.js">graphic with axes template</a>,
 which extends `GraphicBase` and draws X and Y axes onto the SVG.
@@ -194,7 +223,7 @@ Implementing d3.js's axis tick options for the x and y axes,
 respectively. [See the d3 documentation.](https://github.com/d3/d3-axis#axis_ticks)
 
 
-### Vertical bar chart
+### VerticalBarChart
 
 Options for the <a href="bar-chart-vertical.js">vertical bar chart template</a>,
 which extends `GraphicWithAxes` and draws a bar chart with bars running
@@ -268,7 +297,7 @@ config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d)
 A function that formats the tick labels along the y axis.
 
 
-### Horizontal bar chart
+### HorizontalBarChart
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
 config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
