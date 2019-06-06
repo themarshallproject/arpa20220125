@@ -257,16 +257,24 @@ config<strong>.labelFormat</strong> - <em>Function</em>. Default value: `(d) => 
 
 A function that formats the label displayed with each bar.
 
+<a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
+config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
 
-TKTK: What to do about axis tick functions?
-- should labelformat receive entire datum?
+A function that formats the tick labels along the x axis.
 
-      xAxisTickFormat: (d) => { return d },
-      yAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      labelFormat: (d) => { return utilities.addCommas(d) }
+<a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
+config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+
+A function that formats the tick labels along the y axis.
 
 
 ### Horizontal bar chart
 
-      xAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      yAxisTickFormat: (d) => { return d },
+<a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
+config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+
+A function that formats the tick labels along the x axis.
+
+<a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
+config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
+
