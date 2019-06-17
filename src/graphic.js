@@ -1,7 +1,7 @@
-import GraphicBase from './graphic-templates/graphic-base.js';
-import GraphicWithAxes from './graphic-templates/axis-base.js';
-import VerticalBarChart from './graphic-templates/bar-chart-vertical.js';
-import HorizontalBarChart from './graphic-templates/bar-chart-horizontal.js';
+import GraphicBase from 'charts/graphic-base.js';
+import GraphicWithAxes from 'charts/axis-base.js';
+import VerticalBarChart from 'charts/bar-chart-vertical.js';
+import HorizontalBarChart from 'charts/bar-chart-horizontal.js';
 
 $(document).ready(() => {
   createBaseExample();
