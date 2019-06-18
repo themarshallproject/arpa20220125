@@ -238,12 +238,6 @@ horizontal bar chart, the config options reference data by `band` and
 name of each bar (i.e. the independent variable), while `value`
 refers to the size of each bar (the dependent variable).
 
-<a name="barWidth" href="#barWidth">#</a>
-config<strong>.barWidth</strong> - <em>Number</em>. Default value:
-`20`
-
-The width of a single bar.
-
 <a name="barPadding" href="#barPadding">#</a>
 config<strong>.barPadding</strong> - <em>Number</em>. Default value:
 `0.1`

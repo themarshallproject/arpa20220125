@@ -26,7 +26,6 @@ export default class VerticalBarChart extends GraphicWithAxes {
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
-      barWidth: 20,
       barPadding: 0.1,
       roundBarSize: false,
       bandDataFormat: (d) => { return d },
