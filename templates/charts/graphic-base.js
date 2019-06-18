@@ -39,7 +39,7 @@ export default class GraphicBase {
     });
 
     if (errors.length > 0) {
-      throw new Error(`Error calling ${name}:\n${errors.join('\n')}`);
+      console.error(`Error calling ${name}:\n${errors.join('\n')}`);
     }
   }
 
