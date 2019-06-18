@@ -13,7 +13,7 @@ $(document).ready(() => {
 // without it being a real chart-chart
 function createBaseExample() {
   const exampleBaseGraphic = new GraphicBase({
-    containerId: 'g-chart-example-base',
+    //containerId: 'g-chart-example-base',
     aspectRatio: 0.5,
     marginTop: 40,
     marginLeft: 40
@@ -27,7 +27,7 @@ function createBaseExample() {
 
 function createAxesExample() {
   const exampleAxisGraphic = new GraphicWithAxes({
-    containerId: 'g-chart-example-axes',
+    //containerId: 'g-chart-example-axes',
     data: AXIS_DATA,
     keyX: 'value_x',
     keyY: 'value_y',
@@ -57,7 +57,7 @@ function createBarExample() {
   });
 
   const exampleHorizontalBarChart = new HorizontalBarChart({
-    containerId: 'g-chart-example-horizontal-bars',
+    //containerId: 'g-chart-example-horizontal-bars',
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
