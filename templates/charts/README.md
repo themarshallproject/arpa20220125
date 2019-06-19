@@ -23,12 +23,9 @@ in `src/graphic-templates/`.
 
 ## Getting started
 
-All the graphics in these templates use d3.js (version 5). Make sure you have that
-installed:
-
-```
-npm install --save-dev d3
-```
+All the graphics in these templates use d3.js (version 5), which will be
+automatically installed when you set up a new graphic or run `npm
+install`.
 
 ### Importing templates
 
