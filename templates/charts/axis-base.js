@@ -16,7 +16,14 @@ export default class GraphicWithAxes extends GraphicBase {
 
   constructor(config) {
     super(config);
-    console.log(this);
+  }
+
+
+  // Check if any required keys are missing from the config.
+  checkConfigKeys(config) {
+    const className = 'GraphicWithAxes';
+    const requiredKeys = ['containerId', 'data', 'xKey', 'yKey'];
+    this.ensureRequired(className, config, requiredKeys);
   }
 
 
@@ -27,8 +34,6 @@ export default class GraphicWithAxes extends GraphicBase {
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
-      xKey: 'x',
-      yKey: 'y',
       marginLeft: 20,
       marginBottom: 20,
       xDataFormat: (d) => { return +d },

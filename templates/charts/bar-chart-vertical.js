@@ -19,6 +19,14 @@ export default class VerticalBarChart extends GraphicWithAxes {
   }
 
 
+  // Check if any required keys are missing from the config.
+  checkConfigKeys(config) {
+    const className = 'VerticalBarChart';
+    const requiredKeys = ['containerId', 'data', 'bandKey', 'valueKey'];
+    this.ensureRequired(className, config, requiredKeys);
+  }
+
+
   // Fill in default values for undefined config options. Some are already
   // defined in the GraphicWithAxes class. This function preserves any
   // already-defined config options, which means you can pass literally any

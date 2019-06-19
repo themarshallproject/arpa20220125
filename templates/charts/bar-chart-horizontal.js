@@ -21,6 +21,14 @@ export default class HorizontalBarChart extends VerticalBarChart {
   }
 
 
+  // Check if any required keys are missing from the config.
+  checkConfigKeys(config) {
+    const className = 'HorizontalBarChart';
+    const requiredKeys = ['containerId', 'data', 'bandKey', 'valueKey'];
+    this.ensureRequired(className, config, requiredKeys);
+  }
+
+
   // Fill in default values for undefined config options. Most are already
   // defined in the VerticalBarChart class. This function preserves any
   // already-defined config options, which means you can pass literally any

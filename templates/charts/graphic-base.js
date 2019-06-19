@@ -12,7 +12,7 @@ export default class GraphicBase {
   // Constructor: Sets the most basic class properties and fills in config defaults.
   // Listens for resize.
   constructor(config) {
-    this.ensureRequired('GraphicBase', config, ['containerId']);
+    this.checkConfigKeys(config);
 
     this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
@@ -29,6 +29,13 @@ export default class GraphicBase {
   }
 
 
+  // Check if any required keys are missing from the config.
+  checkConfigKeys(config) {
+    this.ensureRequired('GraphicBase', config, ['containerId']);
+  }
+
+
+  // Return error message for each required key missing from config.
   ensureRequired(name, object, requiredKeys) {
     const errors = [];
 
@@ -49,7 +56,6 @@ export default class GraphicBase {
   // sort of data through to your graphic.
   setConfigDefaults(config) {
     this.config = _.defaults(config, {
-      data: [],
       responsive: true,
       aspectRatio: .75,
       marginTop: 10,

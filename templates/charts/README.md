@@ -13,7 +13,6 @@ in `src/graphic-templates/`.
   * [Importing templates](#importing-templates)
   * [Importing styles](#importing-styles)
 - [Individual template config options](#individual-template-config-options)
-  * [Required options](#required-options)
   * [GraphicBase](#graphicbase)
   * [GraphicWithAxes](#graphicwithaxes)
   * [VerticalBarChart](#verticalbarchart)
@@ -72,17 +71,15 @@ Each chart type accepts an object of config options to customize the
 chart. All charts must include a `containerId`, which is used to select
 the DOM element where the chart will be drawn.
 
-### Required options
-
-<a name="containerId" href="#containerId">#</a> config<strong>.containerId</strong> - <em>String</em>
-
-The id of the DOM element where the chart will be drawn. Should not
-include the `#` identifier.
-
 ### GraphicBase
 
 Options for the <a href="graphic-base.js">base template</a>, which just draws an SVG. All of these
 options will be available to other templates.
+
+<a name="containerId" href="#containerId">#</a> config<strong>.containerId</strong> - <em>String</em>. **Required.**
+
+The id of the DOM element where the chart will be drawn. Should not
+include the `#` identifier.
 
 <a name="responsive" href="#responsive">#</a>
 config<strong>.responsive</strong> - <em>Boolean</em>. Default value: `true`
@@ -131,20 +128,20 @@ which extends `GraphicBase` and draws X and Y axes onto the SVG.
 Inherits all config options made available by `GraphicBase`.
 
 <a name="data" href="#data">#</a>
-config<strong>.data</strong> - <em>Array</em>. Default value: `[]`
+config<strong>.data</strong> - <em>Array</em>. **Required.**
 
 An array of data. If no rounded min/max values are defined, the range of
 any data scales will calculate the maximum and minimum values from this
 data to serve as the range.
 
 <a name="xKey" href="#xKey">#</a>
-config<strong>.xKey</strong> - <em>String</em>. Default value: `x`
+config<strong>.xKey</strong> - <em>String</em>. **Required.**
 
 The name of the property through which the x value can be accessed
 in each datum.
 
 <a name="yKey" href="#yKey">#</a>
-config<strong>.yKey</strong> - <em>String</em>. Default value: `y`
+config<strong>.yKey</strong> - <em>String</em>. **Required.**
 
 The name of the property through which the y value can be accessed
 in each datum.
@@ -235,6 +232,18 @@ horizontal bar chart, the config options reference data by `band` and
 name of each bar (i.e. the independent variable), while `value`
 refers to the size of each bar (the dependent variable).
 
+<a name="bandKey" href="#bandKey">#</a>
+config<strong>.bandKey</strong> - <em>String</em>. **Required.**
+
+The name of the property through which the bar's band can be accessed
+in each datum.
+
+<a name="valueKey" href="#valueKey">#</a>
+config<strong>.valueKey</strong> - <em>String</em>. **Required.**
+
+The name of the property through which the bar's value can be accessed
+in each datum.
+
 <a name="barPadding" href="#barPadding">#</a>
 config<strong>.barPadding</strong> - <em>Number</em>. Default value:
 `0.1`
@@ -249,18 +258,6 @@ config<strong>.roundBarSize</strong> - <em>Boolean</em>. Default value:
 
 If true, the start and stop position of each band will be integers.
 Refer to the [d3.js documentation](https://github.com/d3/d3-scale#band_round) for `band.round()`.
-
-<a name="bandKey" href="#bandKey">#</a>
-config<strong>.bandKey</strong> - <em>String</em>. Default value: `x`
-
-The name of the property through which the bar's band can be accessed
-in each datum.
-
-<a name="valueKey" href="#valueKey">#</a>
-config<strong>.valueKey</strong> - <em>String</em>. Default value: `y`
-
-The name of the property through which the bar's value can be accessed
-in each datum.
 
 <a name="bandDataFormat" href="#bandDataFormat">#</a>
 config<strong>.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
@@ -298,3 +295,4 @@ A function that formats the tick labels along the x axis.
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
 config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
 
+A function that formats the tick labels along the y axis.
