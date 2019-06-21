@@ -31,12 +31,12 @@ export default class GraphicBase {
 
   // Check if any required keys are missing from the config.
   checkConfigKeys(config) {
-    this.ensureRequired('GraphicBase', config, ['containerId']);
+    this.ensureRequired(config, ['containerId']);
   }
 
 
   // Return error message for each required key missing from config.
-  ensureRequired(name, object, requiredKeys) {
+  ensureRequired(object, requiredKeys) {
     const errors = [];
 
     requiredKeys.forEach((key) => {
@@ -46,7 +46,7 @@ export default class GraphicBase {
     });
 
     if (errors.length > 0) {
-      console.error(`Error calling ${name}:\n${errors.join('\n')}`);
+      console.error(`Error calling ${this.constructor.name}:\n${errors.join('\n')}`);
     }
   }
 

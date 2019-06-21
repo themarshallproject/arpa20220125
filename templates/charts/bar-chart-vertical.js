@@ -21,9 +21,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
 
   // Check if any required keys are missing from the config.
   checkConfigKeys(config) {
-    const className = 'VerticalBarChart';
     const requiredKeys = ['containerId', 'data', 'bandKey', 'valueKey'];
-    this.ensureRequired(className, config, requiredKeys);
+    this.ensureRequired(config, requiredKeys);
   }
 
 

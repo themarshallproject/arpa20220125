@@ -21,9 +21,8 @@ export default class GraphicWithAxes extends GraphicBase {
 
   // Check if any required keys are missing from the config.
   checkConfigKeys(config) {
-    const className = 'GraphicWithAxes';
     const requiredKeys = ['containerId', 'data', 'xKey', 'yKey'];
-    this.ensureRequired(className, config, requiredKeys);
+    this.ensureRequired(config, requiredKeys);
   }
 
 
