@@ -1,5 +1,5 @@
-import GraphicBase from 'charts/graphic-base.js';
-import GraphicWithAxes from 'charts/axis-base.js';
+import ChartBase from 'charts/chart-base.js';
+import ChartWithAxes from 'charts/axis-base.js';
 import VerticalBarChart from 'charts/bar-chart-vertical.js';
 import HorizontalBarChart from 'charts/bar-chart-horizontal.js';
 
@@ -12,21 +12,21 @@ $(document).ready(() => {
 // Kind of a silly example, but let's say we wanna draw stuff on an SVG
 // without it being a real chart-chart
 function createBaseExample() {
-  const exampleBaseGraphic = new GraphicBase({
+  const exampleBaseChart = new ChartBase({
     containerId: 'g-chart-example-base',
     aspectRatio: 0.5,
     marginTop: 40,
     marginLeft: 40
   });
 
-  exampleBaseGraphic.chart.append('circle')
+  exampleBaseChart.chart.append('circle')
     .attr('r', 100)
-    .attr('cx', .5 * exampleBaseGraphic.size.chartWidth)
-    .attr('cy', .5 * exampleBaseGraphic.size.chartHeight);
+    .attr('cx', .5 * exampleBaseChart.size.chartWidth)
+    .attr('cy', .5 * exampleBaseChart.size.chartHeight);
 }
 
 function createAxesExample() {
-  const exampleAxisGraphic = new GraphicWithAxes({
+  const exampleAxisChart = new ChartWithAxes({
     containerId: 'g-chart-example-axes',
     data: AXIS_DATA,
     xKey: 'value_x',

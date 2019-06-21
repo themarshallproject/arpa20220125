@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 
 /* * * * *
- * GRAPHIC BASE
+ * CHART BASE
  *
- * The most basic graphic template class. This adds an SVG to the given container
+ * The most basic chart template class. This adds an SVG to the given container
  * and sets it up with a chart group, config options and responsive sizing. This
  * is meant to be extended into all sorts of wacky, beautiful charts.
  * * * * */
-export default class GraphicBase {
+export default class ChartBase {
 
   // Constructor: Sets the most basic class properties and fills in config defaults.
   // Listens for resize.
@@ -21,11 +21,11 @@ export default class GraphicBase {
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
-        this.redrawGraphic();
+        this.redrawChart();
       });
     }
 
-    this.initGraphic();
+    this.initChart();
   }
 
 
@@ -68,27 +68,27 @@ export default class GraphicBase {
 
   // Initialize the graphic and size it. We call this separately from the
   // constructor because this will differ from template to template.
-  initGraphic() {
-    this.initBaseGraphic();
+  initChart() {
+    this.initBaseChart();
     this.sizeBaseSVG();
   }
 
 
   // Add the SVG and a chart container to the page
-  initBaseGraphic() {
+  initBaseChart() {
     this.containerEl.classed('g-tmp-chart', true);
     this.svg = this.containerEl.append('svg');
     this.chart = this.svg.append('g').attr('class', 'chart-g');
   }
 
 
-  // Graphics default to filling their container width
+  // Charts default to filling their container width
   getSVGWidth() {
     return this.$containerEl.width();
   }
 
 
-  // Graphics default to basing their height as a proportion of the chart width.
+  // Charts default to basing their height as a proportion of the chart width.
   getSVGHeight() {
     const svgWidth = this.getSVGWidth();
     // However, this proportion may need to be expressed through a function
@@ -137,7 +137,7 @@ export default class GraphicBase {
 
   // Redraw the graphic, re-calculating the size and positions. This is called
   // on `tmp_resize` in the constructor.
-  redrawGraphic() {
+  redrawChart() {
     this.sizeBaseSVG();
   }
 

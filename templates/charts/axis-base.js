@@ -1,18 +1,18 @@
 import * as d3 from 'd3';
 import * as utilities from './utilities.js';
-import GraphicBase from './graphic-base.js';
+import ChartBase from './chart-base.js';
 
 /* * * * *
- * GRAPHIC WITH AXES
+ * CHART WITH AXES
  *
- * Extends GraphicBase.
+ * Extends ChartBase.
  *
- * Some scaffolding for setting up data-driven graphics with axes. This module
- * won't serve all axis-based graphics because it defaults to linear scales, but
- * it can be easily extended by specific graphic classes to incorporate other
+ * Some scaffolding for setting up data-driven charts with axes. This module
+ * won't serve all axis-based charts because it defaults to linear scales, but
+ * it can be easily extended by specific chart classes to incorporate other
  * data formats.
  * * * * */
-export default class GraphicWithAxes extends GraphicBase {
+export default class ChartWithAxes extends ChartBase {
 
   constructor(config) {
     super(config);
@@ -27,9 +27,9 @@ export default class GraphicWithAxes extends GraphicBase {
 
 
   // Fill in default values for undefined config options. Some are already
-  // defined in the GraphicBase class. This function preserves any
+  // defined in the ChartBase class. This function preserves any
   // already-defined config options, which means you can pass literally any
-  // sort of data through to your graphic.
+  // sort of data through to your chart.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
@@ -52,14 +52,14 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
-  // Initialize the graphic, set up scales and axis objects, add axis elements
+  // Initialize the chart, set up scales and axis objects, add axis elements
   // to the DOM and size/position the SVG elements.
-  initGraphic() {
-    this.initBaseGraphic();
+  initChart() {
+    this.initBaseChart();
     this.initScales();
     this.initAxes();
     this.initAxisElements();
-    this.sizeAndPositionGraphic();
+    this.sizeAndPositionChart();
   }
 
 
@@ -136,7 +136,7 @@ export default class GraphicWithAxes extends GraphicBase {
   // Getting the correct size of all SVG elements and putting them in the right
   // place. In the process this updates the `this.size` object and the range
   // of our scales.
-  sizeAndPositionGraphic() {
+  sizeAndPositionChart() {
     // This gets the base measurements (width, height, margins) and assigns them
     // to `this.size`, then sets the size and position of the svg and the chart.
     super.sizeBaseSVG();
@@ -173,9 +173,9 @@ export default class GraphicWithAxes extends GraphicBase {
   }
 
 
-  // Redraw the graphic, re-calculating the size and positions. This is called
+  // Redraw the chart, re-calculating the size and positions. This is called
   // on `tmp_resize` in the constructor.
-  redrawGraphic() {
-    this.sizeAndPositionGraphic();
+  redrawChart() {
+    this.sizeAndPositionChart();
   }
 }

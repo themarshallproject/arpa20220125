@@ -1,7 +1,7 @@
-# Graphic templates
+# Chart templates
 
-This is the documentation for our graphic templates, which can be found
-in `src/graphic-templates/`.
+This is the documentation for our chart templates, which can be found
+in `templates/charts/`.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
@@ -13,8 +13,8 @@ in `src/graphic-templates/`.
   * [Importing templates](#importing-templates)
   * [Importing styles](#importing-styles)
 - [Individual template config options](#individual-template-config-options)
-  * [GraphicBase](#graphicbase)
-  * [GraphicWithAxes](#graphicwithaxes)
+  * [ChartBase](#chartbase)
+  * [ChartWithAxes](#chartwithaxes)
   * [VerticalBarChart](#verticalbarchart)
   * [HorizontalBarChart](#horizontalbarchart)
 
@@ -22,18 +22,18 @@ in `src/graphic-templates/`.
 
 ## Getting started
 
-All the graphics in these templates use d3.js (version 5), which will be
-automatically installed when you set up a new graphic or run `npm
+All the charts in these templates use d3.js (version 5), which will be
+automatically installed when you set up a new chart or run `npm
 install`.
 
 ### Importing templates
 
 Each template can be imported into your javascript as an ES6 module and
-instantiated as a graphic object. For example, here's how you would
+instantiated as a chart object. For example, here's how you would
 create a new bar chart in the div `#g-chart-example`:
 
 ```
-import HorizontalBarChart from './graphic-templates/bar-chart-horizontal.js';
+import HorizontalBarChart from 'charts/bar-chart-horizontal.js';
 
 const BARS_DATA = [
   {
@@ -56,12 +56,12 @@ const exampleChart = new HorizontalBarChart({
 
 ### Importing styles
 
-Stylesheets can be found in `src/graphic-templates/stylesheets/` and
-imported in your `graphic.scss` file.
+Stylesheets can be found in `templates/charts/stylesheets/` and
+imported in your `chart.scss` file.
 
 ```
-@import "graphic-templates/stylesheets/graphic-with-axes.scss";
-@import "graphic-templates/stylesheets/graphic-labels.scss";
+@import "charts/stylesheets/chart-with-axes.scss";
+@import "charts/stylesheets/chart-labels.scss";
 ```
 
 
@@ -71,9 +71,9 @@ Each chart type accepts an object of config options to customize the
 chart. All charts must include a `containerId`, which is used to select
 the DOM element where the chart will be drawn.
 
-### GraphicBase
+### ChartBase
 
-Options for the <a href="graphic-base.js">base template</a>, which just draws an SVG. All of these
+Options for the <a href="chart-base.js">base template</a>, which just draws an SVG. All of these
 options will be available to other templates.
 
 <a name="containerId" href="#containerId">#</a> config<strong>.containerId</strong> - <em>String</em>. **Required.**
@@ -120,12 +120,12 @@ The space between the left edge of the SVG and the area where the chart
 itself is drawn.
 
 
-### GraphicWithAxes
+### ChartWithAxes
 
-Options for the <a href="axis-base.js">graphic with axes template</a>,
-which extends `GraphicBase` and draws X and Y axes onto the SVG.
+Options for the <a href="axis-base.js">chart with axes template</a>,
+which extends `ChartBase` and draws X and Y axes onto the SVG.
 
-Inherits all config options made available by `GraphicBase`.
+Inherits all config options made available by `ChartBase`.
 
 <a name="data" href="#data">#</a>
 config<strong>.data</strong> - <em>Array</em>. **Required.**
@@ -220,11 +220,11 @@ respectively. [See the d3 documentation.](https://github.com/d3/d3-axis#axis_tic
 ### VerticalBarChart
 
 Options for the <a href="bar-chart-vertical.js">vertical bar chart template</a>,
-which extends `GraphicWithAxes` and draws a bar chart with bars running
+which extends `ChartWithAxes` and draws a bar chart with bars running
 vertically.
 
-Inherits all config options made available by `GraphicBase` and
-`GraphicWithAxes`, with some new default values noted below.
+Inherits all config options made available by `ChartBase` and
+`ChartWithAxes`, with some new default values noted below.
 
 To make it as easy as possible to convert from a vertical bar chart to a
 horizontal bar chart, the config options reference data by `band` and
