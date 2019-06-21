@@ -14,7 +14,7 @@ $(document).ready(() => {
 function createBaseExample() {
   const exampleBaseChart = new ChartBase({
     containerId: 'g-chart-example-base',
-    aspectRatio: 0.5,
+    aspectRatio: 2/1,
     marginTop: 40,
     marginLeft: 40
   });
@@ -47,7 +47,7 @@ function createBarExample() {
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
-    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.9 : 0.7; },
+    aspectRatio: function(size) { return size.svgWidth < 600 ? 1 : 4/3; },
     marginTop: 20,
     marginRight: 10,
     marginBottom: 40,
@@ -61,7 +61,7 @@ function createBarExample() {
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
-    aspectRatio: function(size) { return size.svgWidth < 600 ? 0.7 : 0.5; },
+    aspectRatio: function(size) { return size.svgWidth < 600 ? 1 : 4/3; },
     marginTop: 20,
     marginRight: 20,
     marginBottom: 40,
@@ -75,7 +75,7 @@ function createBarExample() {
     data: NEG_BARS_DATA,
     bandKey: 'animal',
     valueKey: 'score',
-    aspectRatio: 0.6,
+    aspectRatio: 7/5,
     marginLeft: 40,
     yAxisTicks: 5,
     roundedYMin: -10
@@ -86,7 +86,7 @@ function createBarExample() {
     data: NEG_BARS_DATA,
     bandKey: 'animal',
     valueKey: 'score',
-    aspectRatio: 0.6,
+    aspectRatio: 16/9,
     xAxisTickValues: [-8, 0, 8, 16, 24],
     roundedXMax: 24,
     marginLeft: 80

@@ -57,7 +57,7 @@ export default class ChartBase {
   setConfigDefaults(config) {
     this.config = _.defaults(config, {
       responsive: true,
-      aspectRatio: .75,
+      aspectRatio: 4/3,
       marginTop: 10,
       marginRight: 10,
       marginBottom: 10,
@@ -93,9 +93,9 @@ export default class ChartBase {
     const svgWidth = this.getSVGWidth();
     // However, this proportion may need to be expressed through a function
     // rather than a set value.
-    const aspectMultiplier = this.evalConfigOption('aspectRatio', { svgWidth: svgWidth });
+    const aspectDivisor = this.evalConfigOption('aspectRatio', { svgWidth: svgWidth });
 
-    return aspectMultiplier * svgWidth;
+    return svgWidth / aspectDivisor;
   }
 
 

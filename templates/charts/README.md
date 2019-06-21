@@ -88,12 +88,14 @@ Whether the chart should redraw on `tmp_resize`.
 
 <a name="aspectRatio" href="#aspectRatio">#</a>
 config<strong>.aspectRatio</strong> - <em>Number</em>. Default value:
-`.75`
+`4/3`
 
-The aspect ratio of the chart canvas, expressed as a ratio of height to
-width. A lower value will be a shallower chart; a higher value will be a
-taller chart. The default value, `0.75`, represents a chart with a height that
-is 75% of its width.
+The aspect ratio of the chart canvas, expressed as a ratio of width to height.
+Any positive finite value is accepted, though for readability we prefer
+a math expression (e.g. `16/9`) to a decimal value (e.g. `1.77`).
+A higher value will be a shallower chart; a lower value will be a
+taller chart. The default value, `4/3`, represents a chart with a height that
+is three-quarters of its width.
 
 <a name="marginTop" href="#marginTop">#</a>
 config<strong>.marginTop</strong> - <em>Number</em>. Default value: `10`
