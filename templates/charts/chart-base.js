@@ -1,17 +1,19 @@
 import * as d3 from 'd3';
 
 /* * * * *
- * GRAPHIC BASE
+ * CHART BASE
  *
- * The most basic graphic template class. This adds an SVG to the given container
+ * The most basic chart template class. This adds an SVG to the given container
  * and sets it up with a chart group, config options and responsive sizing. This
  * is meant to be extended into all sorts of wacky, beautiful charts.
  * * * * */
-export default class GraphicBase {
+export default class ChartBase {
 
   // Constructor: Sets the most basic class properties and fills in config defaults.
   // Listens for resize.
   constructor(config) {
+    this.checkConfigKeys(config);
+
     this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
     this.setConfigDefaults(config);
@@ -19,11 +21,33 @@ export default class GraphicBase {
 
     if (this.config.responsive) {
       $(window).on('tmp_resize', () => {
-        this.redrawGraphic();
+        this.redrawChart();
       });
     }
 
-    this.initGraphic();
+    this.initChart();
+  }
+
+
+  // Check if any required keys are missing from the config.
+  checkConfigKeys(config) {
+    this.ensureRequired(config, ['containerId']);
+  }
+
+
+  // Return error message for each required key missing from config.
+  ensureRequired(object, requiredKeys) {
+    const errors = [];
+
+    requiredKeys.forEach((key) => {
+      if (typeof object[key] === 'undefined') {
+        errors.push(`Required key ${key} missing from config options`);
+      }
+    });
+
+    if (errors.length > 0) {
+      console.error(`Error calling ${this.constructor.name}:\n${errors.join('\n')}`);
+    }
   }
 
 
@@ -32,9 +56,8 @@ export default class GraphicBase {
   // sort of data through to your graphic.
   setConfigDefaults(config) {
     this.config = _.defaults(config, {
-      data: [],
       responsive: true,
-      aspectRatio: .75,
+      aspectRatio: 4/3,
       marginTop: 10,
       marginRight: 10,
       marginBottom: 10,
@@ -45,34 +68,34 @@ export default class GraphicBase {
 
   // Initialize the graphic and size it. We call this separately from the
   // constructor because this will differ from template to template.
-  initGraphic() {
-    this.initBaseGraphic();
+  initChart() {
+    this.initBaseChart();
     this.sizeBaseSVG();
   }
 
 
   // Add the SVG and a chart container to the page
-  initBaseGraphic() {
+  initBaseChart() {
     this.containerEl.classed('g-tmp-chart', true);
     this.svg = this.containerEl.append('svg');
     this.chart = this.svg.append('g').attr('class', 'chart-g');
   }
 
 
-  // Graphics default to filling their container width
+  // Charts default to filling their container width
   getSVGWidth() {
     return this.$containerEl.width();
   }
 
 
-  // Graphics default to basing their height as a proportion of the chart width.
+  // Charts default to basing their height as a proportion of the chart width.
   getSVGHeight() {
     const svgWidth = this.getSVGWidth();
     // However, this proportion may need to be expressed through a function
     // rather than a set value.
-    const aspectMultiplier = this.evalConfigOption('aspectRatio', { svgWidth: svgWidth });
+    const aspectDivisor = this.evalConfigOption('aspectRatio', { svgWidth: svgWidth });
 
-    return aspectMultiplier * svgWidth;
+    return svgWidth / aspectDivisor;
   }
 
 
@@ -114,7 +137,7 @@ export default class GraphicBase {
 
   // Redraw the graphic, re-calculating the size and positions. This is called
   // on `tmp_resize` in the constructor.
-  redrawGraphic() {
+  redrawChart() {
     this.sizeBaseSVG();
   }
 

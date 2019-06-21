@@ -129,7 +129,7 @@ function renderReadme(options) {
 
 
 function renderGraphicsReadme(options) {
-  var content = fs.readFileSync('./build/graphic-templates/README.md', 'utf8')
+  var content = fs.readFileSync('./build/templates/charts/README.md', 'utf8')
   var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
   var contentHTML = marked(content);
   var html = template.replace('|CONTENT|', getLRScript(options) + contentHTML);

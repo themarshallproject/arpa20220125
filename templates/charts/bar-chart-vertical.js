@@ -1,16 +1,16 @@
 import * as d3 from 'd3';
 import * as utilities from './utilities.js';
-import GraphicWithAxes from './axis-base.js';
+import ChartWithAxes from './axis-base.js';
 
 /* * * * *
  * VERTICAL BAR CHART
  *
- * Extends GraphicWithAxes.
+ * Extends ChartWithAxes.
  *
  * A basic responsive bar chart that displays vertical bars. For horizontal
  * bars, see the HorizontalBarChart class that extends this one.
  * * * * */
-export default class VerticalBarChart extends GraphicWithAxes {
+export default class VerticalBarChart extends ChartWithAxes {
 
   constructor(config) {
     super(config);
@@ -19,14 +19,20 @@ export default class VerticalBarChart extends GraphicWithAxes {
   }
 
 
+  // Check if any required keys are missing from the config.
+  checkConfigKeys(config) {
+    const requiredKeys = ['containerId', 'data', 'bandKey', 'valueKey'];
+    this.ensureRequired(config, requiredKeys);
+  }
+
+
   // Fill in default values for undefined config options. Some are already
-  // defined in the GraphicWithAxes class. This function preserves any
+  // defined in the ChartWithAxes class. This function preserves any
   // already-defined config options, which means you can pass literally any
-  // sort of data through to your graphic.
+  // sort of data through to your chart.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
-      barWidth: 20,
       barPadding: 0.1,
       roundBarSize: false,
       bandDataFormat: (d) => { return d },
@@ -41,16 +47,16 @@ export default class VerticalBarChart extends GraphicWithAxes {
   }
 
 
-  // Initialize the graphic, set up scales and axis objects, add elements
+  // Initialize the chart, set up scales and axis objects, add elements
   // to the DOM and size/position the SVG elements.
-  initGraphic() {
-    this.initBaseGraphic();
+  initChart() {
+    this.initBaseChart();
     this.initScales();
     this.initAxes();
     this.initAxisElements();
     this.initDataElements();
     this.initLabels();
-    this.sizeAndPositionGraphic();
+    this.sizeAndPositionChart();
   }
 
 
@@ -181,8 +187,8 @@ export default class VerticalBarChart extends GraphicWithAxes {
 
 
   // Update the size and position of all DOM elements with the latest pixel values.
-  sizeAndPositionGraphic() {
-    super.sizeAndPositionGraphic();
+  sizeAndPositionChart() {
+    super.sizeAndPositionChart();
 
     this.updateDataElements();
     this.updateLabels();

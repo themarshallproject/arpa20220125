@@ -1,7 +1,7 @@
-# Graphic templates
+# Chart templates
 
-This is the documentation for our graphic templates, which can be found
-in `src/graphic-templates/`.
+This is the documentation for our chart templates, which can be found
+in `templates/charts/`.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
@@ -13,9 +13,8 @@ in `src/graphic-templates/`.
   * [Importing templates](#importing-templates)
   * [Importing styles](#importing-styles)
 - [Individual template config options](#individual-template-config-options)
-  * [Required options](#required-options)
-  * [GraphicBase](#graphicbase)
-  * [GraphicWithAxes](#graphicwithaxes)
+  * [ChartBase](#chartbase)
+  * [ChartWithAxes](#chartwithaxes)
   * [VerticalBarChart](#verticalbarchart)
   * [HorizontalBarChart](#horizontalbarchart)
 
@@ -23,21 +22,18 @@ in `src/graphic-templates/`.
 
 ## Getting started
 
-All the graphics in these templates use d3.js (version 5). Make sure you have that
-installed:
-
-```
-npm install --save-dev d3
-```
+All the charts in these templates use d3.js (version 5), which will be
+automatically installed when you set up a new chart or run `npm
+install`.
 
 ### Importing templates
 
 Each template can be imported into your javascript as an ES6 module and
-instantiated as a graphic object. For example, here's how you would
+instantiated as a chart object. For example, here's how you would
 create a new bar chart in the div `#g-chart-example`:
 
 ```
-import HorizontalBarChart from './graphic-templates/bar-chart-horizontal.js';
+import HorizontalBarChart from 'charts/bar-chart-horizontal.js';
 
 const BARS_DATA = [
   {
@@ -60,12 +56,12 @@ const exampleChart = new HorizontalBarChart({
 
 ### Importing styles
 
-Stylesheets can be found in `src/graphic-templates/stylesheets/` and
-imported in your `graphic.scss` file.
+Stylesheets can be found in `templates/charts/stylesheets/` and
+imported in your `chart.scss` file.
 
 ```
-@import "graphic-templates/stylesheets/graphic-with-axes.scss";
-@import "graphic-templates/stylesheets/graphic-labels.scss";
+@import "charts/stylesheets/chart-with-axes.scss";
+@import "charts/stylesheets/chart-labels.scss";
 ```
 
 
@@ -75,17 +71,15 @@ Each chart type accepts an object of config options to customize the
 chart. All charts must include a `containerId`, which is used to select
 the DOM element where the chart will be drawn.
 
-### Required options
+### ChartBase
 
-<a name="containerId" href="#containerId">#</a> config<strong>.containerId</strong> - <em>String</em>
+Options for the <a href="chart-base.js">base template</a>, which just draws an SVG. All of these
+options will be available to other templates.
+
+<a name="containerId" href="#containerId">#</a> config<strong>.containerId</strong> - <em>String</em>. **Required.**
 
 The id of the DOM element where the chart will be drawn. Should not
 include the `#` identifier.
-
-### GraphicBase
-
-Options for the <a href="graphic-base.js">base template</a>, which just draws an SVG. All of these
-options will be available to other templates.
 
 <a name="responsive" href="#responsive">#</a>
 config<strong>.responsive</strong> - <em>Boolean</em>. Default value: `true`
@@ -94,12 +88,14 @@ Whether the chart should redraw on `tmp_resize`.
 
 <a name="aspectRatio" href="#aspectRatio">#</a>
 config<strong>.aspectRatio</strong> - <em>Number</em>. Default value:
-`.75`
+`4/3`
 
-The aspect ratio of the chart canvas, expressed as a ratio of height to
-width. A lower value will be a shallower chart; a higher value will be a
-taller chart. The default value, `0.75`, represents a chart with a height that
-is 75% of its width.
+The aspect ratio of the chart canvas, expressed as a ratio of width to height.
+Any positive finite value is accepted, though for readability we prefer
+a math expression (e.g. `16/9`) to a decimal value (e.g. `1.77`).
+A higher value will be a shallower chart; a lower value will be a
+taller chart. The default value, `4/3`, represents a chart with a height that
+is three-quarters of its width.
 
 <a name="marginTop" href="#marginTop">#</a>
 config<strong>.marginTop</strong> - <em>Number</em>. Default value: `10`
@@ -126,28 +122,28 @@ The space between the left edge of the SVG and the area where the chart
 itself is drawn.
 
 
-### GraphicWithAxes
+### ChartWithAxes
 
-Options for the <a href="axis-base.js">graphic with axes template</a>,
-which extends `GraphicBase` and draws X and Y axes onto the SVG.
+Options for the <a href="axis-base.js">chart with axes template</a>,
+which extends `ChartBase` and draws X and Y axes onto the SVG.
 
-Inherits all config options made available by `GraphicBase`.
+Inherits all config options made available by `ChartBase`.
 
 <a name="data" href="#data">#</a>
-config<strong>.data</strong> - <em>Array</em>. Default value: `[]`
+config<strong>.data</strong> - <em>Array</em>. **Required.**
 
 An array of data. If no rounded min/max values are defined, the range of
 any data scales will calculate the maximum and minimum values from this
 data to serve as the range.
 
 <a name="xKey" href="#xKey">#</a>
-config<strong>.xKey</strong> - <em>String</em>. Default value: `x`
+config<strong>.xKey</strong> - <em>String</em>. **Required.**
 
 The name of the property through which the x value can be accessed
 in each datum.
 
 <a name="yKey" href="#yKey">#</a>
-config<strong>.yKey</strong> - <em>String</em>. Default value: `y`
+config<strong>.yKey</strong> - <em>String</em>. **Required.**
 
 The name of the property through which the y value can be accessed
 in each datum.
@@ -226,11 +222,11 @@ respectively. [See the d3 documentation.](https://github.com/d3/d3-axis#axis_tic
 ### VerticalBarChart
 
 Options for the <a href="bar-chart-vertical.js">vertical bar chart template</a>,
-which extends `GraphicWithAxes` and draws a bar chart with bars running
+which extends `ChartWithAxes` and draws a bar chart with bars running
 vertically.
 
-Inherits all config options made available by `GraphicBase` and
-`GraphicWithAxes`, with some new default values noted below.
+Inherits all config options made available by `ChartBase` and
+`ChartWithAxes`, with some new default values noted below.
 
 To make it as easy as possible to convert from a vertical bar chart to a
 horizontal bar chart, the config options reference data by `band` and
@@ -238,11 +234,17 @@ horizontal bar chart, the config options reference data by `band` and
 name of each bar (i.e. the independent variable), while `value`
 refers to the size of each bar (the dependent variable).
 
-<a name="barWidth" href="#barWidth">#</a>
-config<strong>.barWidth</strong> - <em>Number</em>. Default value:
-`20`
+<a name="bandKey" href="#bandKey">#</a>
+config<strong>.bandKey</strong> - <em>String</em>. **Required.**
 
-The width of a single bar.
+The name of the property through which the bar's band can be accessed
+in each datum.
+
+<a name="valueKey" href="#valueKey">#</a>
+config<strong>.valueKey</strong> - <em>String</em>. **Required.**
+
+The name of the property through which the bar's value can be accessed
+in each datum.
 
 <a name="barPadding" href="#barPadding">#</a>
 config<strong>.barPadding</strong> - <em>Number</em>. Default value:
@@ -258,18 +260,6 @@ config<strong>.roundBarSize</strong> - <em>Boolean</em>. Default value:
 
 If true, the start and stop position of each band will be integers.
 Refer to the [d3.js documentation](https://github.com/d3/d3-scale#band_round) for `band.round()`.
-
-<a name="bandKey" href="#bandKey">#</a>
-config<strong>.bandKey</strong> - <em>String</em>. Default value: `x`
-
-The name of the property through which the bar's band can be accessed
-in each datum.
-
-<a name="valueKey" href="#valueKey">#</a>
-config<strong>.valueKey</strong> - <em>String</em>. Default value: `y`
-
-The name of the property through which the bar's value can be accessed
-in each datum.
 
 <a name="bandDataFormat" href="#bandDataFormat">#</a>
 config<strong>.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
@@ -307,3 +297,4 @@ A function that formats the tick labels along the x axis.
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
 config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
 
+A function that formats the tick labels along the y axis.
