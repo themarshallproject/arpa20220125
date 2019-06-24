@@ -144,6 +144,9 @@ export default class ChartWithAxes extends ChartBase {
   }
 
 
+  // Update axis functions to use the evaluated output of each option.
+  // Pass an object containing the chart width so options can be set
+  // responsively.
   updateAxisFunctions() {
     const sizeData = { svgWidth: this.getSVGWidth() };
 

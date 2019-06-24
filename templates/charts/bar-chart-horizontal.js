@@ -181,6 +181,9 @@ export default class HorizontalBarChart extends VerticalBarChart {
   }
 
 
+  // Update axis functions to use the evaluated output of each option.
+  // Pass an object containing the chart width so options can be set
+  // responsively.
   updateAxisFunctions() {
     super.updateAxisFunctions();
     const sizeData = { svgWidth: this.getSVGWidth() };
