@@ -31,13 +31,15 @@ function createAxesExample() {
     data: AXIS_DATA,
     xKey: 'value_x',
     yKey: 'value_y',
-    //aspectRatio: function(size) { return size.svgWidth < 600 ? 0.5 : 0.7; },
-    //marginTop: 40,
-    //marginLeft: 40,
-    //xAxisTicks: 6,
-    //yAxisTicks: 8,
-    //roundedYMax: 8000,
-    //roundedXMax: 10
+    aspectRatio: (size) => { return size.svgWidth < 600 ? 1 : 2; },
+    xAxisTicks: (size) => { return size.svgWidth < 600 ? 5 : 10; },
+    yAxisTicks: (size) => { return size.svgWidth < 600 ? 4 : 8; },
+    xAxisTickFormat: function(d, size) { return size.svgWidth < 600 ? d : 2 * d; },
+    yAxisTickFormat: function(d, size) { return size.svgWidth < 600 ? `${d / 1000}k` : d; },
+    marginTop: 40,
+    marginLeft: (size) => { return size.svgWidth < 600 ? 20 : 40; },
+    roundedYMax: 8000,
+    roundedXMax: 10
   });
 }
 

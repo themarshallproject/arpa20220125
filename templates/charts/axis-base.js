@@ -97,25 +97,14 @@ export default class ChartWithAxes extends ChartBase {
   initAxes() {
     this.xAxis = d3.axisBottom()
       .scale(this.xScale)
-      .tickSizeOuter(0)
-      .tickArguments(this.config.xAxisTickArguments)
-      .tickValues(this.config.xAxisTickValues)
-      .ticks(this.config.xAxisTicks)
-      .tickFormat(this.config.xAxisTickFormat);
+      .tickSizeOuter(0);
 
     this.yAxis = d3.axisLeft()
       .scale(this.yScale)
-      .tickSizeOuter(0)
-      .tickArguments(this.config.yAxisTickArguments)
-      .tickValues(this.config.yAxisTickValues)
-      .ticks(this.config.yAxisTicks)
-      .tickFormat(this.config.yAxisTickFormat);
+      .tickSizeOuter(0);
 
     this.yGrid = d3.axisLeft()
       .scale(this.yScale)
-      .tickArguments(this.config.yAxisTickArguments)
-      .tickValues(this.config.yAxisTickValues)
-      .ticks(this.config.yAxisTicks)
       .tickFormat('');
   }
 
@@ -143,6 +132,7 @@ export default class ChartWithAxes extends ChartBase {
     // Update the scales' range with new dimensions
     this.calculateScales();
     // Draw the axis elements
+    this.updateAxisFunctions();
     this.updateAxisElements();
   }
 
@@ -151,6 +141,31 @@ export default class ChartWithAxes extends ChartBase {
   calculateScales() {
     this.xScale.range([0, this.size.chartWidth]);
     this.yScale.range([this.size.chartHeight, 0]);
+  }
+
+
+  updateAxisFunctions() {
+    const sizeData = { svgWidth: this.getSVGWidth() }
+    this.xAxis
+      .tickArguments(this.evalConfigOption('xAxisTickArguments', sizeData))
+      .tickValues(this.evalConfigOption('xAxisTickValues', sizeData))
+      .ticks(this.evalConfigOption('xAxisTicks', sizeData))
+      .tickFormat((d) => {
+        return this.config.xAxisTickFormat.call(this, d, sizeData);
+      });
+
+    this.yAxis
+      .tickArguments(this.evalConfigOption('yAxisTickArguments', sizeData))
+      .tickValues(this.evalConfigOption('yAxisTickValues', sizeData))
+      .ticks(this.evalConfigOption('yAxisTicks', sizeData))
+      .tickFormat((d) => {
+        return this.config.yAxisTickFormat.call(this, d, sizeData);
+      });
+
+    this.yGrid
+      .tickArguments(this.evalConfigOption('yAxisTickArguments', sizeData))
+      .tickValues(this.evalConfigOption('yAxisTickValues', sizeData))
+      .ticks(this.evalConfigOption('yAxisTicks', sizeData));
   }
 
 
