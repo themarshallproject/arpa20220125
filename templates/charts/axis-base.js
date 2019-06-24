@@ -148,28 +148,28 @@ export default class ChartWithAxes extends ChartBase {
   // Pass an object containing the chart width so options can be set
   // responsively.
   updateAxisFunctions() {
-    const sizeData = { svgWidth: this.getSVGWidth() };
+    const chartWidth = this.getSVGWidth();
 
     this.xAxis
-      .tickArguments(this.evalConfigOption('xAxisTickArguments', sizeData))
-      .tickValues(this.evalConfigOption('xAxisTickValues', sizeData))
-      .ticks(this.evalConfigOption('xAxisTicks', sizeData))
+      .tickArguments(this.evalConfigOption('xAxisTickArguments', chartWidth))
+      .tickValues(this.evalConfigOption('xAxisTickValues', chartWidth))
+      .ticks(this.evalConfigOption('xAxisTicks', chartWidth))
       .tickFormat((d) => {
-        return this.config.xAxisTickFormat.call(this, d, sizeData);
+        return this.config.xAxisTickFormat.call(this, d, chartWidth);
       });
 
     this.yAxis
-      .tickArguments(this.evalConfigOption('yAxisTickArguments', sizeData))
-      .tickValues(this.evalConfigOption('yAxisTickValues', sizeData))
-      .ticks(this.evalConfigOption('yAxisTicks', sizeData))
+      .tickArguments(this.evalConfigOption('yAxisTickArguments', chartWidth))
+      .tickValues(this.evalConfigOption('yAxisTickValues', chartWidth))
+      .ticks(this.evalConfigOption('yAxisTicks', chartWidth))
       .tickFormat((d) => {
-        return this.config.yAxisTickFormat.call(this, d, sizeData);
+        return this.config.yAxisTickFormat.call(this, d, chartWidth);
       });
 
     this.yGrid
-      .tickArguments(this.evalConfigOption('yAxisTickArguments', sizeData))
-      .tickValues(this.evalConfigOption('yAxisTickValues', sizeData))
-      .ticks(this.evalConfigOption('yAxisTicks', sizeData));
+      .tickArguments(this.evalConfigOption('yAxisTickArguments', chartWidth))
+      .tickValues(this.evalConfigOption('yAxisTickValues', chartWidth))
+      .ticks(this.evalConfigOption('yAxisTicks', chartWidth));
   }
 
 

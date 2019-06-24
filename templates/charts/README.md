@@ -87,7 +87,7 @@ config<strong>.responsive</strong> - <em>Boolean</em>. Default value: `true`
 Whether the chart should redraw on `tmp_resize`.
 
 <a name="aspectRatio" href="#aspectRatio">#</a>
-config<strong>.aspectRatio</strong> - <em>Number</em>. Default value:
+config<strong>.aspectRatio</strong> - <em>Number</em> or <em>Function</em>. Default value:
 `4/3`
 
 The aspect ratio of the chart canvas, expressed as a ratio of width to height.
@@ -97,29 +97,44 @@ A higher value will be a shallower chart; a lower value will be a
 taller chart. The default value, `4/3`, represents a chart with a height that
 is three-quarters of its width.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginTop" href="#marginTop">#</a>
-config<strong>.marginTop</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginTop</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the top edge of the SVG and the area where the chart
 itself is drawn.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginRight" href="#marginRight">#</a>
-config<strong>.marginRight</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginRight</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the right edge of the SVG and the area where the chart
 itself is drawn.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginBottom" href="#marginBottom">#</a>
-config<strong>.marginBottom</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginBottom</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the bottom edge of the SVG and the area where the chart
 itself is drawn.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginLeft" href="#marginLeft">#</a>
-config<strong>.marginLeft</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginLeft</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the left edge of the SVG and the area where the chart
 itself is drawn.
+
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
 
 
 ### ChartWithAxes
