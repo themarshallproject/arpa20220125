@@ -145,7 +145,8 @@ export default class ChartWithAxes extends ChartBase {
 
 
   updateAxisFunctions() {
-    const sizeData = { svgWidth: this.getSVGWidth() }
+    const sizeData = { svgWidth: this.getSVGWidth() };
+
     this.xAxis
       .tickArguments(this.evalConfigOption('xAxisTickArguments', sizeData))
       .tickValues(this.evalConfigOption('xAxisTickValues', sizeData))

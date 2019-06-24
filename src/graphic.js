@@ -93,7 +93,7 @@ function createBarExample() {
     bandKey: 'animal',
     valueKey: 'score',
     aspectRatio: 16/9,
-    xAxisTickValues: [-8, 0, 8, 16, 24],
+    xAxisTickValues: (size) => { return size.svgWidth < 600 ? [-8, 0, 8, 16, 24] : [-8, 0, 4, 12, 24] },
     roundedXMax: 24,
     marginLeft: 80
   });
