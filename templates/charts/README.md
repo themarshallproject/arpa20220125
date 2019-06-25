@@ -100,6 +100,18 @@ is three-quarters of its width.
 Can be expressed as a function with one argument,
 the width of the chart SVG in pixels, to set values responsively.
 
+**Example:** _Setting aspect ratio responsively_
+
+The example below sets an aspect ratio of 4:3 for charts with a width
+smaller than 600px, and a ratio of 16:9 for wider charts.
+
+```
+const responsiveChart = new ChartBase({
+  containerId: 'g-chart-example',
+  aspectRatio: (width) => { return width > 600 ? 4/3 : 16/9 }
+});
+```
+
 <a name="marginTop" href="#marginTop">#</a>
 config<strong>.marginTop</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
