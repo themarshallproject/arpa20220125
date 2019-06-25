@@ -74,8 +74,8 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 
 ## Notes on JavaScript
 
-- Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
-- You can use ES6 by setting the `use_es6` configuration option in `config.json`. This creates a slightly different compilation behavior. Only `graphic.js` will be included automatically, other files should be `import`ed from there. The `src/lib/` folder will be included and concatenated, without being compiled. This provides an easy way to use non-ES6-module code, such as jQuery Mobile.
+- By default, the graphics rig uses the ES6 import structure. Only `graphic.js` is included automatically on the page, so other files should be `import`ed from there. To use non-ES6-module code, place scripts in the `src/lib/` folder. This will be included and concatenated without being compiled.
+- You can use ES5 by setting the `use_es6` configuration option in `config.json` to `false`. This creates a slightly different compilation behavior. Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
 
 ## Using external data sources in your HTML
 
