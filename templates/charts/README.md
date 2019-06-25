@@ -106,9 +106,11 @@ The example below sets an aspect ratio of 4:3 for charts with a width
 smaller than 600px, and a ratio of 16:9 for wider charts.
 
 ```
+const mobileBreak = 600;
+
 const responsiveChart = new ChartBase({
   containerId: 'g-chart-example',
-  aspectRatio: (width) => { return width > 600 ? 4/3 : 16/9 }
+  aspectRatio: (width) => { return width < mobileBreak ? 4/3 : 16/9 }
 });
 ```
 
@@ -235,12 +237,14 @@ The example below formats ticks as `1k`, `2k`, etc. for charts narrower
 than 600px and `1,000`, `2,000`, etc. for wider charts.
 
 ```
+const mobileBreak = 600;
+
 const responsiveChart = new ChartWithAxes({
   containerId: 'g-chart-example',
   data: EXAMPLE_DATA,
   xKey: 'x',
   yKey: 'y',
-  xAxisTickFormat: (d, width) => { return width > 600 ? `${ d / 1000 }k` : utilities.addCommas(d) }
+  xAxisTickFormat: (d, width) => { return width < mobileBreak ? `${ d / 1000 }k` : utilities.addCommas(d) }
 });
 ```
 

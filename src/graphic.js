@@ -26,36 +26,40 @@ function createBaseExample() {
 }
 
 function createAxesExample() {
+  const mobileBreak = 600;
+
   const exampleAxisChart = new ChartWithAxes({
     containerId: 'g-chart-example-axes',
     data: AXIS_DATA,
     xKey: 'value_x',
     yKey: 'value_y',
-    aspectRatio: (width) => { return width < 600 ? 1 : 2; },
-    xAxisTicks: (width) => { return width < 600 ? 5 : 10; },
-    yAxisTicks: (width) => { return width < 600 ? 4 : 8; },
-    xAxisTickFormat: (d, width) => { return width < 600 ? d : 2 * d; },
-    yAxisTickFormat: (d, width) => { return width < 600 ? `${d / 1000}k` : d; },
+    aspectRatio: (width) => { return width < mobileBreak ? 1 : 2; },
+    xAxisTicks: (width) => { return width < mobileBreak ? 5 : 10; },
+    yAxisTicks: (width) => { return width < mobileBreak ? 4 : 8; },
+    xAxisTickFormat: (d, width) => { return width < mobileBreak ? d : 2 * d; },
+    yAxisTickFormat: (d, width) => { return width < mobileBreak ? `${d / 1000}k` : d; },
     marginTop: 40,
-    marginLeft: (width) => { return width < 600 ? 20 : 40; },
+    marginLeft: (width) => { return width < mobileBreak ? 20 : 40; },
     roundedYMax: 8000,
     roundedXMax: 10
   });
 }
 
 function createBarExample() {
+  const mobileBreak = 600;
+
   const exampleVerticalBarChart = new VerticalBarChart({
     containerId: 'g-chart-example-vertical-bars',
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
-    aspectRatio: (width) => { return width < 600 ? 1 : 16/9; },
-    xAxisTickFormat: (d, width) => { return width < 600 ? `${d}...` : `${d}!`; },
+    aspectRatio: (width) => { return width < mobileBreak ? 1 : 16/9; },
+    xAxisTickFormat: (d, width) => { return width < mobileBreak ? `${d}...` : `${d}!`; },
     marginTop: 20,
     marginRight: 10,
     marginBottom: 40,
     marginLeft: 40,
-    yAxisTicks: (width) => { return width < 600 ? 5 : 10; },
+    yAxisTicks: (width) => { return width < mobileBreak ? 5 : 10; },
     roundedYMax: 8000
   });
 
@@ -64,10 +68,10 @@ function createBarExample() {
     data: BARS_DATA,
     bandKey: 'value_x',
     valueKey: 'value_y',
-    aspectRatio: (width) => { return width < 600 ? 4/3 : 7/5; },
-    xAxisTickFormat: (d, width) => { return width < 600 ? `${d/1000}k` : `${d}!`; },
-    yAxisTickFormat: (d, width) => { return width < 600 ? `(${d})` : `${d}!`; },
-    xAxisTicks: (width) => { return width < 600 ? 4 : 10 },
+    aspectRatio: (width) => { return width < mobileBreak ? 4/3 : 7/5; },
+    xAxisTickFormat: (d, width) => { return width < mobileBreak ? `${d/1000}k` : `${d}!`; },
+    yAxisTickFormat: (d, width) => { return width < mobileBreak ? `(${d})` : `${d}!`; },
+    xAxisTicks: (width) => { return width < mobileBreak ? 4 : 10 },
     marginTop: 20,
     marginRight: 20,
     marginBottom: 40,
@@ -93,7 +97,7 @@ function createBarExample() {
     bandKey: 'animal',
     valueKey: 'score',
     aspectRatio: 16/9,
-    xAxisTickValues: (width) => { return width < 600 ? [-8, 0, 8, 16, 24] : [-8, 0, 4, 12, 24] },
+    xAxisTickValues: (width) => { return width < mobileBreak ? [-8, 0, 8, 16, 24] : [-8, 0, 4, 12, 24] },
     roundedXMax: 24,
     marginLeft: 80
   });
