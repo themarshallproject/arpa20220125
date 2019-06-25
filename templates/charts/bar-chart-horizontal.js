@@ -186,12 +186,11 @@ export default class HorizontalBarChart extends VerticalBarChart {
   // responsively.
   updateAxisFunctions() {
     super.updateAxisFunctions();
-    const svgWidth = this.getSVGWidth();
 
     this.xGrid
-      .tickArguments(this.evalConfigOption('xAxisTickArguments', svgWidth))
-      .tickValues(this.evalConfigOption('xAxisTickValues', svgWidth))
-      .ticks(this.evalConfigOption('xAxisTicks', svgWidth));
+      .tickArguments(this.evaluateOption('xAxisTickArguments'))
+      .tickValues(this.evaluateOption('xAxisTickValues'))
+      .ticks(this.evaluateOption('xAxisTicks'));
   }
 
 

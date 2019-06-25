@@ -151,25 +151,25 @@ export default class ChartWithAxes extends ChartBase {
     const chartWidth = this.getSVGWidth();
 
     this.xAxis
-      .tickArguments(this.evalConfigOption('xAxisTickArguments', chartWidth))
-      .tickValues(this.evalConfigOption('xAxisTickValues', chartWidth))
-      .ticks(this.evalConfigOption('xAxisTicks', chartWidth))
+      .tickArguments(this.evaluateOption('xAxisTickArguments'))
+      .tickValues(this.evaluateOption('xAxisTickValues'))
+      .ticks(this.evaluateOption('xAxisTicks'))
       .tickFormat((d) => {
         return this.config.xAxisTickFormat.call(this, d, chartWidth);
       });
 
     this.yAxis
-      .tickArguments(this.evalConfigOption('yAxisTickArguments', chartWidth))
-      .tickValues(this.evalConfigOption('yAxisTickValues', chartWidth))
-      .ticks(this.evalConfigOption('yAxisTicks', chartWidth))
+      .tickArguments(this.evaluateOption('yAxisTickArguments'))
+      .tickValues(this.evaluateOption('yAxisTickValues'))
+      .ticks(this.evaluateOption('yAxisTicks'))
       .tickFormat((d) => {
         return this.config.yAxisTickFormat.call(this, d, chartWidth);
       });
 
     this.yGrid
-      .tickArguments(this.evalConfigOption('yAxisTickArguments', chartWidth))
-      .tickValues(this.evalConfigOption('yAxisTickValues', chartWidth))
-      .ticks(this.evalConfigOption('yAxisTicks', chartWidth));
+      .tickArguments(this.evaluateOption('yAxisTickArguments'))
+      .tickValues(this.evaluateOption('yAxisTickValues'))
+      .ticks(this.evaluateOption('yAxisTicks'));
   }
 
 

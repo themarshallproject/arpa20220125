@@ -91,9 +91,10 @@ export default class ChartBase {
   // Charts default to basing their height as a proportion of the chart width.
   getSVGHeight() {
     const svgWidth = this.getSVGWidth();
+
     // However, this proportion may need to be expressed through a function
     // rather than a set value.
-    const aspectDivisor = this.evalConfigOption('aspectRatio', { svgWidth: svgWidth });
+    const aspectDivisor = this.evaluateOption('aspectRatio');
 
     return svgWidth / aspectDivisor;
   }
@@ -104,10 +105,10 @@ export default class ChartBase {
   getBaseMeasurements() {
     const svgWidth = this.getSVGWidth();
     const svgHeight = this.getSVGHeight();
-    const marginTop = this.evalConfigOption('marginTop', { svgWidth: svgWidth });
-    const marginRight = this.evalConfigOption('marginRight', { svgWidth: svgWidth });
-    const marginBottom = this.evalConfigOption('marginBottom', { svgWidth: svgWidth });
-    const marginLeft = this.evalConfigOption('marginLeft', { svgWidth: svgWidth });
+    const marginTop = this.evaluateOption('marginTop');
+    const marginRight = this.evaluateOption('marginRight');
+    const marginBottom = this.evaluateOption('marginBottom');
+    const marginLeft = this.evaluateOption('marginLeft');
 
     return {
       chartWidth: svgWidth - marginLeft - marginRight,
@@ -144,12 +145,15 @@ export default class ChartBase {
 
   // Some config options might be a fixed value, some might be a function.
   // Here's a wrapper to get the value given the config option name only.
-  evalConfigOption(optionName, args) {
+  // If the option is a function, we pass the width of the SVG as one of its
+  // arguments.
+  evaluateOption(optionName, args) {
     const configOption = this.config[optionName];
     let configValue = configOption;
 
     if (typeof(configOption) === 'function') {
-      configValue = configOption.call(this, args);
+      const svgWidth = this.getSVGWidth();
+      configValue = configOption.call(this, svgWidth, args);
     }
 
     return configValue;
