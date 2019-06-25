@@ -301,6 +301,16 @@ config<strong>.valueKey</strong> - <em>String</em>. **Required.**
 The name of the property through which the bar's value can be accessed
 in each datum.
 
+<a name="bandDataFormat" href="#bandDataFormat">#</a>
+config<strong>.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
+
+A function that accesses and/or formats the band data value.
+
+<a name="valueDataFormat" href="#valueDataFormat">#</a>
+config<strong>.valueDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
+
+A function that accesses and/or formats the value data value.
+
 <a name="barPadding" href="#barPadding">#</a>
 config<strong>.barPadding</strong> - <em>Number</em>. Default value:
 `0.1`
@@ -315,16 +325,6 @@ config<strong>.roundBarSize</strong> - <em>Boolean</em>. Default value:
 
 If true, the start and stop position of each band will be integers.
 Refer to the [d3.js documentation](https://github.com/d3/d3-scale#band_round) for `band.round()`.
-
-<a name="bandDataFormat" href="#bandDataFormat">#</a>
-config<strong>.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
-
-A function that accesses and/or formats the band data value.
-
-<a name="valueDataFormat" href="#valueDataFormat">#</a>
-config<strong>.valueDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
-
-A function that accesses and/or formats the value data value.
 
 <a name="labelFormat" href="#labelFormat">#</a>
 config<strong>.labelFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
