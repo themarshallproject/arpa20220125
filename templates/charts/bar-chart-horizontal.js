@@ -181,6 +181,19 @@ export default class HorizontalBarChart extends VerticalBarChart {
   }
 
 
+  // Update axis functions to use the evaluated output of each option.
+  // Pass an object containing the chart width so options can be set
+  // responsively.
+  updateAxisFunctions() {
+    super.updateAxisFunctions();
+
+    this.xGrid
+      .tickArguments(this.evaluateOption('xAxisTickArguments'))
+      .tickValues(this.evaluateOption('xAxisTickValues'))
+      .ticks(this.evaluateOption('xAxisTicks'));
+  }
+
+
   updateAxisElements() {
     // This function does some translating of elements to get the axes in the
     // right places. Here we use chartHeight instead of chartWidth for those

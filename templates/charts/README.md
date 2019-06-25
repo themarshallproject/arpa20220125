@@ -87,7 +87,7 @@ config<strong>.responsive</strong> - <em>Boolean</em>. Default value: `true`
 Whether the chart should redraw on `tmp_resize`.
 
 <a name="aspectRatio" href="#aspectRatio">#</a>
-config<strong>.aspectRatio</strong> - <em>Number</em>. Default value:
+config<strong>.aspectRatio</strong> - <em>Number</em> or <em>Function</em>. Default value:
 `4/3`
 
 The aspect ratio of the chart canvas, expressed as a ratio of width to height.
@@ -97,29 +97,61 @@ A higher value will be a shallower chart; a lower value will be a
 taller chart. The default value, `4/3`, represents a chart with a height that
 is three-quarters of its width.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
+**Example:** _Setting aspect ratio responsively_
+
+The example below sets an aspect ratio of 4:3 for charts with a width
+smaller than 600px, and a ratio of 16:9 for wider charts.
+
+```
+const mobileBreak = 600;
+
+const responsiveChart = new ChartBase({
+  containerId: 'g-chart-example',
+  aspectRatio: (width) => { return width < mobileBreak ? 4/3 : 16/9 }
+});
+```
+
 <a name="marginTop" href="#marginTop">#</a>
-config<strong>.marginTop</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginTop</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the top edge of the SVG and the area where the chart
 itself is drawn.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginRight" href="#marginRight">#</a>
-config<strong>.marginRight</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginRight</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the right edge of the SVG and the area where the chart
 itself is drawn.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginBottom" href="#marginBottom">#</a>
-config<strong>.marginBottom</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginBottom</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the bottom edge of the SVG and the area where the chart
 itself is drawn.
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
 <a name="marginLeft" href="#marginLeft">#</a>
-config<strong>.marginLeft</strong> - <em>Number</em>. Default value: `10`
+config<strong>.marginLeft</strong> - <em>Number</em> or <em>Function</em>. Default value: `10`
 
 The space between the left edge of the SVG and the area where the chart
 itself is drawn.
+
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
+
+---
 
 
 ### ChartWithAxes
@@ -192,15 +224,38 @@ on the y axis). Useful for setting your axes to tidy, rounded values.
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
 config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value:
-`(d) => { return utilities.addCommas(d) }`
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the x axis.
+A function that formats the tick labels along the x axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
+
+**Example:** _Setting tick format responsively_
+
+The example below formats ticks as `1k`, `2k`, etc. for charts narrower
+than 600px and `1,000`, `2,000`, etc. for wider charts.
+
+```
+const mobileBreak = 600;
+
+const responsiveChart = new ChartWithAxes({
+  containerId: 'g-chart-example',
+  data: EXAMPLE_DATA,
+  xKey: 'x',
+  yKey: 'y',
+  xAxisTickFormat: (d, width) => { return width < mobileBreak ? `${ d / 1000 }k` : utilities.addCommas(d) }
+});
+```
 
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
 config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
-`(d) => { return utilities.addCommas(d) }`
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the y axis.
+A function that formats the tick labels along the y axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="xAxisTicks" href="#xAxisTicks">#</a>
 config<strong>.xAxisTicks</strong><br>
@@ -218,6 +273,10 @@ config<strong>.yAxisTickValues</strong>
 Implementing d3.js's axis tick options for the x and y axes,
 respectively. [See the d3 documentation.](https://github.com/d3/d3-axis#axis_ticks)
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
+---
 
 ### VerticalBarChart
 
@@ -246,6 +305,16 @@ config<strong>.valueKey</strong> - <em>String</em>. **Required.**
 The name of the property through which the bar's value can be accessed
 in each datum.
 
+<a name="bandDataFormat" href="#bandDataFormat">#</a>
+config<strong>.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
+
+A function that accesses and/or formats the band data value.
+
+<a name="valueDataFormat" href="#valueDataFormat">#</a>
+config<strong>.valueDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
+
+A function that accesses and/or formats the value data value.
+
 <a name="barPadding" href="#barPadding">#</a>
 config<strong>.barPadding</strong> - <em>Number</em>. Default value:
 `0.1`
@@ -261,40 +330,48 @@ config<strong>.roundBarSize</strong> - <em>Boolean</em>. Default value:
 If true, the start and stop position of each band will be integers.
 Refer to the [d3.js documentation](https://github.com/d3/d3-scale#band_round) for `band.round()`.
 
-<a name="bandDataFormat" href="#bandDataFormat">#</a>
-config<strong>.bandDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return d; }`
-
-A function that accesses and/or formats the band data value.
-
-<a name="valueDataFormat" href="#valueDataFormat">#</a>
-config<strong>.valueDataFormat</strong> - <em>Function</em>. Default value: `(d) => { return +d; }`
-
-A function that accesses and/or formats the value data value.
-
 <a name="labelFormat" href="#labelFormat">#</a>
 config<strong>.labelFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
 
 A function that formats the label displayed with each bar.
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
-config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
+config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return d }`
 
-A function that formats the tick labels along the x axis.
+A function that formats the tick labels along the x axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
-config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the y axis.
+A function that formats the tick labels along the y axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
+
+---
 
 ### HorizontalBarChart
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
-config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the x axis.
+A function that formats the tick labels along the x axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
-config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
+config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return d }`
 
-A function that formats the tick labels along the y axis.
+A function that formats the tick labels along the y axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
