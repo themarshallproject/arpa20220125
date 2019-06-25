@@ -137,6 +137,9 @@ Can be expressed as a function with one argument,
 the width of the chart SVG in pixels, to set values responsively.
 
 
+---
+
+
 ### ChartWithAxes
 
 Options for the <a href="axis-base.js">chart with axes template</a>,
@@ -207,15 +210,21 @@ on the y axis). Useful for setting your axes to tidy, rounded values.
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
 config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value:
-`(d) => { return utilities.addCommas(d) }`
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the x axis.
+A function that formats the tick labels along the x axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
 config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
-`(d) => { return utilities.addCommas(d) }`
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the y axis.
+A function that formats the tick labels along the y axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="xAxisTicks" href="#xAxisTicks">#</a>
 config<strong>.xAxisTicks</strong><br>
@@ -233,6 +242,10 @@ config<strong>.yAxisTickValues</strong>
 Implementing d3.js's axis tick options for the x and y axes,
 respectively. [See the d3 documentation.](https://github.com/d3/d3-axis#axis_ticks)
 
+Can be expressed as a function with one argument,
+the width of the chart SVG in pixels, to set values responsively.
+
+---
 
 ### VerticalBarChart
 
@@ -292,24 +305,42 @@ config<strong>.labelFormat</strong> - <em>Function</em>. Default value: `(d) => 
 A function that formats the label displayed with each bar.
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
-config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
+config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return d }`
 
-A function that formats the tick labels along the x axis.
+A function that formats the tick labels along the x axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
-config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the y axis.
+A function that formats the tick labels along the y axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
+
+---
 
 ### HorizontalBarChart
 
 <a name="xAxisTickFormat" href="#xAxisTickFormat">#</a>
-config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return utilities.addCommas(d) }`
+config<strong>.xAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return utilities.addCommas(d) }`
 
-A function that formats the tick labels along the x axis.
+A function that formats the tick labels along the x axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
 
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
-config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value: `(d) => { return d }`
+config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
+`(d, width) => { return d }`
 
-A function that formats the tick labels along the y axis.
+A function that formats the tick labels along the y axis. The function
+is passed two arguments: `d`, representing the value of the tick, and
+`width`, the width of the chart SVG, which can be used to format the
+ticks responsively.
