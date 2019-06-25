@@ -229,6 +229,21 @@ is passed two arguments: `d`, representing the value of the tick, and
 `width`, the width of the chart SVG, which can be used to format the
 ticks responsively.
 
+**Example:** _Setting tick format responsively_
+
+The example below formats ticks as `1k`, `2k`, etc. for charts narrower
+than 600px and `1,000`, `2,000`, etc. for wider charts.
+
+```
+const responsiveChart = new ChartWithAxes({
+  containerId: 'g-chart-example',
+  data: EXAMPLE_DATA,
+  xKey: 'x',
+  yKey: 'y',
+  xAxisTickFormat: (d, width) => { return width > 600 ? `${ d / 1000 }k` : utilities.addCommas(d) }
+});
+```
+
 <a name="yAxisTickFormat" href="#yAxisTickFormat">#</a>
 config<strong>.yAxisTickFormat</strong> - <em>Function</em>. Default value:
 `(d, width) => { return utilities.addCommas(d) }`
