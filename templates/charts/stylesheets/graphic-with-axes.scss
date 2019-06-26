@@ -1,0 +1,58 @@
+.g-tmp-chart {
+  @include acumin;
+
+  rect, line, path {
+    shape-rendering: crispEdges;
+  }
+
+  .x.axis path {
+    stroke-width: 1px;
+    stroke: $med-gray;
+  }
+
+  .y.axis {
+    path {
+      stroke-width: 1px;
+      stroke: $med-gray;
+    }
+
+    .tick line {
+      display: none;
+    }
+  }
+
+  .x.grid {
+    .domain {
+      display: none;
+    }
+
+    .tick line {
+      stroke: $light-gray;
+      stroke-dasharray: 2px 3px;
+    }
+  }
+
+  .y.grid {
+    .domain {
+      display: none;
+    }
+
+    .tick line {
+      stroke: $light-gray;
+      stroke-dasharray: 2px 3px;
+    }
+  }
+
+  .axis line {
+    stroke: $med-gray;
+  }
+
+  .tick text {
+    font-size: 12px;
+    fill: $med-gray;
+
+    @media (max-width: 540px) {
+      font-size: 10px;
+    }
+  }
+}

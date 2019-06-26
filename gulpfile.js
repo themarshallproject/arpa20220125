@@ -62,7 +62,11 @@ function openBrowser(done) {
 
 function styles() {
   return gulp.src('src/graphic.scss')
-    .pipe(sass()
+    .pipe(sass({
+      includePaths: [
+        'templates/'
+      ]
+    })
       .on('error', notify.onError("SASS <%= error.formatted %>")))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
@@ -71,11 +75,26 @@ function styles() {
 
 function productionStyles() {
   return gulp.src('src/graphic.scss')
-    .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .pipe(sass({
+      outputStyle: 'compressed',
+      includePaths: [
+        'templates/'
+      ]
+    }).on('error', sass.logError))
     .pipe(autoprefixer({
       cascade: false
     }))
     .pipe(gulp.dest('build'));
+}
+
+
+function graphicsReadme() {
+  return gulp.src('templates/charts/README.md')
+    .pipe(changedInPlace({ firstPass: true }))
+    .pipe(toc())
+    .pipe(gulp.dest('templates/charts'))
+    .pipe(gulp.dest('build/templates/charts'))
+    .pipe(livereload());
 }
 
 
@@ -149,6 +168,9 @@ function scripts() {
 
     var graphicJs = gulp.src('src/graphic.js')
       .pipe(bro({
+        paths: [
+          '../templates'
+        ],
         transform: [
           babelify.configure({ presets: ['@babel/preset-env'] })
         ]
@@ -176,6 +198,9 @@ function productionScripts() {
 
     var graphicJs = gulp.src('src/graphic.js')
       .pipe(bro({
+        paths: [
+          '../templates'
+        ],
         transform: [
           babelify.configure({ presets: ['@babel/preset-env'] })
         ]
@@ -204,15 +229,16 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme));
+const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
 
 function watch() {
   gulp.watch(['README.md'], readme);
-  gulp.watch(['src/*.scss'], styles);
-  gulp.watch(['src/*.js', 'src/lib/*.js'], scripts);
+  gulp.watch(['templates/charts/README.md'], graphicsReadme);
+  gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
+  gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);

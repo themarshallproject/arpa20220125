@@ -1,1 +1,4 @@
-// Write your JS here. You can use ES6.
+// Wait for document ready before executing code that interacts with the DOM
+$(document).ready(() => {
+
+});
