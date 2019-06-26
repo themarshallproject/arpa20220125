@@ -28,13 +28,14 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 - [Run](#run)
 - [Deploy](#deploy)
 - [Notes on JavaScript](#notes-on-javascript)
+- [Using pre-configured templates](#using-pre-configured-templates)
+  * [Chart templates](#chart-templates)
+  * [ai2html template](#ai2html-template)
+  * [Scrolly template TK](#scrolly-template-tk)
 - [Using external data sources in your HTML](#using-external-data-sources-in-your-html)
     + [Example: basic table](#example-basic-table)
     + [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
     + [CSV data formats](#csv-data-formats)
-- [Using pre-configured templates](#using-pre-configured-templates)
-  * [ai2html template](#ai2html-template)
-  * [Scrolly template TK](#scrolly-template-tk)
 - [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
     + [Using custom heds and other graphics](#using-custom-heds-and-other-graphics)
 - [Tips](#tips)
@@ -76,6 +77,67 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 
 - By default, the graphics rig uses the ES6 import structure. Only `graphic.js` is included automatically on the page, so other files should be `import`ed from there. To use non-ES6-module code, place scripts in the `src/lib/` folder. This will be included and concatenated without being compiled.
 - You can use ES5 by setting the `use_es6` configuration option in `config.json` to `false`. This creates a slightly different compilation behavior. Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
+
+
+## Using pre-configured templates
+
+The `templates` directory houses frequently used graphic formats and
+javascript modules for basic d3.js charts.
+
+### Chart templates
+
+Our chart templates are javascript modules that can be used to create
+basic d3.js charts with configurable options. Documentation for the
+templates, including instructions for setup, can be found in the [Chart
+Templates README](templates/charts/README.md).
+
+
+### ai2html template
+
+If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo. Or use this command:
+
+```
+cp -r templates/ai2html/src .
+```
+
+After you've copied over the template, you can find an Illustrator template in `src/ai2html/base-graphic.ai`. Build your graphic here.
+
+Once you're ready to see it on the page, run the
+`src/ai2html/ai2html.js` script and the output will automatically be
+dropped in the correct location at
+`src/template-files/base-graphic.html`. This file will be completely
+overwritten every time you run the ai2html script. The background images
+are placed in `src/assets`.
+
+The ai2html output is imported into your main `graphic.html` file, so
+you can add additional HTML around your graphic without it being
+overwritten by the script.
+
+In most cases, you can refer to the [ai2html documentation](http://ai2html.org/)
+from the New York Times graphics desk. However, we have one additional
+feature: constrained artboard widths.
+
+Our ai2html template defaults to using "dynamic" responsive sizing --
+that is, the graphic will always fill 100% of the width of its
+container. But sometimes this leads to graphics looking too stretched
+out. To constrain an artboard to a maximum width, you can add a
+`data-constrain-` attribute to the parent element in `src/graphic.html`.
+
+For example, to constrain an artboard named "small" to stretch no more
+than 350px, your code would look like this:
+
+```
+  <div class="g-ai2html-wrapper" data-constrain-small="350">
+    {% include "template-files/base-graphic.html" %}
+  </div>
+```
+
+To do away with these constraints altogether, just remove the
+data-attributes from the parent.
+
+### Scrolly template TK
+
+Details TK.
 
 ## Using external data sources in your HTML
 
@@ -251,63 +313,6 @@ would return a JSON like this:
   "Description": "This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948."
 }
 ```
-
-
-## Using pre-configured templates
-
-Eventually we hope to have a directory of frequently used graphic
-formats to use as templates. You can find these in `templates`.
-
-To use a template, replace the `src` folder of your project with the
-`src` folder within your desired template. NOTE: This will overwrite any
-files you have already modified within `src`!
-
-### ai2html template
-
-If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo. Or use this command:
-
-```
-cp -r templates/ai2html/src .
-```
-
-After you've copied over the template, you can find an Illustrator template in `src/ai2html/base-graphic.ai`. Build your graphic here.
-
-Once you're ready to see it on the page, run the
-`src/ai2html/ai2html.js` script and the output will automatically be
-dropped in the correct location at
-`src/template-files/base-graphic.html`. This file will be completely
-overwritten every time you run the ai2html script. The background images
-are placed in `src/assets`.
-
-The ai2html output is imported into your main `graphic.html` file, so
-you can add additional HTML around your graphic without it being
-overwritten by the script.
-
-In most cases, you can refer to the [ai2html documentation](http://ai2html.org/)
-from the New York Times graphics desk. However, we have one additional
-feature: constrained artboard widths.
-
-Our ai2html template defaults to using "dynamic" responsive sizing --
-that is, the graphic will always fill 100% of the width of its
-container. But sometimes this leads to graphics looking too stretched
-out. To constrain an artboard to a maximum width, you can add a
-`data-constrain-` attribute to the parent element in `src/graphic.html`.
-
-For example, to constrain an artboard named "small" to stretch no more
-than 350px, your code would look like this:
-
-```
-  <div class="g-ai2html-wrapper" data-constrain-small="350">
-    {% include "template-files/base-graphic.html" %}
-  </div>
-```
-
-To do away with these constraints altogether, just remove the
-data-attributes from the parent.
-
-### Scrolly template TK
-
-Details TK.
 
 ## Deploying multiple graphics from one repo
 
