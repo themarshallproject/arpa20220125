@@ -57,7 +57,7 @@ const exampleChart = new HorizontalBarChart({
 ### Importing styles
 
 Stylesheets can be found in `templates/charts/stylesheets/` and
-imported in your `chart.scss` file.
+imported in your `graphic.scss` file.
 
 ```
 @import "charts/stylesheets/chart-with-axes.scss";
