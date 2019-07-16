@@ -1,0 +1,28 @@
+.g-tmp-chart {
+  @include acumin;
+
+  .data-label {
+    font-size: 13px;
+    fill: $med-gray;
+    text-anchor: middle;
+  }
+
+  &.g-tmp-bar-chart-horizontal {
+    .data-label.label-positive {
+      text-anchor: start;
+
+      &.label-in {
+        text-anchor: end;
+      }
+    }
+
+    .data-label.label-negative {
+      text-anchor: end;
+
+      &.label-in {
+        text-anchor: start;
+      }
+    }
+  }
+
+}
