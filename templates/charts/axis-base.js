@@ -80,10 +80,21 @@ export default class ChartWithAxes extends ChartBase {
   // array for each domain by default, but in an extended version of the class, this
   // function could be rewritten to return domains in different formats.
   getScaleExtents() {
-    const xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
-    const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
-    const yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
-    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
+    const xMin = utilities.isDefinedOrZero(this.config.roundedXMin)
+      ? this.config.roundedXMin
+      : d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
+
+    const xMax = utilities.isDefinedOrZero(this.config.roundedXMax)
+      ? this.config.roundedXMax
+      : d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
+
+    const yMin = utilities.isDefinedOrZero(this.config.roundedYMin)
+      ? this.config.roundedYMin
+      : d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
+
+    const yMax = utilities.isDefinedOrZero(this.config.roundedYMax)
+      ? this.config.roundedYMax
+      : d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
 
     return {
       xDomain: [xMin, xMax],

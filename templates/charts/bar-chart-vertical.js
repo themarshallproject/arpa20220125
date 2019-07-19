@@ -80,9 +80,15 @@ export default class VerticalBarChart extends ChartWithAxes {
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
     const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
+
     // Get max/min values for y axis, defaulting to the specified values if present
-    let yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
-    let yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let yMin = utilities.isDefinedOrZero(this.config.roundedYMin)
+      ? this.config.roundedYMin
+      : d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+
+    let yMax = utilities.isDefinedOrZero(this.config.roundedYMax)
+      ? this.config.roundedYMax
+      : d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
 
     // For bar charts, always include a zero baseline
     yMin = yMin > 0 ? 0 : yMin;

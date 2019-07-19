@@ -19,6 +19,10 @@ export function abbrevYear(text) {
   return `'${ text.slice(2) }`
 }
 
+export function isDefinedOrZero(value) {
+  return value || value === 0;
+}
+
 export function wrapText(text, width, lineHeight=1.1) {
   text.each(function() {
     const text = d3.select(this),
