@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { addCommas, isDefined } from './utilities.js';
+import { addCommas, isDefined, slugify } from './utilities.js';
 import ChartWithAxes from './axis-base.js';
 
 /* * * * *
@@ -109,7 +109,7 @@ export default class VerticalBarChart extends ChartWithAxes {
         .enter()
       .append('rect')
         .attr('class', (d) => {
-          return `bar-rect bar-${ utilities.slugify(d[this.config.bandKey]) }`;
+          return `bar-rect bar-${ slugify(d[this.config.bandKey]) }`;
         })
   }
 
@@ -122,7 +122,7 @@ export default class VerticalBarChart extends ChartWithAxes {
         .enter()
       .append('text')
         .attr('class', (d) => {
-          return `data-label data-label-${ utilities.slugify(d[this.config.bandKey]) }`;
+          return `data-label data-label-${ slugify(d[this.config.bandKey]) }`;
         })
         .text((d) => {
           return this.config.labelFormat(d[this.config.valueKey]);
