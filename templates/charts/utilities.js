@@ -20,7 +20,7 @@ export function abbrevYear(text) {
 }
 
 export function isNullOrUndefined(value) {
-  return value == undefined;
+  return value === null || value === undefined;
 }
 
 export function wrapText(text, width, lineHeight=1.1) {
