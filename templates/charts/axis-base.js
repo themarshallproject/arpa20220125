@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { addCommas, isDefined } from './utilities.js';
+import { addCommas, isNullOrUndefined } from './utilities.js';
 import ChartBase from './chart-base.js';
 
 /* * * * *
@@ -80,21 +80,21 @@ export default class ChartWithAxes extends ChartBase {
   // array for each domain by default, but in an extended version of the class, this
   // function could be rewritten to return domains in different formats.
   getScaleExtents() {
-    const xMin = isDefined(this.config.roundedXMin)
-      ? this.config.roundedXMin
-      : d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
+    const xMin = isNullOrUndefined(this.config.roundedXMin)
+      ? d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) })
+      : this.config.roundedXMin;
 
-    const xMax = isDefined(this.config.roundedXMax)
-      ? this.config.roundedXMax
-      : d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
+    const xMax = isNullOrUndefined(this.config.roundedXMax)
+      ? d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) })
+      : this.config.roundedXMax;
 
-    const yMin = isDefined(this.config.roundedYMin)
-      ? this.config.roundedYMin
-      : d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
+    const yMin = isNullOrUndefined(this.config.roundedYMin)
+      ? d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) })
+      : this.config.roundedYMin;
 
-    const yMax = isDefined(this.config.roundedYMax)
-      ? this.config.roundedYMax
-      : d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
+    const yMax = isNullOrUndefined(this.config.roundedYMax)
+      ? d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) })
+      : this.config.roundedYMax;
 
     return {
       xDomain: [xMin, xMax],

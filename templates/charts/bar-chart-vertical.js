@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { addCommas, isDefined, slugify } from './utilities.js';
+import { addCommas, isNullOrUndefined, slugify } from './utilities.js';
 import ChartWithAxes from './axis-base.js';
 
 /* * * * *
@@ -82,13 +82,13 @@ export default class VerticalBarChart extends ChartWithAxes {
     const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
 
     // Get max/min values for y axis, defaulting to the specified values if present
-    let yMin = isDefined(this.config.roundedYMin)
-      ? this.config.roundedYMin
-      : d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let yMin = isNullOrUndefined(this.config.roundedYMin)
+      ? d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedYMin;
 
-    let yMax = isDefined(this.config.roundedYMax)
-      ? this.config.roundedYMax
-      : d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let yMax = isNullOrUndefined(this.config.roundedYMax)
+      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+      : this.config.roundedYMax;
 
     // For bar charts, always include a zero baseline
     yMin = yMin > 0 ? 0 : yMin;

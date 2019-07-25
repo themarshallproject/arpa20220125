@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { addCommas, isDefined } from './utilities.js';
+import { addCommas, isNullOrUndefined } from './utilities.js';
 import VerticalBarChart from './bar-chart-vertical.js';
 
 /* * * * *
@@ -64,13 +64,13 @@ export default class HorizontalBarChart extends VerticalBarChart {
     const yDomain = this.data.map((d) => { return d[this.config.bandKey] })
 
     // Get max/min values for x axis, defaulting to the specified values if present
-    let xMin = isDefined(this.config.roundedXMin)
-      ? this.config.roundedXMin
-      : d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let xMin = isNullOrUndefined(this.config.roundedXMin)
+      ? d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedXMin;
 
-    let xMax = isDefined(this.config.roundedXMax)
-      ? this.config.roundedXMax
-      : d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let xMax = isNullOrUndefined(this.config.roundedXMax)
+      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedXMax;
 
     // For bar charts, always include a zero baseline
     xMin = xMin > 0 ? 0 : xMin;

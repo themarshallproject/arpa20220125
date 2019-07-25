@@ -19,8 +19,8 @@ export function abbrevYear(text) {
   return `'${ text.slice(2) }`
 }
 
-export function isDefined(value) {
-  return value || value === 0;
+export function isNullOrUndefined(value) {
+  return value == undefined;
 }
 
 export function wrapText(text, width, lineHeight=1.1) {
