@@ -19,7 +19,7 @@ export function abbrevYear(text) {
   return `'${ text.slice(2) }`
 }
 
-export function isDefinedOrZero(value) {
+export function isDefined(value) {
   return value || value === 0;
 }
 

@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as utilities from './utilities.js';
+import { addCommas, isDefined } from './utilities.js';
 import ChartWithAxes from './axis-base.js';
 
 /* * * * *
@@ -38,8 +38,8 @@ export default class VerticalBarChart extends ChartWithAxes {
       bandDataFormat: (d) => { return d },
       valueDataFormat: (d) => { return +d },
       xAxisTickFormat: (d) => { return d },
-      yAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      labelFormat: (d) => { return utilities.addCommas(d) }
+      yAxisTickFormat: (d) => { return addCommas(d) },
+      labelFormat: (d) => { return addCommas(d) }
     });
 
     // Then set the basic defaults
@@ -82,11 +82,11 @@ export default class VerticalBarChart extends ChartWithAxes {
     const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
 
     // Get max/min values for y axis, defaulting to the specified values if present
-    let yMin = utilities.isDefinedOrZero(this.config.roundedYMin)
+    let yMin = isDefined(this.config.roundedYMin)
       ? this.config.roundedYMin
       : d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
 
-    let yMax = utilities.isDefinedOrZero(this.config.roundedYMax)
+    let yMax = isDefined(this.config.roundedYMax)
       ? this.config.roundedYMax
       : d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
 

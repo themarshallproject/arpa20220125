@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as utilities from './utilities.js';
+import { addCommas, isDefined } from './utilities.js';
 import VerticalBarChart from './bar-chart-vertical.js';
 
 /* * * * *
@@ -35,7 +35,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
-      xAxisTickFormat: (d) => { return utilities.addCommas(d) },
+      xAxisTickFormat: (d) => { return addCommas(d) },
       yAxisTickFormat: (d) => { return d },
     });
 
@@ -64,11 +64,11 @@ export default class HorizontalBarChart extends VerticalBarChart {
     const yDomain = this.data.map((d) => { return d[this.config.bandKey] })
 
     // Get max/min values for x axis, defaulting to the specified values if present
-    let xMin = utilities.isDefinedOrZero(this.config.roundedXMin)
+    let xMin = isDefined(this.config.roundedXMin)
       ? this.config.roundedXMin
       : d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
 
-    let xMax = utilities.isDefinedOrZero(this.config.roundedXMax)
+    let xMax = isDefined(this.config.roundedXMax)
       ? this.config.roundedXMax
       : d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
 
