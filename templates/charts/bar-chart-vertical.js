@@ -87,7 +87,7 @@ export default class VerticalBarChart extends ChartWithAxes {
       : this.config.roundedYMin;
 
     let yMax = isNullOrUndefined(this.config.roundedYMax)
-      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
       : this.config.roundedYMax;
 
     // For bar charts, always include a zero baseline
