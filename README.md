@@ -38,6 +38,7 @@ Our toolchain for building and deploying graphics, custom posts, and post header
     + [CSV data formats](#csv-data-formats)
 - [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
     + [Using custom heds and other graphics](#using-custom-heds-and-other-graphics)
+- [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
 - [Tips](#tips)
 - [Other commands](#other-commands)
 - [Editing this template](#editing-this-template)
@@ -334,6 +335,18 @@ To incorporate a custom hed with multiple graphics:
 2. Create a file called `src/header.html`. Your header lives in here. The name is all that identifies it.
 3. Your other graphics can go in other html files, as above.
 4. You do not need to manually include the header in `localtext.md`, and you do not need to include the `includes` graphic in the post, as above. The assets will be included with `header.html`.
+
+## Sharing graphics outside of TMP
+
+Sometimes our partners will request that we provide an iframe of a graphic. Getting one to send them can take a little bit of work, especially for multiple graphics setups, but it's doable.
+
+1. A deployed graphic will be served to the public from `https://www.themarshallproject.org/embed/graphic/<graphic-id>` replacing `<graphic-id>` with your graphic's id, which you can find at https://www.themarshallproject.org/admin/graphics in the left-most column.
+2. If everything works as expected at that url, skip to the last step. If not, it may because of some assumptions your code is making about the environment (fix these!) or it may be because you are using multiple graphics.
+3. In multiple graphics setups the JS and CSS are bundled into a single package so they can be shared between all of the graphics. Each embedded graphic will need to individually include all of the assets it needs. The easiest solution to this is to add any script and style tags to an `embed` version of your graphic. Note that this is not as efficient as the way we do it within EndRun, so this should be a separate graphic with it's own slug/filename that is not included in the post. You can see an example of this setup [here](https://github.com/themarshallproject/miamioffender20180627/blob/master/src/map-embed.html).
+4. You can now send the iframe to the partner with some sample code like this: `<iframe width="100%" height="900" src="https://www.themarshallproject.org/embed/graphic/<graphic-id>" frameborder="0"></iframe>`, replacing the graphic id again.
+
+Note that it is up to you to make sure your graphic is responsive, and works well within an iframe. It is up to the partner to make sure that the iframe is suitably sized and resizes dynamically, perhaps using a tool like [NPR's pym](http://blog.apps.npr.org/pym.js/).
+
 
 ## Tips
 
