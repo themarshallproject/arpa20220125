@@ -160,10 +160,14 @@ function resetAWSKeys(done) {
 }
 
 
-function resetGoogleKeys(done) {
-  resetServicePassword(GOOGLE_TOKEN, function() {
-    resetServicePassword(GOOGLE_CLIENT, done);
-  });
+function resetGoogleClient(done) {
+  resetServicePassword(GOOGLE_CLIENT, done);
+}
+
+
+function resetGoogleToken(done) {
+  keychain.deletePassword({ account: 'gfx', service: GOOGLE_TOKEN.key });
+  getGoogleClient(function() { done(); });
 }
 
 
@@ -244,5 +248,6 @@ module.exports = {
   resetAWSKeys,
   resetEndrunKey,
   resetGithubKey,
-  resetGoogleKeys,
+  resetGoogleClient,
+  resetGoogleToken,
 }

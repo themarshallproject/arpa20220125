@@ -41,6 +41,8 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 - [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
 - [Tips](#tips)
 - [Other commands](#other-commands)
+- [Advanced Features](#advanced-features)
+  * [Google Sheets Integration](#google-sheets-integration)
 - [Editing this template](#editing-this-template)
 - [Thoughts? Ideas? Issues?](#thoughts-ideas-issues)
 - [Further reading](#further-reading)
@@ -378,6 +380,16 @@ There are a few other commands available that you might find useful. Especially 
 
 1. `gulp reset:type` will allow you to change your initial choices made while setting up the repo. Handy if you made a mistake, or are just rearranging things.
 2. `gulp credentials:endrun` will allow to enter a fresh API token.
+
+## Advanced Features
+
+### Google Sheets Integration
+
+It is possible to download google spreadsheets into local csv files. This can be helpful for projects with complex editorial-driven fields that will need to be frequently edited. Outside of this specific situation, you probably don't need this and should consider simpler solutions. To set it up, specify a `spreadsheet_id`, which is the long, alphanumeric string in the url of a google sheet. Next run `gulp sheets:download`, which will ask you for a series of credentials with links on where to find them (you'll need to be logged into your google account and have access to our GCP console). Follow along with these instructions.
+
+The `client_secret.json` identifies our 'app' and shouldn't ever change. The bearer token can expire. If it does, you might see an error like `invalid_grant` or something similar. To refresh this token you can run `gulp credentials:google`. If for some reason you do need to reset the client app credentials you should run `gulp credentials:google_client`.
+
+Once you've been properly authorized (which you shouldn't need to do again for a good long while), the download task will convert each sheet of the spreadsheet into a separate csv file in `src/template-files`, using the name of the sheet as the name of the file. You can then import this data into your templates using the process described in [using external data sources in your HTML](#using-external-data-sources-in-your-html).
 
 ## Editing this template
 

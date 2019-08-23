@@ -376,7 +376,8 @@ gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 gulp.task('credentials:github', credentials.resetGithubKey);
-gulp.task('credentials:google', credentials.resetGoogleKeys);
+gulp.task('credentials:google', credentials.resetGoogleToken);
+gulp.task('credentials:google_client', credentials.resetGoogleClient);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
