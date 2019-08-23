@@ -35,6 +35,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
   setConfigDefaults(config) {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
+      marginLeft: 60,
       xAxisTickFormat: (d) => { return utilities.addCommas(d) },
       yAxisTickFormat: (d) => { return d },
     });
