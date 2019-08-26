@@ -385,7 +385,7 @@ There are a few other commands available that you might find useful. Especially 
 
 ### Google Sheets Integration
 
-It is possible to download google spreadsheets into local csv files. This can be helpful for projects with complex editorial-driven fields that will need to be frequently edited. Outside of this specific situation, you probably don't need this and should consider simpler solutions. To set it up, specify a `spreadsheet_id`, which is the long, alphanumeric string in the url of a google sheet. Next run `gulp sheets:download`, which will ask you for a series of credentials with links on where to find them (you'll need to be logged into your google account and have access to our GCP console). Follow along with these instructions.
+It is possible to download google spreadsheets into local csv files. This can be helpful for projects with complex editorial-driven fields that will need to be frequently edited. Outside of this specific situation, you probably don't need this and should consider simpler solutions. To set it up, specify a `spreadsheet_id`, which is the long, alphanumeric string in the url of a google sheet. Next run `gulp sheets:download`, which will ask you for a series of credentials with links on where to find them (you'll need to be logged into your google account and have access to our google cloud console). Follow along with these instructions.
 
 The `client_secret.json` identifies our 'app' and shouldn't ever change. The bearer token can expire. If it does, you might see an error like `invalid_grant` or something similar. To refresh this token you can run `gulp credentials:google`. If for some reason you do need to reset the client app credentials you should run `gulp credentials:google_client`.
 
