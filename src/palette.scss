@@ -70,6 +70,11 @@ $screen-tiniest-below: "screen and (max-width: 359px)";
   font-weight: 400;
 }
 
+@mixin pressura-bold {
+  font-family: 'PressuraBold', sans-serif;
+  font-weight: 400;
+}
+
 @mixin utopia {
   font-family: 'Utopia-std', serif;
   font-weight: 400;
