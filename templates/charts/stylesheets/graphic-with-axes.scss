@@ -1,6 +1,10 @@
 .g-tmp-chart {
   @include acumin;
 
+  text, tspan {
+    @include acumin;
+  }
+
   rect, line, path {
     shape-rendering: crispEdges;
   }
