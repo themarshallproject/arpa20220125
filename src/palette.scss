@@ -107,6 +107,64 @@ $screen-tiniest-below: "screen and (max-width: 359px)";
   }
 }
 
+@mixin inline-head {
+  line-height: 1.1em;
+  display: block;
+  color: $lightblack;
+  font-size: 28px;
+  margin-top: 20px;
+  margin-bottom: 18px;
+  font-weight: 300;
+
+  @media screen and (max-width: 740px) {
+    font-size: 22px;
+  }
+}
+
+@mixin inline-deck {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 28px;
+  color: $lightblack;
+  font-weight: 100;
+  line-height: 1.5em;
+
+  @media screen and (max-width: 740px) {
+    font-size: 16px;
+  }
+}
+
+@mixin inline-source {
+  font-weight: normal;
+  letter-spacing: -0.2px;
+  font-weight: 100;
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 22px;
+  margin-bottom: 53px;
+  color: $med-gray;
+
+  a {
+    color: $lightblack;
+    }
+
+  @media screen and (max-width: 740px) {
+    font-size: 12px;
+  }
+}
+
+@mixin sidebar-head {
+
+}
+
+@mixin sidebar-deck {
+
+}
+
+@mixin sidebar-source {
+
+}
+
 .hidden {
   display: none;
 }

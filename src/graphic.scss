@@ -1,3 +1,253 @@
 @import "palette";
 @import "charts/stylesheets/graphic-with-axes.scss";
 @import "charts/stylesheets/graphic-labels.scss";
+
+$lightblack: #353535;
+$graphic-purple-2: #5641ce;
+$graphic-purple-4: #d5d4e3;
+$graphic-salmon-2: #e55946;
+// chartreuse is such a long word!
+$graphic-green-2: #a5c100;
+$text-purple-2: #604bd7;
+$text-purple-4: #d5d4e3;
+$text-salmon-2: #f97a69;
+$text-chartreuse-2: #9fb900;
+
+
+// add mixin for heads, decks and source lines
+.graphic-head {
+  @include acumin;
+  @include inline-head;
+}
+
+.graphic-deck {
+  @include acumin;
+  @include inline-deck;
+}
+
+.graphic-source {
+  @include acumin;
+  @include inline-source;
+}
+
+// HIGHLIGHT WITHIN AN OBJECT
+.purple-text {
+  color: $text-purple-2;
+  font-weight: 400;
+}
+
+.light-purple-text {
+  color: $text-purple-4;
+  font-weight: 400;
+}
+
+.re-city {
+  .graphic-source {
+    margin-top: 5px;
+  }
+}
+
+.re-city-label {
+  @include acumin;
+  font-size: 15px;
+  font-weight: 600;
+  color: $lightblack;
+  text-align: center;
+  margin-left: 30px;
+  margin-top: 5px;
+  position: absolute;
+
+  @media screen and (max-width: 740px) {
+    font-size: 12px;
+    margin-left: 25px;
+  }
+}
+
+.re-city-bar-chart {
+  width: 48%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 20px;
+  display: inline-block;
+
+  @media screen and (max-width: 740px) {
+    margin-bottom: 14px;
+  }
+
+  .y {
+    .tick:nth-child(odd) {
+      display: none;
+    }
+  }
+
+  .x {
+    .tick {
+      display: none;
+    }
+
+    .tick:nth-child(12n+2) {
+      display: block;
+    }
+  }
+
+  .grid {
+    display: none;
+  }
+
+  .bar-rect-low {
+    fill: $graphic-purple-4;
+  }
+
+  .bar-rect-high {
+    fill: $graphic-purple-2;
+  }
+}
+
+.re-city-bar-chart:nth-child(even){
+  .y {
+    .tick {
+      display: none;
+    }
+  }
+}
+
+// SINGLE SET OF BARS OR LINES
+#re-national-chart {
+  .bar-rect {
+    fill: $graphic-purple-2;
+  }
+
+  .data-label {
+    @media screen and (max-width: 740px) {
+      font-size: 11px;
+    }
+}
+
+  .y {
+    display: none;
+  }
+}
+
+.re-national {
+  @media screen and (max-width: 740px) {
+    .re-graphic-source {
+      margin-top: 0px;
+    }
+  }
+}
+
+// SINGLE SET OF BARS OR LINES WITH HIGHLIGHT
+.line-chart-path {
+  fill: none;
+  stroke-width: 2px;
+  // This does not look good :(
+  shape-rendering: geometricPrecision;
+}
+
+path {
+  &.violent_per_100k {
+    stroke: $graphic-salmon-2;
+  }
+
+  &.property_crime_per_100k {
+    stroke: $graphic-green-2;
+  }
+}
+
+.fs-chart-one-container {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 740px) {
+    flex-wrap: wrap;
+  }
+
+  .x {
+    line {
+      stroke-width: 1px;
+    }
+
+    .tick {
+      text {
+        display: none;
+      }
+    }
+
+    .tick:nth-child(10n+2) {
+      text {
+        display: block;
+      }
+    }
+  }
+}
+
+.fs-chart-one {
+  width: 49%;
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.fs-one-annotation {
+  stroke: $light-gray;
+  stroke-width: 1.5px;
+}
+
+
+// SMALL MULTIPLES
+path {
+    &.murder_per_100k, &.aggravated_assault_per_100k, &.robbery_per_100k {
+      stroke: $graphic-purple-2;
+    }
+
+    &.rape_per_100k {
+      stroke: $graphic-purple-2;
+    }
+}
+
+.fs-chart-two-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .tooltip-circle {
+    display: none;
+  }
+}
+
+.fs-chart-two {
+  width: 25%;
+
+  @media screen and (max-width: 740px) {
+    width: 49%;
+    margin-bottom: 10px;
+
+    .y {
+      .tick:nth-child(even) {
+        display: none;
+      }
+    }
+  }
+
+  .line-subhed {
+    @include acumin;
+    font-weight: 600;
+    margin-left: 35px;
+    margin-top: 5px;
+    font-size: 14px;
+    position: absolute;
+    color: $lightblack;
+
+    @media screen and (max-width: 600px) {
+      font-size: 12px;
+      margin-left: 34px;
+    }
+  }
+}
+
+
+// COMPARING LIKE DATASETS
+
+// MULTIPLE DATASETS IN ONE CHART

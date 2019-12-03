@@ -1,0 +1,39 @@
+<!-- Typekit font package. Include to use Acumin. -->
+<link rel="stylesheet" href="https://use.typekit.net/uol0rpy.css">
+
+<div class="g-tmp-chart-container">
+  <div class="fs-graphic-copy">
+    <p class="graphic-head">
+      Crimes in the U.S. Continue to Decrease
+    </p>
+    <p class="graphic-deck">
+      New FBI data show the U.S. <span class="red-text">violent crime rate</span> fell in 2017 and 2018, after increases in 2015 and 2016. It’s now half as high as in 1991. <span class="blue-text">Property crime rates</span> continued to decline, following a decades-long trend.
+
+    </p>
+  </div>
+
+  <div class="fs-chart-one-container">
+    <div id="violent-crime-historic" class="fs-chart-one">
+      <span class="line-subhed">
+        Violent Crimes per 100,000 People
+      </span>
+    </div>
+
+    <div id="property-crime-historic" class="fs-chart-one">
+      <span class="line-subhed">
+        Property Crimes per 100,000 People
+      </span>
+    </div>
+  </div>
+
+  <div class="graphic-source">
+    Source:
+      <span>
+        <a href="https://ucr.fbi.gov/crime-in-the-u.s/2018/crime-in-the-u.s.-2018">
+          Uniform Crime Reporting program
+        </a>
+      </span>
+  </div>
+</div>
+
+<script type="text/javascript">var HISTORICDATA = {{ data["01_historic_trend"]|dump|safe }};</script>
