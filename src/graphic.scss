@@ -188,6 +188,21 @@ path {
     width: 100%;
     margin-bottom: 10px;
   }
+
+  .line-subhed {
+    @include acumin;
+    font-weight: 600;
+    margin-left: 45px;
+    margin-top: 5px;
+    font-size: 14px;
+    position: absolute;
+    line-height: 1.3em;
+
+    @media screen and (max-width: 600px) {
+      font-size: 12px;
+      margin-left: 45px;
+    }
+  }
 }
 
 .fs-one-annotation {
