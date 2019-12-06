@@ -40,7 +40,7 @@ function renderMultiple(options) {
     content = '';
     for (key in graphics) {
       if (key !== 'header') {
-        content += graphics[key] + '\n' + loremGraf() + '\n';
+        content += graphics[key] + '\n' + loremGraf() + '\n' + loremGraf() + '\n';
       }
     }
   }
