@@ -2,6 +2,8 @@ import * as utilities from 'charts/utilities.js';
 import NationalBarChart from './mpp_national.js'
 import CityStackedBar from './mpp_cities.js'
 import LineChart from './line-chart.js'
+import StackedBarChart from './stacked-bar.js'
+import PaymentChart from './payment-chart.js'
 
 // Wait for document ready before executing code that interacts with the DOM
 $(document).ready(() => {
@@ -13,6 +15,8 @@ $(document).ready(() => {
 
   initFirstChart();
   initSecondChart();
+
+  initBarChart();
 });
 
 function initNationalBar() {
@@ -164,5 +168,35 @@ function initSecondChart() {
     xAxisTickFormat: xAxisTickFormatShare,
     xAxisTickValues: xAxisTickValuesShare,
     aspectRatio: aspectRatioShare
+  })
+}
+
+function initBarChart() {
+
+  const barChartMC = new StackedBarChart({
+    containerId: 'dd-chart-one',
+    data: CASE_DATA,
+    bandKey: 'year',
+    valueKey: 'case',
+    barPadding: 0.4,
+    marginLeft: 30,
+    marginRight: 0,
+    roundedYMax: 500,
+    yAxisTicks: 5
+  });
+
+  const paymentChart = new PaymentChart({
+    containerId: 'dd-chart-two',
+    data: PAYMENT_DATA,
+    bandKey: "event",
+    valueKey: "pay",
+    marginLeft: 80,
+    marginRight: 30,
+    marginBottom: 0,
+    roundedXMax: 200,
+    barPadding: 0.3,
+    labelFormat: (d) => {return d == 180 ? `$${ d }` : d
+  },
+    marginTop: 0
   })
 }

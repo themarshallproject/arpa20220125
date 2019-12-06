@@ -30,6 +30,71 @@ $text-chartreuse-2: #9fb900;
   @include inline-source;
 }
 
+// add mixin for sidebar heads, decks and source lines
+.graphic-head-sidebar {
+  @include sidebar-head;
+}
+
+.graphic-deck-sidebar {
+  @include sidebar-deck;
+}
+
+.graphic-source-sidebar {
+  @include sidebar-source;
+}
+
+.graphic-container-sidebar {
+  @include sidebar-container;
+
+  .tick {
+    @include acumin;
+    text-anchor: end;
+    font-weight: 100;
+  }
+
+  .data-label {
+    @include acumin;
+    font-weight: 100;
+    fill: $lightblack;
+  }
+
+  #dd-chart-one {
+    .x .tick text {
+      text-anchor: middle;
+    }
+  }
+
+  #dd-chart-two {
+    .tick {
+      text {
+        fill: $lightblack;
+        font-weight: 500;
+        text-anchor: start;
+      }
+    }
+
+    .x {
+      display: none;
+    }
+  }
+
+  .bar-rect {
+    fill: $lightblack;
+  }
+
+  .bar-rect-nac {
+    fill: $lightblack;
+  }
+
+  .bar-arraignment {
+    fill: $graphic-purple-2;
+  }
+
+  .data-label-arraignment {
+    fill: $graphic-purple-2;
+  }
+}
+
 // HIGHLIGHT WITHIN AN OBJECT
 .purple-text {
   color: $text-purple-2;
@@ -100,6 +165,20 @@ $text-chartreuse-2: #9fb900;
 
   .bar-rect-high {
     fill: $graphic-purple-2;
+  }
+}
+
+#dd-graphic-arrow {
+  fill: none;
+  stroke: $graphic-purple-2;
+  // I know we decided that lines in like charts should be 2px
+  // But perhaps for annotations, 1.5px looks better?
+  stroke-width: 1.5px;
+  shape-rendering: auto;
+  stroke-linejoin: round;
+
+  path {
+    shape-rendering: auto;
   }
 }
 
@@ -262,7 +341,19 @@ path {
   }
 }
 
+.g-annotation {
+  line {
+    stroke: $graphic-purple-2;
+    stroke-width: 1.5px;
+  }
 
-// COMPARING LIKE DATASETS
-
-// MULTIPLE DATASETS IN ONE CHART
+  text {
+    @include acumin;
+    fill: $graphic-purple-2;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4em;
+    font-weight: 100;
+    letter-spacing: -0.2px;
+  }
+}
