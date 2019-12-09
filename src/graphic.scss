@@ -14,38 +14,7 @@ $text-salmon-2: #f97a69;
 $text-chartreuse-2: #9fb900;
 
 
-// add mixin for heads, decks and source lines
-.graphic-head {
-  @include acumin;
-  @include inline-head;
-}
-
-.graphic-deck {
-  @include acumin;
-  @include inline-deck;
-}
-
-.graphic-source {
-  @include acumin;
-  @include inline-source;
-}
-
-// add mixin for sidebar heads, decks and source lines
-.graphic-head-sidebar {
-  @include sidebar-head;
-}
-
-.graphic-deck-sidebar {
-  @include sidebar-deck;
-}
-
-.graphic-source-sidebar {
-  @include sidebar-source;
-}
-
 .graphic-container-sidebar {
-  @include sidebar-container;
-
   .tick {
     @include acumin;
     text-anchor: end;
