@@ -16,13 +16,11 @@ $text-chartreuse-2: #9fb900;
 
 .graphic-container-sidebar {
   .tick {
-    @include acumin;
     text-anchor: end;
     font-weight: 100;
   }
 
   .data-label {
-    @include acumin;
     font-weight: 100;
     fill: $lightblack;
   }

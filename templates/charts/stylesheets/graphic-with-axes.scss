@@ -52,6 +52,7 @@
   }
 
   .tick text {
+    @include pressura;
     font-size: 12px;
     fill: $med-gray;
 

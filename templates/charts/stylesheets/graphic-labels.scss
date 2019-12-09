@@ -2,6 +2,7 @@
   @include acumin;
 
   .data-label {
+    @include pressura;
     font-size: 13px;
     fill: $med-gray;
     text-anchor: middle;
