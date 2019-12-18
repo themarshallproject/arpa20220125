@@ -135,12 +135,21 @@ function renderGraphicsReadme(options) {
 
 
 function getIncludes(options) {
-  return [
-    getLRScript(options),
-    "<link rel='stylesheet' href='/fonts.css'>",
-    "<link rel='stylesheet' href='/graphic.css'>",
-    "<script src='/graphic.js'></script>\n"
-  ].join("\n");
+  if (options.examples) {
+    return [
+      getLRScript(options),
+      "<link rel='stylesheet' href='/fonts.css'>",
+      "<link rel='stylesheet' href='/examples/examples.css'>",
+      "<script src='/graphic.js'></script>\n"
+    ].join("\n");
+  } else {
+    return [
+      getLRScript(options),
+      "<link rel='stylesheet' href='/fonts.css'>",
+      "<link rel='stylesheet' href='/graphic.css'>",
+      "<script src='/graphic.js'></script>\n"
+    ].join("\n");
+  }
 }
 
 

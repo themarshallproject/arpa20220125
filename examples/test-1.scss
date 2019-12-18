@@ -1,0 +1,9 @@
+.test-example {
+  padding: 40px 20px;
+  font-size: 40px;
+}
+
+#test-graphic-1 {
+  @include pressura;
+  background-color: lightcoral;
+}

@@ -88,6 +88,19 @@ function productionStyles() {
 }
 
 
+function exampleStyles() {
+  return gulp.src('examples/examples.scss')
+    .pipe(sass({
+      includePaths: [
+        'templates/'
+      ]
+    })
+      .on('error', notify.onError("SASS <%= error.formatted %>")))
+    .pipe(gulp.dest('build/examples'))
+    .pipe(livereload());
+}
+
+
 function graphicsReadme() {
   return gulp.src('templates/charts/README.md')
     .pipe(changedInPlace({ firstPass: true }))
@@ -239,7 +252,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, examplesHtml, styles, scripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(html, examplesHtml, styles, exampleStyles, scripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -248,6 +261,7 @@ function watch() {
   gulp.watch(['README.md'], readme);
   gulp.watch(['templates/charts/README.md'], graphicsReadme);
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
+  gulp.watch(['examples/*.scss', 'templates/charts/stylesheets/*.scss'], exampleStyles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
