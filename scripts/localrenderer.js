@@ -96,7 +96,8 @@ function renderWarning(text) {
 
 
 function getGraphics(options) {
-  var files = fs.readdirSync('./build/', 'utf-8');
+  var dirPath = options.examples ? './build/examples/' : './build/';
+  var files = fs.readdirSync(dirPath, 'utf-8');
   var graphics = {};
   var isProduction = options && options.isProduction || false;
 
@@ -107,7 +108,7 @@ function getGraphics(options) {
         var htmlFile = require('../dist/rev-manifest.json')[filename];
         graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
       } else {
-        graphics[key] = fs.readFileSync('./build/' + filename, 'utf-8');
+        graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
       }
     }
   });
