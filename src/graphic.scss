@@ -2,18 +2,6 @@
 @import "charts/stylesheets/graphic-with-axes.scss";
 @import "charts/stylesheets/graphic-labels.scss";
 
-$lightblack: #353535;
-$graphic-purple-2: #5641ce;
-$graphic-purple-4: #d5d4e3;
-$graphic-salmon-2: #e55946;
-// chartreuse is such a long word!
-$graphic-green-2: #a5c100;
-$text-purple-2: #604bd7;
-$text-purple-4: #d5d4e3;
-$text-salmon-2: #f97a69;
-$text-chartreuse-2: #9fb900;
-
-
 .graphic-container-sidebar {
   .tick {
     text-anchor: end;
@@ -22,7 +10,7 @@ $text-chartreuse-2: #9fb900;
 
   .data-label {
     font-weight: 100;
-    fill: $lightblack;
+    fill: $dark-gray;
   }
 
   #dd-chart-one {
@@ -34,7 +22,7 @@ $text-chartreuse-2: #9fb900;
   #dd-chart-two {
     .tick {
       text {
-        fill: $lightblack;
+        fill: $dark-gray;
         font-weight: 500;
         text-anchor: start;
       }
@@ -46,30 +34,30 @@ $text-chartreuse-2: #9fb900;
   }
 
   .bar-rect {
-    fill: $lightblack;
+    fill: $dark-gray;
   }
 
   .bar-rect-nac {
-    fill: $lightblack;
+    fill: $dark-gray;
   }
 
   .bar-arraignment {
-    fill: $graphic-purple-2;
+    fill: $fill-purple;
   }
 
   .data-label-arraignment {
-    fill: $graphic-purple-2;
+    fill: $fill-purple;
   }
 }
 
 // HIGHLIGHT WITHIN AN OBJECT
 .purple-text {
-  color: $text-purple-2;
+  color: $text-purple;
   font-weight: 400;
 }
 
 .light-purple-text {
-  color: $text-purple-4;
+  color: $scale-purple-2;
   font-weight: 400;
 }
 
@@ -83,7 +71,7 @@ $text-chartreuse-2: #9fb900;
   @include acumin;
   font-size: 15px;
   font-weight: 600;
-  color: $lightblack;
+  color: $dark-gray;
   text-align: center;
   margin-left: 30px;
   margin-top: 5px;
@@ -123,21 +111,21 @@ $text-chartreuse-2: #9fb900;
   }
 
   .grid {
-    display: none;
+    //display: none;
   }
 
   .bar-rect-low {
-    fill: $graphic-purple-4;
+    fill: $scale-purple-2;
   }
 
   .bar-rect-high {
-    fill: $graphic-purple-2;
+    fill: $scale-purple-5;
   }
 }
 
 #dd-graphic-arrow {
   fill: none;
-  stroke: $graphic-purple-2;
+  stroke: $fill-purple;
   // I know we decided that lines in like charts should be 2px
   // But perhaps for annotations, 1.5px looks better?
   stroke-width: 1.5px;
@@ -151,7 +139,7 @@ $text-chartreuse-2: #9fb900;
 
 .re-city-bar-chart:nth-child(even){
   .y {
-    .tick {
+    .tick text {
       display: none;
     }
   }
@@ -160,7 +148,7 @@ $text-chartreuse-2: #9fb900;
 // SINGLE SET OF BARS OR LINES
 #re-national-chart {
   .bar-rect {
-    fill: $graphic-purple-2;
+    fill: $fill-purple;
   }
 
   .data-label {
@@ -192,11 +180,11 @@ $text-chartreuse-2: #9fb900;
 
 path {
   &.violent_per_100k {
-    stroke: $graphic-salmon-2;
+    stroke: $fill-green;
   }
 
   &.property_crime_per_100k {
-    stroke: $graphic-green-2;
+    stroke: $fill-green;
   }
 }
 
@@ -260,11 +248,11 @@ path {
 // SMALL MULTIPLES
 path {
     &.murder_per_100k, &.aggravated_assault_per_100k, &.robbery_per_100k {
-      stroke: $graphic-purple-2;
+      stroke: $fill-purple;
     }
 
     &.rape_per_100k {
-      stroke: $graphic-purple-2;
+      stroke: $fill-purple;
     }
 }
 
@@ -299,7 +287,7 @@ path {
     margin-top: 5px;
     font-size: 14px;
     position: absolute;
-    color: $lightblack;
+    color: $dark-gray;
 
     @media screen and (max-width: 600px) {
       font-size: 12px;
@@ -310,13 +298,13 @@ path {
 
 .g-annotation {
   line {
-    stroke: $graphic-purple-2;
+    stroke: $fill-purple;
     stroke-width: 1.5px;
   }
 
   text {
     @include acumin;
-    fill: $graphic-purple-2;
+    fill: $fill-purple;
     font-size: 13px;
     font-weight: 400;
     line-height: 1.4em;
