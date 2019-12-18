@@ -34,30 +34,30 @@ $text-salmon: #f97a69;
 $text-green: #a5c100;
 $text-blue: #5cc4f7;
 
-// Chart colors: Sequential values
-$sequence-purple-1: #d5d3e3;
-$sequence-purple-2: #b5aee0;
-$sequence-purple-3: #9588de;
-$sequence-purple-4: #7563db;
-$sequence-purple-5: #553dd8;
+// Chart colors: Sequential color scale values
+$scale-purple-1: #d5d3e3;
+$scale-purple-2: #b5aee0;
+$scale-purple-3: #9588de;
+$scale-purple-4: #7563db;
+$scale-purple-5: #553dd8;
 
-$sequence-salmon-1: #e5d2d1;
-$sequence-salmon-2: #e5b3a8;
-$sequence-salmon-3: #e59380;
-$sequence-salmon-4: #e57457;
-$sequence-salmon-5: #e5542e;
+$scale-salmon-1: #e5d2d1;
+$scale-salmon-2: #e5b3a8;
+$scale-salmon-3: #e59380;
+$scale-salmon-4: #e57457;
+$scale-salmon-5: #e5542e;
 
-$sequence-green-1:  #d6d6c8;
-$sequence-green-2:  #c6cc96;
-$sequence-green-3:  #b6c265;
-$sequence-green-4:  #a5b833;
-$sequence-green-5:  #95ae01;
+$scale-green-1:  #d6d6c8;
+$scale-green-2:  #c6cc96;
+$scale-green-3:  #b6c265;
+$scale-green-4:  #a5b833;
+$scale-green-5:  #95ae01;
 
-$sequence-blue-1:   #d5dee2;
-$sequence-blue-2:   #b7d8e7;
-$sequence-blue-3:   #99d1ed;
-$sequence-blue-4:   #7acbf2;
-$sequence-blue-5:   #5fbef2;
+$scale-blue-1:   #d5dee2;
+$scale-blue-2:   #b7d8e7;
+$scale-blue-3:   #99d1ed;
+$scale-blue-4:   #7acbf2;
+$scale-blue-5:   #5fbef2;
 
 // Breakpoints
 $screen-large-above: "(min-width: 940px)";
@@ -197,6 +197,10 @@ $screen-tiniest-below: "(max-width: 359px)";
 
   @media (max-width: 740px) {
     font-size: 16px;
+  }
+
+  .graphic-inline-legend {
+    font-weight: 600;
   }
 }
 

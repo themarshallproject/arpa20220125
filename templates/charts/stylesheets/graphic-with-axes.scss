@@ -5,7 +5,7 @@
     @include acumin;
   }
 
-  rect, line, path {
+  rect, line, .domain {
     shape-rendering: crispEdges;
   }
 
@@ -53,11 +53,17 @@
 
   .tick text {
     @include pressura;
-    font-size: 12px;
+    letter-spacing: -0.2px;
+    font-size: 11.5px;
     fill: $med-gray;
 
     @media (max-width: 540px) {
       font-size: 10px;
     }
+  }
+
+  &.g-tmp-bar-chart-horizontal .y .tick text {
+    @include acumin;
+    letter-spacing: 0;
   }
 }

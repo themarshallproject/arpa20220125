@@ -3,6 +3,7 @@
 
   .data-label {
     @include pressura;
+    letter-spacing: -0.2px;
     font-size: 13px;
     fill: $med-gray;
     text-anchor: middle;
