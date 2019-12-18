@@ -29,6 +29,7 @@ function renderSingle(options) {
 
 function renderMultiple(options) {
   var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
+  var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
   var graphics = getGraphics();
@@ -40,7 +41,8 @@ function renderMultiple(options) {
     content = '';
     for (key in graphics) {
       if (key !== 'header') {
-        content += graphics[key] + '\n' + loremGraf() + '\n';
+        graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
+        content += graphicHTML;
       }
     }
   }
@@ -91,11 +93,6 @@ function replaceGraphics(text) {
 
 function renderWarning(text) {
   return '<h1 style="color: red;">' + text + '</h1>'
-}
-
-
-function loremGraf() {
-  return "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
 }
 
 
