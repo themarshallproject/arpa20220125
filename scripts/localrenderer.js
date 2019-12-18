@@ -32,11 +32,11 @@ function renderMultiple(options) {
   var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
-  var graphics = getGraphics();
+  var graphics = getGraphics(options);
   var headerContent = graphics['header'];
 
-  if (localText) {
-    content = replaceGraphics(localText);
+  if (localText && !options.examples) {
+    content = replaceGraphics(graphics, localText);
   } else {
     content = '';
     for (key in graphics) {
@@ -64,8 +64,7 @@ function renderMultiple(options) {
 }
 
 
-function replaceGraphics(text) {
-  var graphics = getGraphics();
+function replaceGraphics(graphics, text) {
   var regex = /\[graphic .*slug=["\']?(\S+):(\S+)[\'"]?\s*.*\]/;
   var lines = text.split('\n');
   return lines.map(function(line) {

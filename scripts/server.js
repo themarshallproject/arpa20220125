@@ -17,6 +17,13 @@ module.exports = function(options) {
     res.send(renderer.renderTemplate({ lrPort: lrPort }));
   });
 
+  app.get('/examples/', function(req, res) {
+    res.send(renderer.renderTemplate({
+      lrPort: lrPort,
+      examples: true
+    }));
+  });
+
   app.get('/readme/', function(req, res) {
     res.send(renderer.renderReadme({ lrPort: lrPort }))
   });
