@@ -3,7 +3,7 @@ var config = require('../config.json');
 var marked = require('marked');
 
 function renderTemplate(options) {
-  if (config.multiple_graphics) {
+  if (config.multiple_graphics || options.examples) {
     return renderMultiple(options);
   } else {
     return renderSingle(options)
