@@ -16,23 +16,28 @@ $transition-timing: 0.25s ease-in-out;
 $text-shadow: 1px 1px 10px rgba(0,0,0,0.8);
 
 // Colors
-$highlight: #ff0b3a;
-$light-gray: #ccc;
-$med-gray: #888;
-$lightblack: #353535;
+$bg-gray:       #f6f6f4; // Site bg color
+$text-black:    #111111; // Site text color
+$highlight:     #ff0b3a;
+$alt-highlight: #1fbec3;
+
+// Grays
+$light-gray:    #ececea; // Secondary bg color
+$med-gray:      #888888; // Secondary text
+$dark-gray:     #353535; // Muted black
 
 // Chart colors: Basic fills
 $fill-purple: #604bd7;
 $fill-salmon: #f97a69;
-$fill-green: #a5c100;
-$fill-blue: #5cc4f7;
+$fill-green:  #a5c100;
+$fill-blue:   #5cc4f7;
 
 // Chart colors: Text (designed to show up better)
 // TODO ACTUAL VALUES TK!!!
 $text-purple: #604bd7;
 $text-salmon: #f97a69;
-$text-green: #a5c100;
-$text-blue: #5cc4f7;
+$text-green:  #a5c100;
+$text-blue:   #5cc4f7;
 
 // Chart colors: Sequential color scale values
 $scale-purple-1: #d5d3e3;
@@ -162,7 +167,7 @@ $screen-tiniest-below: "(max-width: 359px)";
   @include acumin;
   line-height: 1.1em;
   display: block;
-  color: $lightblack;
+  color: $dark-gray;
   font-size: 28px;
   margin-top: 20px;
   margin-bottom: 18px;
@@ -191,7 +196,7 @@ $screen-tiniest-below: "(max-width: 359px)";
   display: block;
   font-size: 18px;
   margin-bottom: 28px;
-  color: $lightblack;
+  color: $dark-gray;
   font-weight: 100;
   line-height: 1.5em;
 
@@ -226,7 +231,7 @@ $screen-tiniest-below: "(max-width: 359px)";
   color: $med-gray;
 
   a {
-    color: $lightblack;
+    color: $dark-gray;
   }
 
   @media (max-width: 740px) {
