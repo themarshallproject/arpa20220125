@@ -137,6 +137,16 @@ function productionHtml() {
 }
 
 
+function examplesHtml() {
+  return gulp.src('examples/*.html')
+    // TODO allow external data
+    //.pipe(externalData.getExternalData())
+    //.pipe(externalData.renderGraphicHTML())
+    .pipe(gulp.dest('build/examples'))
+    .pipe(livereload());
+}
+
+
 function singleOrHeader(file) {
   if (!config.multiple_graphics) {
     return true;
@@ -229,7 +239,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(html, examplesHtml, styles, scripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -242,6 +252,7 @@ function watch() {
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
+  gulp.watch(['examples/**'], examplesHtml);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
