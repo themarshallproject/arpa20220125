@@ -7,3 +7,9 @@
   @include pressura;
   background-color: lightcoral;
 }
+
+#test-graphic-1b {
+  @include pressura;
+  font-size: 20px;
+  background-color: fuchsia;
+}

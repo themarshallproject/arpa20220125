@@ -283,13 +283,13 @@ function watch() {
   gulp.watch(['README.md'], readme);
   gulp.watch(['templates/charts/README.md'], graphicsReadme);
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
-  gulp.watch(['examples/*.scss', 'templates/charts/stylesheets/*.scss'], exampleStyles);
+  gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], exampleStyles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
-  gulp.watch(['examples/*.js', 'examples/lib/*.js', 'templates/charts/*.js'], exampleScripts);
+  gulp.watch(['examples/*/*.js', 'examples/lib/*.js', 'templates/charts/*.js'], exampleScripts);
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  gulp.watch(['examples/*.html'], exampleHtml);
+  gulp.watch(['examples/*/*.html'], exampleHtml);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
