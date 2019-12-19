@@ -17,6 +17,8 @@ M M M M M M M M M   /_/  /_/  \___/_/ /\__/\__/\__/
 
 Our toolchain for building and deploying graphics, custom posts, and post headers.
 
+View some [examples of common graphics](/examples/).
+
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
 ## Table of Contents
@@ -28,6 +30,7 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 - [Run](#run)
 - [Deploy](#deploy)
 - [Notes on JavaScript](#notes-on-javascript)
+- [Examples](#examples)
 - [Using pre-configured templates](#using-pre-configured-templates)
   * [Chart templates](#chart-templates)
   * [ai2html template](#ai2html-template)
@@ -80,6 +83,19 @@ Our toolchain for building and deploying graphics, custom posts, and post header
 
 - By default, the graphics rig uses the ES6 import structure. Only `graphic.js` is included automatically on the page, so other files should be `import`ed from there. To use non-ES6-module code, place scripts in the `src/lib/` folder. This will be included and concatenated without being compiled.
 - You can use ES5 by setting the `use_es6` configuration option in `config.json` to `false`. This creates a slightly different compilation behavior. Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
+
+
+## Examples
+
+- View [examples of common graphics here](/examples/), or check out the
+  code in `examples/`.
+- To add a new example to the page:
+  - create a new directory in `examples/` with a directory name that describes the graphic.
+  - Place your html, javascript and sass inside. You can also include assets and
+    external data, preserving the same folder structure that you'd use
+    within `src/`.
+  - Import your sassfile in `examples/examples.scss`.
+  - You're good to go!
 
 
 ## Using pre-configured templates
