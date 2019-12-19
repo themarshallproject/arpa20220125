@@ -150,7 +150,7 @@ function productionHtml() {
 }
 
 
-function examplesHtml() {
+function exampleHtml() {
   return gulp.src('examples/*.html')
     // TODO allow external data
     //.pipe(externalData.getExternalData())
@@ -244,6 +244,28 @@ function productionScripts() {
 }
 
 
+function exampleScripts() {
+  // Compile the vendor js
+  var libJs = gulp.src('examples/lib/*.js');
+
+  var graphicJs = gulp.src('examples/*.js')
+    .pipe(bro({
+      paths: [
+        '../templates'
+      ],
+      transform: [
+        babelify.configure({ presets: ['@babel/preset-env'] })
+      ]
+    }));
+
+  return mergeStream(libJs, graphicJs)
+    .pipe(sort(jsFileComparator))
+    .pipe(concat('examples.js'))
+    .pipe(gulp.dest('build/examples'))
+    .pipe(livereload());
+}
+
+
 function assets() {
   return gulp.src('src/assets/**', { base: 'src' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
@@ -252,7 +274,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, examplesHtml, styles, exampleStyles, scripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(html, exampleHtml, styles, exampleStyles, scripts, exampleScripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -263,10 +285,11 @@ function watch() {
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
   gulp.watch(['examples/*.scss', 'templates/charts/stylesheets/*.scss'], exampleStyles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
+  gulp.watch(['examples/*.js', 'examples/lib/*.js', 'templates/charts/*.js'], exampleScripts);
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  gulp.watch(['examples/**'], examplesHtml);
+  gulp.watch(['examples/*.html'], exampleHtml);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 

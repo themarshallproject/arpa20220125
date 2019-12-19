@@ -140,7 +140,7 @@ function getIncludes(options) {
       getLRScript(options),
       "<link rel='stylesheet' href='/fonts.css'>",
       "<link rel='stylesheet' href='/examples/examples.css'>",
-      "<script src='/graphic.js'></script>\n"
+      "<script src='/examples/examples.js'></script>\n"
     ].join("\n");
   } else {
     return [
