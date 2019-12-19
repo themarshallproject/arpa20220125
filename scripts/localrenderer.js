@@ -32,7 +32,7 @@ function renderMultiple(options) {
   var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
-  var graphics = getGraphics(options);
+  var graphics = options.examples ? getExamples(options) : getGraphics(options);
   var headerContent = graphics['header'];
 
   if (localText && !options.examples) {
@@ -96,7 +96,7 @@ function renderWarning(text) {
 
 
 function getGraphics(options) {
-  var dirPath = options.examples ? './build/examples/' : './build/';
+  var dirPath = options.dirPath || './build/';
   var files = fs.readdirSync(dirPath, 'utf-8');
   var graphics = {};
   var isProduction = options && options.isProduction || false;
@@ -112,6 +112,25 @@ function getGraphics(options) {
       }
     }
   });
+  return graphics;
+}
+
+
+function getExamples(options) {
+  var parentDirPath = './build/examples/';
+  var dirs = fs.readdirSync(parentDirPath, 'utf-8').filter((d) => {
+    return fs.lstatSync(parentDirPath + d).isDirectory();
+  })
+  var graphics = {};
+
+  dirs.forEach((dirPath) => {
+    var dirOptions = options;
+    dirOptions['dirPath'] = `${parentDirPath + dirPath}/`;
+
+    var dirGraphics = getGraphics(dirOptions)
+    Object.assign(graphics, dirGraphics);
+  })
+
   return graphics;
 }
 

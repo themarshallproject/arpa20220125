@@ -151,7 +151,7 @@ function productionHtml() {
 
 
 function exampleHtml() {
-  return gulp.src('examples/*.html')
+  return gulp.src('examples/!(lib)/*.html')
     // TODO allow external data
     //.pipe(externalData.getExternalData())
     //.pipe(externalData.renderGraphicHTML())
