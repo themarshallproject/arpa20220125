@@ -248,10 +248,10 @@ function exampleScripts() {
   // Compile the vendor js
   var libJs = gulp.src('examples/lib/*.js');
 
-  var graphicJs = gulp.src('examples/*.js')
+  var graphicJs = gulp.src('examples/!(lib)/*.js')
     .pipe(bro({
       paths: [
-        '../templates'
+        '../../templates'
       ],
       transform: [
         babelify.configure({ presets: ['@babel/preset-env'] })
