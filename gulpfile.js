@@ -152,9 +152,8 @@ function productionHtml() {
 
 function exampleHtml() {
   return gulp.src('examples/!(lib)/*.html')
-    // TODO allow external data
-    //.pipe(externalData.getExternalData())
-    //.pipe(externalData.renderGraphicHTML())
+    .pipe(externalData.getExternalData({ examples: true }))
+    .pipe(externalData.renderGraphicHTML({ examples: true }))
     .pipe(gulp.dest('build/examples'))
     .pipe(livereload());
 }
@@ -289,7 +288,7 @@ function watch() {
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  gulp.watch(['examples/*/*.html'], exampleHtml);
+  gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], exampleHtml);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
