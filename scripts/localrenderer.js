@@ -117,7 +117,7 @@ function getGraphics(options) {
 
 
 function getExamples(options) {
-  var parentDirPath = './build/examples/';
+  var parentDirPath = './build-examples/';
   var dirs = fs.readdirSync(parentDirPath, 'utf-8').filter((d) => {
     return fs.lstatSync(parentDirPath + d).isDirectory();
   })
@@ -154,21 +154,13 @@ function renderGraphicsReadme(options) {
 
 
 function getIncludes(options) {
-  if (options.examples) {
-    return [
-      getLRScript(options),
-      "<link rel='stylesheet' href='/fonts.css'>",
-      "<link rel='stylesheet' href='/examples/examples.css'>",
-      "<script src='/examples/examples.js'></script>\n"
-    ].join("\n");
-  } else {
-    return [
-      getLRScript(options),
-      "<link rel='stylesheet' href='/fonts.css'>",
-      "<link rel='stylesheet' href='/graphic.css'>",
-      "<script src='/graphic.js'></script>\n"
-    ].join("\n");
-  }
+  const dirPath = options.examples ? '/examples' : '';
+  return [
+    getLRScript(options),
+    `<link rel='stylesheet' href='/fonts.css'>`,
+    `<link rel='stylesheet' href='${dirPath}/graphic.css'>`,
+    `<script src='${dirPath}/graphic.js'></script>\n`
+  ].join("\n");
 }
 
 

@@ -97,8 +97,8 @@ function exampleStyles() {
       ]
     })
       .on('error', notify.onError("SASS <%= error.formatted %>")))
-    .pipe(concat('examples.css'))
-    .pipe(gulp.dest('build/examples'))
+    .pipe(concat('graphic.css'))
+    .pipe(gulp.dest('build-examples'))
     .pipe(livereload());
 }
 
@@ -156,7 +156,7 @@ function exampleHtml() {
   return gulp.src('examples/*/*.html')
     .pipe(externalData.getExternalData({ examples: true }))
     .pipe(externalData.renderGraphicHTML({ examples: true }))
-    .pipe(gulp.dest('build/examples'))
+    .pipe(gulp.dest('build-examples'))
     .pipe(livereload());
 }
 
@@ -261,8 +261,8 @@ function exampleScripts() {
 
   return mergeStream(libJs, graphicJs)
     .pipe(sort(jsFileComparator))
-    .pipe(concat('examples.js'))
-    .pipe(gulp.dest('build/examples'))
+    .pipe(concat('graphic.js'))
+    .pipe(gulp.dest('build-examples'))
     .pipe(livereload());
 }
 

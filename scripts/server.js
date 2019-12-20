@@ -5,6 +5,7 @@ var renderer = require('./localrenderer.js');
 module.exports = function(options) {
   var app = express();
   app.use(express.static('build'));
+  app.use('/examples', express.static('build-examples'));
   app.use(express.static('post-templates'));
 
   var config;
