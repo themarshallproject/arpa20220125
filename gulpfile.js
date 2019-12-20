@@ -89,13 +89,15 @@ function productionStyles() {
 
 
 function exampleStyles() {
-  return gulp.src('examples/examples.scss')
+  return gulp.src('examples/*/graphic.scss')
     .pipe(sass({
       includePaths: [
+        'src/',
         'templates/'
       ]
     })
       .on('error', notify.onError("SASS <%= error.formatted %>")))
+    .pipe(concat('examples.css'))
     .pipe(gulp.dest('build/examples'))
     .pipe(livereload());
 }
@@ -151,7 +153,7 @@ function productionHtml() {
 
 
 function exampleHtml() {
-  return gulp.src('examples/!(lib)/*.html')
+  return gulp.src('examples/*/*.html')
     .pipe(externalData.getExternalData({ examples: true }))
     .pipe(externalData.renderGraphicHTML({ examples: true }))
     .pipe(gulp.dest('build/examples'))
@@ -245,9 +247,9 @@ function productionScripts() {
 
 function exampleScripts() {
   // Compile the vendor js
-  var libJs = gulp.src('examples/lib/*.js');
+  var libJs = gulp.src('examples/*/lib/*.js');
 
-  var graphicJs = gulp.src('examples/!(lib)/*.js')
+  var graphicJs = gulp.src('examples/*/graphic.js')
     .pipe(bro({
       paths: [
         '../../templates'
@@ -284,7 +286,7 @@ function watch() {
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
   gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], exampleStyles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
-  gulp.watch(['examples/*/*.js', 'examples/lib/*.js', 'templates/charts/*.js'], exampleScripts);
+  gulp.watch(['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'], exampleScripts);
   gulp.watch(['src/assets/**'], assets);
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
