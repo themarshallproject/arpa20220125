@@ -30,6 +30,7 @@ var urljoin = require('url-join');
 
 var config = require('./config.json');
 var credentials = require('./scripts/credentials.js');
+var examples = require('./scripts/examples.js');
 var externalData = require('./scripts/externaldata.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
 var github = require('./scripts/github.js');
@@ -88,21 +89,6 @@ function productionStyles() {
 }
 
 
-function exampleStyles() {
-  return gulp.src('examples/*/graphic.scss')
-    .pipe(sass({
-      includePaths: [
-        'src/',
-        'templates/'
-      ]
-    })
-      .on('error', notify.onError("SASS <%= error.formatted %>")))
-    .pipe(concat('graphic.css'))
-    .pipe(gulp.dest('build-examples'))
-    .pipe(livereload());
-}
-
-
 function graphicsReadme() {
   return gulp.src('templates/charts/README.md')
     .pipe(changedInPlace({ firstPass: true }))
@@ -148,15 +134,6 @@ function productionHtml() {
       gulpIf(singleOrHeader,
         insert.append(includes.javascriptIncludeText())))
     .pipe(gulp.dest('build'))
-    .pipe(livereload());
-}
-
-
-function exampleHtml() {
-  return gulp.src('examples/*/*.html')
-    .pipe(externalData.getExternalData({ examples: true }))
-    .pipe(externalData.renderGraphicHTML({ examples: true }))
-    .pipe(gulp.dest('build-examples'))
     .pipe(livereload());
 }
 
@@ -245,28 +222,6 @@ function productionScripts() {
 }
 
 
-function exampleScripts() {
-  // Compile the vendor js
-  var libJs = gulp.src('examples/*/lib/*.js');
-
-  var graphicJs = gulp.src('examples/*/graphic.js')
-    .pipe(bro({
-      paths: [
-        '../../templates'
-      ],
-      transform: [
-        babelify.configure({ presets: ['@babel/preset-env'] })
-      ]
-    }));
-
-  return mergeStream(libJs, graphicJs)
-    .pipe(sort(jsFileComparator))
-    .pipe(concat('graphic.js'))
-    .pipe(gulp.dest('build-examples'))
-    .pipe(livereload());
-}
-
-
 function assets() {
   return gulp.src('src/assets/**', { base: 'src' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
@@ -275,7 +230,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, exampleHtml, styles, exampleStyles, scripts, exampleScripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(html, examples.html, styles, examples.styles, scripts, examples.scripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -284,13 +239,17 @@ function watch() {
   gulp.watch(['README.md'], readme);
   gulp.watch(['templates/charts/README.md'], graphicsReadme);
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
-  gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], exampleStyles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
-  gulp.watch(['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'], exampleScripts);
   gulp.watch(['src/assets/**'], assets);
+
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], exampleHtml);
+
+  // Examples
+  gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);
+  gulp.watch(['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'], examples.scripts);
+  gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
+
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
