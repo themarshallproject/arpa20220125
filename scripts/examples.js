@@ -12,7 +12,7 @@ var sort = require('gulp-sort');
 var externalData = require('./externaldata.js');
 var getGraphics = require('./localrenderer.js').getGraphics;
 
-function styles() {
+function exampleStyles() {
   return gulp.src('examples/*/graphic.scss')
     .pipe(sass({
       includePaths: [
@@ -27,7 +27,7 @@ function styles() {
 }
 
 
-function html() {
+function exampleHtml() {
   return gulp.src('examples/*/*.html')
     .pipe(externalData.getExternalData({ examples: true }))
     .pipe(externalData.renderGraphicHTML({ examples: true }))
@@ -36,7 +36,7 @@ function html() {
 }
 
 
-function scripts() {
+function exampleScripts() {
   // Compile the vendor js
   var libJs = gulp.src('examples/*/lib/*.js');
 
@@ -57,7 +57,7 @@ function scripts() {
 }
 
 module.exports = {
-  styles,
-  html,
-  scripts,
+  styles: exampleStyles,
+  html: exampleHtml,
+  scripts: exampleScripts,
 }
