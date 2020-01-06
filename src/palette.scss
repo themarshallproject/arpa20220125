@@ -33,12 +33,21 @@ $fill-salmon: #f97a69;
 $fill-green:  #a5c100;
 $fill-blue:   #5cc4f7;
 
-// Chart colors: Text (designed to show up better)
-// TODO ACTUAL VALUES TK!!!
-$text-purple: #604bd7;
-$text-salmon: #f97a69;
-$text-green:  #a5c100;
-$text-blue:   #5cc4f7;
+// Chart colors: Text
+// Use to signify when text corresponds to a graphic fill color.
+// These are formulated to better show up as text.
+// Can also be used to signify when text corresponds to the highest-value sequential color.
+$text-purple: #5641ce;
+$text-salmon: #e55946;
+$text-green:  #8da400;
+$text-blue:   #40afe5;
+
+// Chart colors: Text (light)
+// Use to signify when text corresponds to a lowest-value sequential color.
+$text-light-purple: #a39dd9;
+$text-light-salmon: #d7a4a2;
+$text-light-green:  #bcbc8a;
+$text-light-blue:   #88b3c7;
 
 // Chart colors: Sequential color scale values
 $scale-purple-1: #d5d3e3;
