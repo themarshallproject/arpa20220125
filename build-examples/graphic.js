@@ -21,7 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(document).ready(function () {
   var $test2 = $('#test-graphic-2');
-  $test2.html('This html has been replaced. <div id="dynamic-div"></div>');
+  $test2.html('This html has been replaced. <div id="dynamic-div"></div> <img src="assets/test-arrow-next-70.png" />"');
   var testChart = new _chartBase.default({
     containerId: 'dynamic-div',
     aspectRatio: 12 / 5

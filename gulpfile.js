@@ -230,7 +230,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, examples.html, styles, examples.styles, scripts, examples.scripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(html, examples.html, styles, examples.styles, scripts, examples.scripts, assets, examples.assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -249,6 +249,7 @@ function watch() {
   gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);
   gulp.watch(['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'], examples.scripts);
   gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
+  gulp.watch(['examples/*/assets/**'], examples.assets);
 
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }

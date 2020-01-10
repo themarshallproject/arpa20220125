@@ -1,6 +1,7 @@
 var babel = require('gulp-babel');
 var babelify = require('babelify');
 var bro = require('gulp-bro');
+var checkFileSize = require('gulp-check-filesize');
 var concat = require('gulp-concat');
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
@@ -56,8 +57,17 @@ function exampleScripts() {
     .pipe(livereload());
 }
 
+
+function exampleAssets() {
+  return gulp.src('examples/*/assets/**', { base: 'examples' })
+    .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
+    .pipe(gulp.dest('build-examples'))
+    .pipe(livereload());
+}
+
 module.exports = {
   styles: exampleStyles,
   html: exampleHtml,
   scripts: exampleScripts,
+  assets: exampleAssets,
 }
