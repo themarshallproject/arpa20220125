@@ -8,6 +8,7 @@ var livereload = require('gulp-livereload');
 var log = require('fancy-log');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
+var rename = require('gulp-rename');
 var RevAll = require('gulp-rev-all');
 var sass = require('gulp-sass');
 var sort = require('gulp-sort');
@@ -62,23 +63,19 @@ function exampleScripts() {
 
 
 function exampleAssets() {
+  log('exampleAssets is now running')
   return gulp.src('examples/*/assets/**', { base: 'examples' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
-    .pipe(gulp.dest('build-examples'));
-}
-
-function exampleRevision() {
-  return gulp.src('examples/*/**')
-    .pipe(RevAll.revision({
-      debug: true,
-      transformPath: (rev, source, file) => {
-        log(rev)
-        return urljoin('testing-revision/', rev);
-      },
-      includeFilesInManifest: ['.html', '.js', '.css']
+    .pipe(rename(function(path) {
+      log(path)
+      const pathData = path;
+      pathData.basename = `${ path.dirname.split('/assets')[0] }-${ path.basename }`;
+      pathData.dirname = `assets`;
+      log(pathData)
+      return pathData;
     }))
-    .pipe(gulp.dest('dist-examples'))
-    
+    .pipe(gulp.dest('build-examples'))
+    .pipe(livereload());
 }
 
 module.exports = {
@@ -86,5 +83,4 @@ module.exports = {
   html: exampleHtml,
   scripts: exampleScripts,
   assets: exampleAssets,
-  revision: exampleRevision,
 }
