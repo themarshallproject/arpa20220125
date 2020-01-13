@@ -82,3 +82,6 @@
   border: 5px dashed turquoise;
   font-family: 'acumin-pro', sans-serif;
   font-weight: 400; }
+
+#dynamic-div {
+  background: url(assets/e-arrow-replay.png); }

@@ -5,3 +5,7 @@
   border: 5px dashed turquoise;
   @include acumin;
 }
+
+#dynamic-div {
+  background: url(assets/e-arrow-replay.png);
+}

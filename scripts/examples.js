@@ -5,10 +5,13 @@ var checkFileSize = require('gulp-check-filesize');
 var concat = require('gulp-concat');
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
+var log = require('fancy-log');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
+var RevAll = require('gulp-rev-all');
 var sass = require('gulp-sass');
 var sort = require('gulp-sort');
+var urljoin = require('url-join');
 
 var externalData = require('./externaldata.js');
 var getGraphics = require('./localrenderer.js').getGraphics;
@@ -61,8 +64,21 @@ function exampleScripts() {
 function exampleAssets() {
   return gulp.src('examples/*/assets/**', { base: 'examples' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
-    .pipe(gulp.dest('build-examples'))
-    .pipe(livereload());
+    .pipe(gulp.dest('build-examples'));
+}
+
+function exampleRevision() {
+  return gulp.src('examples/*/**')
+    .pipe(RevAll.revision({
+      debug: true,
+      transformPath: (rev, source, file) => {
+        log(rev)
+        return urljoin('testing-revision/', rev);
+      },
+      includeFilesInManifest: ['.html', '.js', '.css']
+    }))
+    .pipe(gulp.dest('dist-examples'))
+    
 }
 
 module.exports = {
@@ -70,4 +86,5 @@ module.exports = {
   html: exampleHtml,
   scripts: exampleScripts,
   assets: exampleAssets,
+  revision: exampleRevision,
 }

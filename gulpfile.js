@@ -256,21 +256,23 @@ function watch() {
 
 
 function clean() {
-  return del(['dist/**', 'build/**']);
+  return del(['dist/**', 'build/**', 'build-examples/**']);
 }
 
 
 function revision() {
   return gulp.src('build/**')
     .pipe(RevAll.revision({
+      debug: true,
       transformPath: (rev, source, file) => {
+        log(rev)
         return urljoin(config.cdn, config.slug, rev);
       },
       includeFilesInManifest: ['.html', '.js', '.css']
     }))
     .pipe(gulp.dest('dist'))
-    .pipe(RevAll.manifestFile())
-    .pipe(gulp.dest('dist'));
+    //.pipe(RevAll.manifestFile())
+    //.pipe(gulp.dest('dist'));
 }
 
 
@@ -372,6 +374,7 @@ gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
+gulp.task('revision:examples', examples.revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
 
