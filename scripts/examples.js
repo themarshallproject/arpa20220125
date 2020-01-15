@@ -51,6 +51,8 @@ function exampleHtml() {
       var exampleSlug = file.path.match(/\/build-examples\/([^\/]+)\//)[1];
       log('exampleSlug', exampleSlug)
       log('file.path', file.path)
+      log('file.base', file.base)
+      log('file.cwd', file.cwd)
 
         // TODO this regex is not foolproof...
       return gulp.src(file.path)
@@ -58,7 +60,7 @@ function exampleHtml() {
           log('MATCH', match)
           return `${ exampleSlug }/${ match }`
         }))
-        .pipe(gulp.dest('./'))
+        .pipe(gulp.dest(`${ file.base }/${ exampleSlug }`))
     }))
     .pipe(livereload());
 }
