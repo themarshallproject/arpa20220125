@@ -3,6 +3,7 @@ var babelify = require('babelify');
 var bro = require('gulp-bro');
 var checkFileSize = require('gulp-check-filesize');
 var concat = require('gulp-concat');
+var del = require('del');
 var flatmap = require('gulp-flatmap');
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
@@ -98,17 +99,24 @@ function exampleAssets() {
 }
 
 
-function reviseAssetPaths(stream) {
-  return stream
-    .pipe(tap(function(file) {
-      log(file.path)
-    }))
+function exampleClean() {
+  log('example clean');
+  return del('build-examples/**');
 }
 
+
+const exampleBuild = gulp.series(exampleClean, gulp.parallel(
+  exampleHtml,
+  exampleStyles,
+  exampleScripts,
+  exampleAssets
+));
 
 module.exports = {
   styles: exampleStyles,
   html: exampleHtml,
   scripts: exampleScripts,
   assets: exampleAssets,
+  clean: exampleClean,
+  build: exampleBuild
 }

@@ -230,7 +230,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, examples.html, styles, examples.styles, scripts, examples.scripts, assets, examples.assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -256,7 +256,7 @@ function watch() {
 
 
 function clean() {
-  return del(['dist/**', 'build/**', 'build-examples/**']);
+  return del(['dist/**', 'build/**']);
 }
 
 
@@ -271,8 +271,8 @@ function revision() {
       includeFilesInManifest: ['.html', '.js', '.css']
     }))
     .pipe(gulp.dest('dist'))
-    //.pipe(RevAll.manifestFile())
-    //.pipe(gulp.dest('dist'));
+    .pipe(RevAll.manifestFile())
+    .pipe(gulp.dest('dist'));
 }
 
 
@@ -353,7 +353,7 @@ function S3Deploy(done) {
   });
 }
 
-var defaultTask = gulp.series(clean, startServer, buildDev, openBrowser, watch);
+var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
 
 // Public interface
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
