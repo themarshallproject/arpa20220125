@@ -13,9 +13,6 @@ var notify = require('gulp-notify');
 var replace = require('gulp-replace');
 var RevAll = require('gulp-rev-all');
 var sass = require('gulp-sass');
-var sort = require('gulp-sort');
-var tap = require('gulp-tap');
-var urljoin = require('url-join');
 
 var externalData = require('./externaldata.js');
 var getGraphics = require('./localrenderer.js').getGraphics;
