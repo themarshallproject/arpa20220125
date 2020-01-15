@@ -263,7 +263,6 @@ function clean() {
 function revision() {
   return gulp.src('build/**')
     .pipe(RevAll.revision({
-      debug: true,
       transformPath: (rev, source, file) => {
         return urljoin(config.cdn, config.slug, rev);
       },

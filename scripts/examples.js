@@ -10,7 +10,6 @@ var livereload = require('gulp-livereload');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
 var replace = require('gulp-replace');
-var RevAll = require('gulp-rev-all');
 var sass = require('gulp-sass');
 
 var externalData = require('./externaldata.js');
