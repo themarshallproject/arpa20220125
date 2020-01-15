@@ -20,6 +20,7 @@ var getGraphics = require('./localrenderer.js').getGraphics;
 function exampleStyles() {
   return gulp.src('examples/*/graphic.scss')
     .pipe(flatmap(function(stream, file) {
+      // Replace asset paths to use subfolders that correspond to slug for the given example
       var exampleSlug = file.path.match(/\/examples\/([^\/]+)\//)[1];
 
       return gulp.src(file.path)
@@ -45,6 +46,7 @@ function exampleHtml() {
     .pipe(externalData.renderGraphicHTML({ examples: true }))
     .pipe(gulp.dest('build-examples'))
     .pipe(flatmap(function(stream, file) {
+      // Replace asset paths to use subfolders that correspond to slug for the given example
       var exampleSlug = file.path.match(/\/build-examples\/([^\/]+)\//)[1];
 
         // TODO this regex is not foolproof...
@@ -64,6 +66,7 @@ function exampleScripts() {
 
   var graphicJs = gulp.src('examples/*/graphic.js')
     .pipe(flatmap(function(stream, file) {
+      // Replace asset paths to use subfolders that correspond to slug for the given example
       var exampleSlug = file.path.match(/\/examples\/([^\/]+)\//)[1];
 
       return gulp.src(file.path)
