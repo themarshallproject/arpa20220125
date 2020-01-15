@@ -24,7 +24,6 @@ function exampleStyles() {
   return gulp.src('examples/*/graphic.scss')
     .pipe(flatmap(function(stream, file) {
       var exampleSlug = file.path.match(/\/examples\/([^\/]+)\//)[1];
-      log('exampleSlug', exampleSlug)
 
       return gulp.src(file.path)
         .pipe(sass({
@@ -91,7 +90,6 @@ function exampleScripts() {
 
 
 function exampleAssets() {
-  log('exampleAssets is now running')
   return gulp.src('examples/*/assets/**', { base: 'examples' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('build-examples'))
