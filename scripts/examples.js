@@ -43,21 +43,16 @@ function exampleStyles() {
 
 
 function exampleHtml() {
-  var html = gulp.src('examples/*/*.html')
+  return gulp.src('examples/*/*.html')
     .pipe(externalData.getExternalData({ examples: true }))
     .pipe(externalData.renderGraphicHTML({ examples: true }))
     .pipe(gulp.dest('build-examples'))
     .pipe(flatmap(function(stream, file) {
       var exampleSlug = file.path.match(/\/build-examples\/([^\/]+)\//)[1];
-      log('exampleSlug', exampleSlug)
-      log('file.path', file.path)
-      log('file.base', file.base)
-      log('file.cwd', file.cwd)
 
         // TODO this regex is not foolproof...
       return gulp.src(file.path)
         .pipe(replace(/(assets\/.+\.\w+)/g, function(match) {
-          log('MATCH', match)
           return `${ exampleSlug }/${ match }`
         }))
         .pipe(gulp.dest(`${ file.base }/${ exampleSlug }`))
@@ -71,19 +66,18 @@ function exampleScripts() {
   var libJs = gulp.src('examples/*/lib/*.js');
 
   var graphicJs = gulp.src('examples/*/graphic.js')
-    .pipe(bro({
-      paths: [
-        '../../templates'
-      ],
-      transform: [
-        babelify.configure({ presets: ['@babel/preset-env'] })
-      ]
-    }))
     .pipe(flatmap(function(stream, file) {
       var exampleSlug = file.path.match(/\/examples\/([^\/]+)\//)[1];
-      log('exampleSlug', exampleSlug)
 
       return gulp.src(file.path)
+        .pipe(bro({
+          paths: [
+            '../../templates'
+          ],
+          transform: [
+            babelify.configure({ presets: ['@babel/preset-env'] })
+          ]
+        }))
         // TODO this regex is not foolproof...
         .pipe(replace(/(assets\/.+\.\w+)/g, `${ exampleSlug }/$1`))
     }))
