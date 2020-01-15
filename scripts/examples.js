@@ -7,7 +7,6 @@ var del = require('del');
 var flatmap = require('gulp-flatmap');
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
-var log = require('fancy-log');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
 var replace = require('gulp-replace');
@@ -98,7 +97,6 @@ function exampleAssets() {
 
 
 function exampleClean() {
-  log('example clean');
   return del('build-examples/**');
 }
 

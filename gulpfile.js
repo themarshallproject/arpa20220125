@@ -265,7 +265,6 @@ function revision() {
     .pipe(RevAll.revision({
       debug: true,
       transformPath: (rev, source, file) => {
-        log(rev)
         return urljoin(config.cdn, config.slug, rev);
       },
       includeFilesInManifest: ['.html', '.js', '.css']
