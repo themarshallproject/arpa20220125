@@ -372,8 +372,6 @@ gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
-gulp.task('revision:examples', examples.revision);
-gulp.task('assets:examples', examples.assets);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
 
