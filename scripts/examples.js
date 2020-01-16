@@ -15,11 +15,19 @@ var sass = require('gulp-sass');
 var externalData = require('./externaldata.js');
 var getGraphics = require('./localrenderer.js').getGraphics;
 
+function getSlugFromExamples(file) {
+  return file.path.match(/\/examples\/([^\/]+)\//)[1];
+}
+
+function getSlugFromBuild(file) {
+  return file.path.match(/\/build-examples\/([^\/]+)\//)[1];
+}
+
 function exampleStyles() {
   return gulp.src('examples/*/graphic.scss')
     .pipe(flatmap(function(stream, file) {
       // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = file.path.match(/\/examples\/([^\/]+)\//)[1];
+      var exampleSlug = getSlugFromExamples(file);
 
       return gulp.src(file.path)
         .pipe(sass({
@@ -45,7 +53,7 @@ function exampleHtml() {
     .pipe(gulp.dest('build-examples'))
     .pipe(flatmap(function(stream, file) {
       // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = file.path.match(/\/build-examples\/([^\/]+)\//)[1];
+      var exampleSlug = getSlugFromBuild(file);
 
         // TODO this regex is not foolproof...
       return gulp.src(file.path)
@@ -65,7 +73,7 @@ function exampleScripts() {
   var graphicJs = gulp.src('examples/*/graphic.js')
     .pipe(flatmap(function(stream, file) {
       // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = file.path.match(/\/examples\/([^\/]+)\//)[1];
+      var exampleSlug = getSlugFromExamples(file);
 
       return gulp.src(file.path)
         .pipe(bro({
