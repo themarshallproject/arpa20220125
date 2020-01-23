@@ -2,38 +2,94 @@
  * This file is intended for re-usable classes, variables, and mixins.  If
  * you encounter something in the course of your project that seems broadly
  * useful, please feel free to add it here.
+ *
+ * Avoid making changes to this file. If you need to customize any of these
+ * styles, build off of them in `src/graphic.scss`.
  */
-
 
 /*
  * VARIABLES
  */
 
-// Site stuff
 $header-height: 64px;
-$highlight: #ff0b3a;
-$light-gray: #ccc;
-$med-gray: #888;
 $transition-timing: 0.25s ease-in-out;
 $text-shadow: 1px 1px 10px rgba(0,0,0,0.8);
 
-$screen-large-above: "screen and (min-width: 940px)";
-$screen-large-below: "screen and (max-width: 939px)";
-$screen-medium-above: "screen and (min-width: 768px)";
-$screen-medium-below: "screen and (max-width: 767px)";
-$screen-small-above: "screen and (min-width: 580px)";
-$screen-small-below: "screen and (max-width: 579px)";
-$screen-tiny-above: "screen and (min-width: 420px)";
-$screen-tiny-below: "screen and (max-width: 419px)";
-$screen-tiniest-above: "screen and (min-width: 360px)";
-$screen-tiniest-below: "screen and (max-width: 359px)";
+// Colors
+$bg-gray:       #f6f6f4; // Site bg color
+$text-black:    #111111; // Site text color
+$highlight:     #ff0b3a;
+$alt-highlight: #1fbec3;
 
-@mixin absolute-center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
+// Grays
+$lightest-gray: #ececea; // Secondary bg color
+$light-gray:    #cccccc; // For muted lines
+$med-gray:      #888888; // Secondary text
+$dark-gray:     #353535; // Muted black
+
+// Chart colors: Basic fills
+$fill-purple: #604bd7;
+$fill-salmon: #f97a69;
+$fill-green:  #a5c100;
+$fill-blue:   #5cc4f7;
+
+// Chart colors: Text
+// Use to signify when text corresponds to a graphic fill color.
+// These are formulated to better show up as text.
+// Can also be used to signify when text corresponds to the highest-value sequential color.
+$text-purple: #5641ce;
+$text-salmon: #e55946;
+$text-green:  #8da400;
+$text-blue:   #40afe5;
+
+// Chart colors: Text (light)
+// Use to signify when text corresponds to a lowest-value sequential color.
+$text-light-purple: #a39dd9;
+$text-light-salmon: #d7a4a2;
+$text-light-green:  #bcbc8a;
+$text-light-blue:   #88b3c7;
+
+// Chart colors: Sequential color scale values
+$scale-purple-1: #d5d3e3;
+$scale-purple-2: #b5aee0;
+$scale-purple-3: #9588de;
+$scale-purple-4: #7563db;
+$scale-purple-5: #553dd8;
+
+$scale-salmon-1: #e5d2d1;
+$scale-salmon-2: #e5b3a8;
+$scale-salmon-3: #e59380;
+$scale-salmon-4: #e57457;
+$scale-salmon-5: #e5542e;
+
+$scale-green-1:  #d6d6c8;
+$scale-green-2:  #c6cc96;
+$scale-green-3:  #b6c265;
+$scale-green-4:  #a5b833;
+$scale-green-5:  #95ae01;
+
+$scale-blue-1:   #d5dee2;
+$scale-blue-2:   #b7d8e7;
+$scale-blue-3:   #99d1ed;
+$scale-blue-4:   #7acbf2;
+$scale-blue-5:   #5fbef2;
+
+// Breakpoints
+$screen-large-above: "(min-width: 940px)";
+$screen-large-below: "(max-width: 939px)";
+$screen-medium-above: "(min-width: 768px)";
+$screen-medium-below: "(max-width: 767px)";
+$screen-small-above: "(min-width: 580px)";
+$screen-small-below: "(max-width: 579px)";
+$screen-tiny-above: "(min-width: 420px)";
+$screen-tiny-below: "(max-width: 419px)";
+$screen-tiniest-above: "(min-width: 360px)";
+$screen-tiniest-below: "(max-width: 359px)";
+
+
+/*
+ * MIXINS
+ */
 
 @mixin font-smooth {
   -webkit-font-smoothing: antialiased;
@@ -80,6 +136,13 @@ $screen-tiniest-below: "screen and (max-width: 359px)";
   font-weight: 400;
 }
 
+@mixin absolute-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 @mixin safari-animation {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -104,6 +167,114 @@ $screen-tiniest-below: "screen and (max-width: 359px)";
         border-bottom: 1px solid $hover-color;
       }
     }
+  }
+}
+
+/*
+ * BASE GRAPHIC STYLES
+ */
+.graphic-head {
+  @include acumin;
+  line-height: 1.1em;
+  display: block;
+  color: $dark-gray;
+  font-size: 28px;
+  margin-top: 20px;
+  margin-bottom: 18px;
+  font-weight: 300;
+
+  @media (max-width: 740px) {
+    font-size: 22px;
+  }
+}
+
+.graphic-container-sidebar .graphic-head {
+  line-height: 1.25;
+  font-size: 24px;
+  margin-top: 35px;
+  margin-bottom: 22px;
+  font-weight: 200;
+
+  @media (max-width: 740px) {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+}
+
+.graphic-deck {
+  @include acumin;
+  display: block;
+  font-size: 18px;
+  margin-bottom: 28px;
+  color: $dark-gray;
+  font-weight: 100;
+  line-height: 1.5em;
+
+  @media (max-width: 740px) {
+    font-size: 16px;
+  }
+
+  .graphic-inline-legend {
+    font-weight: 600;
+  }
+}
+
+.graphic-container-sidebar .graphic-deck {
+  font-size: 15px;
+  margin-bottom: 22px;
+  line-height: 1.4em;
+
+  @media (max-width: 740px) {
+    font-size: 15px;
+  }
+}
+
+.graphic-source {
+  @include acumin;
+  font-weight: normal;
+  letter-spacing: -0.2px;
+  font-weight: 100;
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 22px;
+  margin-bottom: 53px;
+  color: $med-gray;
+
+  a {
+    color: $dark-gray;
+  }
+
+  @media (max-width: 740px) {
+    font-size: 12px;
+  }
+}
+
+.graphic-container-sidebar .graphic-source {
+  font-size: 12px;
+  line-height: 18px;
+  margin-top:8px;
+
+  @media (max-width: 740px) {
+    font-size: 12px;
+    line-height: 14px;
+  }
+}
+
+.graphic-container-sidebar {
+  float: left;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 31%;
+  padding-right: 2.35%;
+  height: 0;
+
+  @media (max-width: 740px) {
+    margin-top: 0px;
+    margin-bottom: 55px;
+    margin-right: 0;
+    display: block;
+    width: 100%;
+    height:  auto;
   }
 }
 
