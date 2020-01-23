@@ -7,6 +7,7 @@ var del = require('del');
 var flatmap = require('gulp-flatmap');
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
+var log = require('fancy-log');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
 var replace = require('gulp-replace');
@@ -15,13 +16,47 @@ var sass = require('gulp-sass');
 var externalData = require('./externaldata.js');
 var getGraphics = require('./localrenderer.js').getGraphics;
 
+
+// Retrieve an example's slug from its path within /examples/
 function getSlugFromExamples(file) {
   return file.path.match(/\/examples\/([^\/]+)\//)[1];
 }
 
+
+// Retrieve an example's slug from its path within /build-examples/
 function getSlugFromBuild(file) {
   return file.path.match(/\/build-examples\/([^\/]+)\//)[1];
 }
+
+
+// Retrieve the regex used to replace asset paths
+function getReplacerRegex() {
+  return /(assets\/.+\.\w+)/g;
+}
+
+
+// Use gulp-replace to add example slug to asset paths
+function addSlugToPaths(exampleSlug) {
+  return replace(getReplacerRegex(), `${ exampleSlug }/$1`);
+}
+
+
+function exampleHtml() {
+  return gulp.src('examples/*/*.html')
+    .pipe(externalData.getExternalData({ examples: true }))
+    .pipe(externalData.renderGraphicHTML({ examples: true }))
+    .pipe(gulp.dest('build-examples'))
+    .pipe(flatmap(function(stream, file) {
+      // Replace asset paths to use subfolders that correspond to slug for the given example
+      var exampleSlug = getSlugFromBuild(file);
+
+      return gulp.src(file.path)
+        .pipe(addSlugToPaths(exampleSlug))
+        .pipe(gulp.dest(`${ file.base }/${ exampleSlug }`))
+    }))
+    .pipe(livereload());
+}
+
 
 function exampleStyles() {
   return gulp.src('examples/*/graphic.scss')
@@ -37,31 +72,10 @@ function exampleStyles() {
           ]
         })
           .on('error', notify.onError("SASS <%= error.formatted %>")))
-        // TODO this regex is not foolproof...
-        .pipe(replace(/(assets\/.+\.\w+)/g, `${ exampleSlug }/$1`))
+        .pipe(addSlugToPaths(exampleSlug))
     }))
     .pipe(concat('graphic.css'))
     .pipe(gulp.dest('build-examples'))
-    .pipe(livereload());
-}
-
-
-function exampleHtml() {
-  return gulp.src('examples/*/*.html')
-    .pipe(externalData.getExternalData({ examples: true }))
-    .pipe(externalData.renderGraphicHTML({ examples: true }))
-    .pipe(gulp.dest('build-examples'))
-    .pipe(flatmap(function(stream, file) {
-      // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = getSlugFromBuild(file);
-
-        // TODO this regex is not foolproof...
-      return gulp.src(file.path)
-        .pipe(replace(/(assets\/.+\.\w+)/g, function(match) {
-          return `${ exampleSlug }/${ match }`
-        }))
-        .pipe(gulp.dest(`${ file.base }/${ exampleSlug }`))
-    }))
     .pipe(livereload());
 }
 
@@ -84,8 +98,7 @@ function exampleScripts() {
             babelify.configure({ presets: ['@babel/preset-env'] })
           ]
         }))
-        // TODO this regex is not foolproof...
-        .pipe(replace(/(assets\/.+\.\w+)/g, `${ exampleSlug }/$1`))
+        .pipe(addSlugToPaths(exampleSlug))
     }))
 
   return mergeStream(libJs, graphicJs)
