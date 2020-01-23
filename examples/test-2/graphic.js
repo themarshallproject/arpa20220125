@@ -6,6 +6,6 @@ $(document).ready(() => {
 
   const testChart = new ChartBase({
     containerId: 'dynamic-div',
-    aspectRatio: 12/5,
+    aspectRatio: 4/1,
   })
 });
