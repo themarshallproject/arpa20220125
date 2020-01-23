@@ -5,3 +5,7 @@
   border: 5px dashed turquoise;
   @include acumin;
 }
+
+#dynamic-div {
+  background: lightskyblue url(assets/nested-img/replay_img.png);
+}
