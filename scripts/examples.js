@@ -29,15 +29,10 @@ function getSlugFromBuild(file) {
 }
 
 
-// Retrieve the regex used to replace asset paths
-function getReplacerRegex() {
-  return /(assets\/.+\.\w+)/g;
-}
-
-
 // Use gulp-replace to add example slug to asset paths
 function addSlugToPaths(exampleSlug) {
-  return replace(getReplacerRegex(), `${ exampleSlug }/$1`);
+  const replacer = /(assets\/.+\.\w+)/g;
+  return replace(replacer, `${ exampleSlug }/$1`);
 }
 
 
