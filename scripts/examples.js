@@ -1,7 +1,6 @@
 var babel = require('gulp-babel');
 var babelify = require('babelify');
 var bro = require('gulp-bro');
-var checkFileSize = require('gulp-check-filesize');
 var concat = require('gulp-concat');
 var del = require('del');
 var flatmap = require('gulp-flatmap');
@@ -105,7 +104,6 @@ function exampleScripts() {
 
 function exampleAssets() {
   return gulp.src('examples/*/assets/**', { base: 'examples' })
-    .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('build-examples'))
     .pipe(livereload());
 }
