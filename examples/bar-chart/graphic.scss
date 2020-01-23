@@ -1,0 +1,32 @@
+@import "palette";
+@import "charts/stylesheets/graphic-with-axes.scss";
+@import "charts/stylesheets/graphic-labels.scss";
+
+.re-national {
+  .purple-text {
+    color: $text-purple;
+    font-weight: 400;
+  }
+
+  @media screen and (max-width: 740px) {
+    .re-graphic-source {
+      margin-top: 0px;
+    }
+  }
+}
+// SINGLE SET OF BARS OR LINES
+#re-national-chart {
+  .bar-rect {
+    fill: $fill-purple;
+  }
+
+  .data-label {
+    @media screen and (max-width: 740px) {
+      font-size: 11px;
+    }
+  }
+
+  .y {
+    display: none;
+  }
+}
