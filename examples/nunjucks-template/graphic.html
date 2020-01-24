@@ -1,0 +1,41 @@
+<div class="g-tmp-chart-container">
+  <div class="graphic-copy">
+    <p class="graphic-head">
+      {{ data['example-key-value'].title }}
+    </p>
+    <p class="graphic-deck">
+      {{ data['example-key-value'].dek|safe }}
+    </p>
+    <p class="graphic-deck">
+      {{ data['example-key-value'].text|safe }}
+    </p>
+    <p class="graphic-deck">Nunjucks also allows you to loop over data and render it using templates. Here, we've templatized the data found in <span class="nunjucks-path">template-files/states.csv</span>.</p>
+  </div>
+
+  <div class="graphic-wrapper">
+    <table class="nunjucks-table">
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Date admitted</th>
+          <th>Nickname</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data.states %}
+        <tr>
+          <td>{{ row.name }}</td>
+          <td>{{ row.date }}</td>
+          <td>{{ row.nickname }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="graphic-deck">For more info on how this works, <a href="https://github.com/themarshallproject/gfx-v2#using-external-data-sources-in-your-html">check out the documentation</a>.</p>
+  </div>
+
+  <div class="graphic-source">
+    Source: TKTK
+  </div>
+</div>
+
