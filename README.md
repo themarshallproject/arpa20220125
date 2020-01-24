@@ -94,7 +94,6 @@ View some [examples of common graphics](/examples/).
   - Place your html, javascript and sass inside. You can also include assets and
     external data, preserving the same folder structure that you'd use
     within `src/`.
-  - Import your sassfile in `examples/examples.scss`.
   - You're good to go!
 
 
