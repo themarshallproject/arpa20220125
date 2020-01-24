@@ -5,6 +5,7 @@ var concat = require('gulp-concat');
 var del = require('del');
 var flatmap = require('gulp-flatmap');
 var gulp = require('gulp');
+var header = require('gulp-header');
 var livereload = require('gulp-livereload');
 var log = require('fancy-log');
 var mergeStream = require('merge-stream');
@@ -43,9 +44,13 @@ function exampleHtml() {
     .pipe(flatmap(function(stream, file) {
       // Replace asset paths to use subfolders that correspond to slug for the given example
       var exampleSlug = getSlugFromBuild(file);
+      var pathData = {
+        relative: file.relative,
+      };
 
       return gulp.src(file.path)
         .pipe(addSlugToPaths(exampleSlug))
+        .pipe(header('<!-- Find this example at examples/${ relative } -->', pathData))
         .pipe(gulp.dest(`${ file.base }/${ exampleSlug }`))
     }))
     .pipe(livereload());
