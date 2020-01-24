@@ -30,3 +30,84 @@
     display: none;
   }
 }
+
+// SIDEBAR BAR CHARTS
+.dd-sidebar-bars {
+  .tick {
+    text-anchor: end;
+    font-weight: 100;
+  }
+
+  .data-label {
+    font-weight: 100;
+    fill: $dark-gray;
+  }
+
+  #dd-chart-one {
+    .x .tick text {
+      text-anchor: middle;
+    }
+  }
+
+  #dd-chart-two {
+    .tick {
+      text {
+        fill: $dark-gray;
+        font-weight: 500;
+        text-anchor: start;
+      }
+    }
+
+    .x {
+      display: none;
+    }
+  }
+
+  .bar-rect {
+    fill: $dark-gray;
+  }
+
+  .bar-rect-nac {
+    fill: $dark-gray;
+  }
+
+  .bar-arraignment {
+    fill: $fill-purple;
+  }
+
+  .data-label-arraignment {
+    fill: $fill-purple;
+  }
+
+  .g-annotation {
+    line {
+      stroke: $fill-purple;
+      stroke-width: 1.5px;
+    }
+
+    text {
+      @include acumin;
+      fill: $fill-purple;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.4em;
+      font-weight: 100;
+      letter-spacing: -0.2px;
+    }
+  }
+}
+
+// ARROW STYLE
+#dd-graphic-arrow {
+  fill: none;
+  stroke: $fill-purple;
+  // I know we decided that lines in like charts should be 2px
+  // But perhaps for annotations, 1.5px looks better?
+  stroke-width: 1.5px;
+  shape-rendering: auto;
+  stroke-linejoin: round;
+
+  path {
+    shape-rendering: auto;
+  }
+}
