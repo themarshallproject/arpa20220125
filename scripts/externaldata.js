@@ -20,6 +20,11 @@ function getExternalData(options) {
     var baseFilename = path.basename(dataPaths[i], extName);
     var pathData;
 
+    // Prevent data files with the same file name from overwriting each other
+    if (fullData.hasOwnProperty(baseFilename)) {
+      throw(new Error(`A data file named ${ baseFilename } already exists. Please rename ${ dataPaths[i]} to avoid name collision with other graphics.`))
+    }
+
     try {
       if (extName == '.csv') {
         pathData = convertCSVtoJSON(fileContents);
