@@ -1,0 +1,4 @@
+key,value
+title,"Using Nunjucks Templates to Display Data"
+dek,"Any CSV or JSON file placed in <span class=""nunjucks-path"">template-files</span> can be accessed as JSON on this page using the <a href=""https://mozilla.github.io/nunjucks/templating.html"">Nunjucks templating language</a>."
+text,"You can create literally any key-value pairs and access them in your HTML! And you can <strong>write HTML</strong> <em>inside this CSV</em>."

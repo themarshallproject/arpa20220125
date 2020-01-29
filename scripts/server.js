@@ -5,6 +5,7 @@ var renderer = require('./localrenderer.js');
 module.exports = function(options) {
   var app = express();
   app.use(express.static('build'));
+  app.use('/examples', express.static('build-examples'));
   app.use(express.static('post-templates'));
 
   var config;
@@ -15,6 +16,13 @@ module.exports = function(options) {
 
   app.get('/', function(req, res) {
     res.send(renderer.renderTemplate({ lrPort: lrPort }));
+  });
+
+  app.get('/examples/', function(req, res) {
+    res.send(renderer.renderTemplate({
+      lrPort: lrPort,
+      examples: true
+    }));
   });
 
   app.get('/readme/', function(req, res) {

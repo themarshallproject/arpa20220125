@@ -8,15 +8,29 @@ var data = require('gulp-data');
 var notify = require('gulp-notify');
 var marked = require('marked');
 
-function getExternalData() {
+
+function printDataFilenameError(baseFilename, dataFilePath) {
+  const dataError = new Error(`A data file named ${ baseFilename } already exists in another example. Please rename ${ dataFilePath } to avoid name collision with other graphics.`);
+  throw dataError;
+}
+
+
+function getExternalData(options) {
   var fullData = {};
-  var dataPaths = glob.sync('./src/template-files/*.@(json|csv)');
+  var dataPaths = options && options.examples ?
+                  glob.sync('./examples/*/template-files/*.@(json|csv)') :
+                  glob.sync('./src/template-files/*.@(json|csv)');
 
   for (i in dataPaths) {
     var extName = path.extname(dataPaths[i]);
     var fileContents = fs.readFileSync(dataPaths[i]);
     var baseFilename = path.basename(dataPaths[i], extName);
     var pathData;
+
+    // Prevent data files with the same file name from overwriting each other
+    if (fullData.hasOwnProperty(baseFilename)) {
+      printDataFilenameError(baseFilename, dataPaths[i]);
+    }
 
     try {
       if (extName == '.csv') {
@@ -72,10 +86,13 @@ function convertCSVtoJSON(fileContents) {
   return formattedData;
 }
 
-function renderGraphicHTML(data) {
+function renderGraphicHTML(options) {
+  var path = options && options.examples ?
+    glob.sync('./examples/!(lib)/') :
+    'src/';
+
   return nunjucksRender({
-    path: 'src/',
-    data: data,
+    path: path,
     manageEnv: manageNunjucksEnvironment
   }).on('error', notify.onError("Nunjucks <%= error %>"));
 }

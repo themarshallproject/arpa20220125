@@ -30,6 +30,7 @@ var urljoin = require('url-join');
 
 var config = require('./config.json');
 var credentials = require('./scripts/credentials.js');
+var examples = require('./scripts/examples.js');
 var externalData = require('./scripts/externaldata.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
 var github = require('./scripts/github.js');
@@ -240,8 +241,16 @@ function watch() {
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
+
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
+
+  // Examples
+  gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);
+  gulp.watch(['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'], examples.scripts);
+  gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
+  gulp.watch(['examples/*/assets/**'], examples.assets);
+
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
@@ -342,7 +351,7 @@ function S3Deploy(done) {
   });
 }
 
-var defaultTask = gulp.series(clean, startServer, buildDev, openBrowser, watch);
+var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
 
 // Public interface
 gulp.task('setup', gulp.series(setup.setup, defaultTask));

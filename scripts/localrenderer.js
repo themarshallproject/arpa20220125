@@ -3,7 +3,7 @@ var config = require('../config.json');
 var marked = require('marked');
 
 function renderTemplate(options) {
-  if (config.multiple_graphics) {
+  if (config.multiple_graphics || options.examples) {
     return renderMultiple(options);
   } else {
     return renderSingle(options)
@@ -32,11 +32,11 @@ function renderMultiple(options) {
   var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
-  var graphics = getGraphics();
+  var graphics = options.examples ? getExamples(options) : getGraphics(options);
   var headerContent = graphics['header'];
 
-  if (localText) {
-    content = replaceGraphics(localText);
+  if (localText && !options.examples) {
+    content = replaceGraphics(graphics, localText);
   } else {
     content = '';
     for (key in graphics) {
@@ -64,8 +64,7 @@ function renderMultiple(options) {
 }
 
 
-function replaceGraphics(text) {
-  var graphics = getGraphics();
+function replaceGraphics(graphics, text) {
   var regex = /\[graphic .*slug=["\']?(\S+):(\S+)[\'"]?\s*.*\]/;
   var lines = text.split('\n');
   return lines.map(function(line) {
@@ -97,7 +96,8 @@ function renderWarning(text) {
 
 
 function getGraphics(options) {
-  var files = fs.readdirSync('./build/', 'utf-8');
+  var dirPath = options.dirPath || './build/';
+  var files = fs.readdirSync(dirPath, 'utf-8');
   var graphics = {};
   var isProduction = options && options.isProduction || false;
 
@@ -108,10 +108,29 @@ function getGraphics(options) {
         var htmlFile = require('../dist/rev-manifest.json')[filename];
         graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
       } else {
-        graphics[key] = fs.readFileSync('./build/' + filename, 'utf-8');
+        graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
       }
     }
   });
+  return graphics;
+}
+
+
+function getExamples(options) {
+  var parentDirPath = './build-examples/';
+  var dirs = fs.readdirSync(parentDirPath, 'utf-8').filter((d) => {
+    return fs.lstatSync(parentDirPath + d).isDirectory();
+  })
+  var graphics = {};
+
+  dirs.forEach((dirPath) => {
+    var dirOptions = options;
+    dirOptions['dirPath'] = `${parentDirPath + dirPath}/`;
+
+    var dirGraphics = getGraphics(dirOptions)
+    Object.assign(graphics, dirGraphics);
+  })
+
   return graphics;
 }
 
@@ -135,11 +154,12 @@ function renderGraphicsReadme(options) {
 
 
 function getIncludes(options) {
+  const dirPath = options.examples ? '/examples' : '';
   return [
     getLRScript(options),
-    "<link rel='stylesheet' href='/fonts.css'>",
-    "<link rel='stylesheet' href='/graphic.css'>",
-    "<script src='/graphic.js'></script>\n"
+    `<link rel='stylesheet' href='/fonts.css'>`,
+    `<link rel='stylesheet' href='${dirPath}/graphic.css'>`,
+    `<script src='${dirPath}/graphic.js'></script>\n`
   ].join("\n");
 }
 
