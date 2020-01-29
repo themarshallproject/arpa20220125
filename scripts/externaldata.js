@@ -8,6 +8,13 @@ var data = require('gulp-data');
 var notify = require('gulp-notify');
 var marked = require('marked');
 
+
+function printDataFilenameError(baseFilename, dataFilePath) {
+  const dataError = new Error(`A data file named ${ baseFilename } already exists in another example. Please rename ${ dataFilePath } to avoid name collision with other graphics.`);
+  throw dataError;
+}
+
+
 function getExternalData(options) {
   var fullData = {};
   var dataPaths = options && options.examples ?
@@ -22,7 +29,7 @@ function getExternalData(options) {
 
     // Prevent data files with the same file name from overwriting each other
     if (fullData.hasOwnProperty(baseFilename)) {
-      throw(new Error(`A data file named ${ baseFilename } already exists. Please rename ${ dataPaths[i]} to avoid name collision with other graphics.`))
+      printDataFilenameError(baseFilename, dataPaths[i]);
     }
 
     try {
