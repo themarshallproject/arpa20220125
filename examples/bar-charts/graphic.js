@@ -1,7 +1,7 @@
 import * as utilities from 'charts/utilities.js';
 import NationalBarChart from './national-bar-chart.js'
 import StackedBarChart from './stacked-bar.js'
-import PaymentChart from './payment-chart.js'
+import HorizontalBarChart from 'charts/bar-chart-horizontal.js';
 import CityStackedBar from './mpp_cities.js'
 
 $(document).ready(() => {
@@ -81,7 +81,7 @@ function initSidebarVertical() {
 }
 
 function initSidebarHorizontal() {
-  const paymentChart = new PaymentChart({
+  const paymentChart = new HorizontalBarChart({
     containerId: 'dd-chart-two',
     data: PAYMENT_DATA,
     bandKey: "event",
