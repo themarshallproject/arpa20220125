@@ -76,6 +76,10 @@ $scale-blue-4:   #7acbf2;
 $scale-blue-5:   #5fbef2;
 
 // Breakpoints
+// To use these in a media query, you'll need to wrap the variable in `#{  }`
+//
+// @media #{$screen-large-above} {  }
+//
 $screen-large-above: "(min-width: 940px)";
 $screen-large-below: "(max-width: 939px)";
 $screen-medium-above: "(min-width: 768px)";
