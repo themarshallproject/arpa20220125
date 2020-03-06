@@ -2,6 +2,8 @@ const keychain = require('keychain');
 const readline = require('readline');
 const log = require('fancy-log');
 const { google } = require('googleapis');
+const os = require('os');
+const fs = require('fs');
 
 const ENDRUN = {
   key: 'gfx-endrun',
@@ -30,7 +32,6 @@ const GOOGLE_TOKEN = {
   key: 'gfx-google-token',
   name: 'OAuth2 bearer token for google apis',
   scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
 }
 const MUX_SECRET = {
   key: 'gfx-mux-secret',
@@ -42,11 +43,66 @@ const MUX_ACCESS = {
 };
 const REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
 
+// In MacOS we use the system-wide keychain to store credentials. On
+// other platforms we just use a plain JSON file.
+function readCredentialsFile() {
+  const fileLocation = process.env.CREDENTIALS_PATH || './.credentials.json';
+  let credentialsContents;
+  let credentialsObject = {};
+  try {
+    credentialsContents = fs.readFileSync(fileLocation);
+  } catch (error) {
+    log.error('Could not load credentials file, may not exist', error);
+  }
+  if (credentialsContents) {
+    credentialsObject = JSON.parse(credentialsContents);
+  }
+  return credentialsObject;
+}
+
+
+function writeCredentialsFile(credentials) {
+  const fileLocation = process.env.CREDENTIALS_PATH || './.credentials.json';
+  fs.writeFileSync(fileLocation, JSON.stringify(credentials));
+}
+
+
+function setPassword(options, callback) {
+  if (os.platform() === 'darwin') {
+    keychain.setPassword(options, callback);
+  } else {
+    const credentials = readCredentialsFile();
+    credentials[options.service] = options.password;
+    writeCredentialsFile(credentials);
+    callback(null, options.password);
+  }
+}
+
+
+function getPassword(options, callback) {
+  if (os.platform() === 'darwin') {
+    keychain.getPassword(options, callback);
+  } else {
+    const credentials = readCredentialsFile();
+    callback(null, credentials[options.service]);
+  }
+}
+
+
+function deletePasssword(options, callback) {
+  if (os.platform() === 'darwin') {
+    keychain.deletePassword(options, callback);
+  } else {
+    options.password = null;
+    setPassword(options, callback);
+  }
+}
+
 
 function ensureCredential(service, cb) {
   var key = service.key;
-  keychain.getPassword({ account: 'gfx', service: key }, function(err, secret) {
-    if (secret === '' || (err && err.code === 'PasswordNotFound')) {
+  getPassword({ account: 'gfx', service: key }, function(err, secret) {
+    if (!secret || (err && err.code === 'PasswordNotFound')) {
       return resetServicePassword(service, cb);
     }
 
@@ -72,7 +128,7 @@ function resetServicePassword(service, cb) {
   }
 
   rl.question(`Enter your ${service.name}: ` , (answer) => {
-    keychain.setPassword({ account: 'gfx', service: service.key, password: answer }, cb);
+    setPassword({ account: 'gfx', service: service.key, password: answer }, cb);
     rl.close();
   });
 }
@@ -80,7 +136,7 @@ function resetServicePassword(service, cb) {
 
 function clearServicePasswords(cb) {
   REQUIRED_CREDS.forEach(function(service) {
-    keychain.deletePassword({ account: 'gfx', service: service.key });
+    deletePassword({ account: 'gfx', service: service.key });
   });
   cb && cb();
 }
@@ -111,7 +167,7 @@ function getRequestedCredentials(requestedKeys, cb) {
     }
   }
   requestedKeys.forEach(function(service) {
-    keychain.getPassword({ account: 'gfx', service: service.key }, function(err, password) {
+    getPassword({ account: 'gfx', service: service.key }, function(err, password) {
       checkDone(service.key, password);
     });
   });
@@ -166,7 +222,7 @@ function resetGoogleClient(done) {
 
 
 function resetGoogleToken(done) {
-  keychain.deletePassword({ account: 'gfx', service: GOOGLE_TOKEN.key });
+  deletePassword({ account: 'gfx', service: GOOGLE_TOKEN.key });
   getGoogleClient(function() { done(); });
 }
 
@@ -177,7 +233,7 @@ function resetGoogleToken(done) {
  */
 function getGoogleClient(done) {
   ensureCredential(GOOGLE_CLIENT, function() {
-    keychain.getPassword({ account: 'gfx', service: GOOGLE_CLIENT.key }, function(err, secret) {
+    getPassword({ account: 'gfx', service: GOOGLE_CLIENT.key }, function(err, secret) {
       authorize(JSON.parse(secret), done);
     });
   });
@@ -196,7 +252,7 @@ function authorize(credentials, callback) {
       client_id, client_secret, redirect_uris[0]);
 
   // Check if we have previously stored a token.
-  keychain.getPassword({ account: 'gfx', service: GOOGLE_TOKEN.key }, function(err, secret) {
+  getPassword({ account: 'gfx', service: GOOGLE_TOKEN.key }, function(err, secret) {
     if (secret === '' || (err && err.code === 'PasswordNotFound')) {
       return getNewToken(oAuth2Client, callback);
     }
@@ -227,7 +283,7 @@ function getNewToken(oAuth2Client, callback) {
     oAuth2Client.getToken(code, (err, token) => {
       if (err) return callback(err);
       oAuth2Client.setCredentials(token);
-      keychain.setPassword({
+      setPassword({
         account: 'gfx',
         service: GOOGLE_TOKEN.key,
         password: JSON.stringify(token)
