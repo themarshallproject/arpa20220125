@@ -44,6 +44,7 @@ View some [examples of common graphics](/examples/).
 - [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
 - [Tips](#tips)
 - [Other commands](#other-commands)
+- [Running on non-Mac platforms](#running-on-non-mac-platforms)
 - [Advanced Features](#advanced-features)
   * [Google Sheets Integration](#google-sheets-integration)
 - [Editing this template](#editing-this-template)
@@ -395,6 +396,16 @@ There are a few other commands available that you might find useful. Especially 
 
 1. `gulp reset:type` will allow you to change your initial choices made while setting up the repo. Handy if you made a mistake, or are just rearranging things.
 2. `gulp credentials:endrun` will allow to enter a fresh API token.
+
+## Running on non-Mac platforms
+
+Theoretically the graphics rig should be supported by any platform that supports node. In practice things are not always so simple. The most important difference is around credential management. We utilize the macOS 'keychain' for some added security on that platform. On other platforms we revert to plain-old text files. The graphics rig will create a credentials file for you if it doesn't already exist (defaults to `.credentials.json` in the project folder). However to get the mac-style credential memory between projects you need to take an additional step. To tell the rig where you want to store your system-wide credentials, set the `CREDENTIALS_PATH` environment variable in your `.bashrc` or equivalent. For example, I added this line to my bashrc:
+
+```export CREDENTIALS_PATH=~/.ssh/.credentials.json```
+
+(the ssh folder is convenient because it will already have appropriately restrictive permissions, but you can put it anywhere).
+
+It's possible you may also run into some difficulties with the packages that require some compiled dependencies (notably node-sass). You're best bet is google, but feel free to ask around if you do run into trouble!
 
 ## Advanced Features
 

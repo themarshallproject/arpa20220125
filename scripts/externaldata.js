@@ -7,6 +7,7 @@ var nunjucksRender = require('gulp-nunjucks-render');
 var data = require('gulp-data');
 var notify = require('gulp-notify');
 var marked = require('marked');
+var d3 = require('d3');
 
 
 function printDataFilenameError(baseFilename, dataFilePath) {
@@ -100,6 +101,10 @@ function renderGraphicHTML(options) {
 function manageNunjucksEnvironment(environment) {
   environment.addFilter('md', function(text) {
     return marked(text);
+  });
+
+  environment.addFilter('format', function(text, formatString) {
+    return d3.format(formatString)(text);
   });
 }
 
