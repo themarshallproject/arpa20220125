@@ -266,6 +266,9 @@ function revision() {
       transformPath: (rev, source, file) => {
         return urljoin(config.cdn, config.slug, rev);
       },
+      // If you want an unversioned file. Careful deploying with this, the
+      // cache times are long.
+      // dontRenameFile: [/.*.csv/],
       includeFilesInManifest: ['.html', '.js', '.css']
     }))
     .pipe(gulp.dest('dist'))
@@ -353,7 +356,7 @@ function S3Deploy(done) {
 
 var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
 
-// Public interface
+// Primary interface
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
@@ -377,7 +380,13 @@ gulp.task('videos:transcode', videos.transcodeUploadedVideos)
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);
-gulp.task('deploy:s3', S3Deploy);
+gulp.task('deploy:s3', gulp.series(
+  buildProduction,
+  revision,
+  S3Deploy,
+  buildDev
+));
+gulp.task('deploy:s3:raw', S3Deploy);
 
 // Credential management
 gulp.task('credentials', credentials.ensureCredentialsTask);
