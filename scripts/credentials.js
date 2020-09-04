@@ -89,7 +89,7 @@ function getPassword(options, callback) {
 }
 
 
-function deletePasssword(options, callback) {
+function deletePassword(options, callback) {
   if (os.platform() === 'darwin') {
     keychain.deletePassword(options, callback);
   } else {
