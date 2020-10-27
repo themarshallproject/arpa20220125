@@ -17,7 +17,8 @@ M M M M M M M M M   /_/  /_/  \___/_/ /\__/\__/\__/
 
 Our toolchain for building and deploying graphics, custom posts, and post headers.
 
-View some [examples of common graphics](/examples/).
+View some [examples of common graphics](/examples/), or check out TMP's
+[Visual Style Guide](https://docs.google.com/document/d/1h0O0xyToUZZyrG_sJtf23Z1ej6ZoSjlcx8g0EzNP9Lk/edit) for some guidelines on how to design charts.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
@@ -49,7 +50,6 @@ View some [examples of common graphics](/examples/).
   * [Google Sheets Integration](#google-sheets-integration)
 - [Editing this template](#editing-this-template)
 - [Thoughts? Ideas? Issues?](#thoughts-ideas-issues)
-- [Further reading](#further-reading)
 
 <!-- tocstop -->
 
@@ -426,8 +426,4 @@ Once you've been properly authorized (which you shouldn't need to do again for a
 ## Thoughts? Ideas? Issues?
 
 Make an issue in this repo!
-
-## Further reading
-
-[Design Document](https://docs.google.com/document/d/18C_LDshggiozKnZh7Bwn_0Qcq8T6f0TZNvA8Bse2KHg/edit)
 
