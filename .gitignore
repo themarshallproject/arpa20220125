@@ -6,3 +6,4 @@ build-examples/
 asset_manifest.json
 .DS_Store
 .credentials.json
+secrets/
