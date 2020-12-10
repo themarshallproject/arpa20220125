@@ -4,6 +4,7 @@
   "local_template": "post",
   "type": "graphic",
   "bucket": "tmp-production-story-assets",
+  "data_bucket": "tmp-gfx-public-data",
   "cdn": "https://d63kb4t2ifcex.cloudfront.net",
   "inline_threshold": 4000,
   "endrun_host": "https://www.themarshallproject.org",
