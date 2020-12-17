@@ -11,7 +11,7 @@ var log = require('fancy-log');
 var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
 var replace = require('gulp-replace');
-var sass = require('gulp-sass');
+var sass = require('gulp-dart-sass');
 
 var externalData = require('./externaldata.js');
 var getGraphics = require('./localrenderer.js').getGraphics;
