@@ -11,7 +11,6 @@ var firstOpenPort = require('first-open-port');
 var fs = require('fs');
 var gulp = require('gulp');
 var gulpIf = require('gulp-if');
-var gzip = require('gulp-gzip');
 var insert = require('gulp-insert');
 var livereload = require('gulp-livereload');
 var log = require('fancy-log');
@@ -39,6 +38,7 @@ var server = require('./scripts/server.js');
 var setup = require('./scripts/setup.js');
 var sheets = require('./scripts/sheets.js');
 var videos = require('./scripts/videos.js');
+var s3 = require('./scripts/s3.js');
 
 var serverPort, lrPort;
 
@@ -320,40 +320,6 @@ function endrunDeploy(done, host) {
   });
 }
 
-
-function S3Deploy(done) {
-  credentials.ensureCredentials(function(creds) {
-    var s3 = require('gulp-s3-upload')({
-      accessKeyId: creds['gfx-aws-access'],
-      secretAccessKey: creds['gfx-aws-secret']
-    });
-    gulp.src('dist/**', { base: 'dist' })
-      .pipe(
-        gulpIf(
-          (file) => { return !file.path.match(/\.mp4$/) },
-          gzip({ append: false })))
-      .pipe(s3({
-        bucket: config.bucket,
-        ACL: 'public-read',
-        CacheControl: 'max-age=2592000', // One month
-        keyTransform: function(filename) {
-          var key = config.slug + '/' + filename;
-          console.log(config.cdn + '/' + key);
-          return key;
-        },
-        maps: {
-          ContentEncoding: (keyname) => {
-            if (keyname.match(/\.mp4$/)) {
-              console.log('Skipping gzip for mp4');
-              return null;
-            }
-            return 'gzip';
-          }
-        }
-      })).on('end', done);
-  });
-}
-
 var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
 
 // Primary interface
@@ -363,7 +329,7 @@ gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
   buildProduction,
   revision,
-  S3Deploy,
+  s3.deploy,
   endrunDeploy,
   buildDev
 ));
@@ -383,10 +349,12 @@ gulp.task('deploy:endrun', endrunDeploy);
 gulp.task('deploy:s3', gulp.series(
   buildProduction,
   revision,
-  S3Deploy,
+  s3.deploy,
   buildDev
 ));
-gulp.task('deploy:s3:raw', S3Deploy);
+
+gulp.task('deploy:s3:raw', s3.deploy);
+gulp.task('deploy:data', s3.deployData);
 
 // Credential management
 gulp.task('credentials', credentials.ensureCredentialsTask);
