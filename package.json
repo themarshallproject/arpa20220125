@@ -61,9 +61,6 @@
     "request": "^2.88.0",
     "url-join": "^4.0.0"
   },
-  "dependencies": {
-    "npm": "^7.1.2"
-  },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
   }
