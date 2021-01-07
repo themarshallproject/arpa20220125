@@ -8,3 +8,4 @@ asset_manifest.json
 .credentials.json
 secrets/
 analysis/source
+analysis/data/test.csv
