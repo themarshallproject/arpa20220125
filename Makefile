@@ -5,10 +5,6 @@ export
 # Run "make" to get help
 .DEFAULT_GOAL := help
 
-# Default directories
-SOURCE=analysis/datia
-PROCESSED=analysis/data
-
 # Environment(s)
 PYENV=pipenv run
 
@@ -17,7 +13,7 @@ RCLONE_FLAGS=--config secrets/rclone.conf -v
 
 ##@ Basic usage
 .PHONY: all
-all: $(PROCESSED)/test.csv  ## Make both test files. 
+all: analysis/data/test.csv  ## Make both test files. 
 	@echo "Replace with your own processing pipeline." || true
 
 .PHONY: clean
@@ -29,12 +25,12 @@ help:  ## Display this help
 
 ##@ Processing
 
-$(PROCESSED)/test.csv: analysis/source/test.csvreate test csv in processed data directory
+analysis/data/test.csv: analysis/source/test.csv ## Create test csv in processed data directory
 	cp $< $@
 
 ##@ Source files
 
-$(SOURCE)/test.csv:  ## Create test csv in processed data directory
+analysis/source/test.csv:  ## Download test csv in processed data directory
 	curl https://raw.githubusercontent.com/themarshallproject/COVID_prison_data/master/data/covid_prison_cases.csv -o $@
 
 ##@ Upload/sync
@@ -46,8 +42,8 @@ deploy: all  ## Deploy to S3 (for Observable or other sharing)
 ##@ Cleanup
 .PHONY: clean/source
 clean/source:  ## Clean source data
-	rm -rf $(SOURCE)/*
+	rm -rf analysis/source/*
 
 .PHONY: clean/data
 clean/data:  ## Clean processed data
-	rm -rf $(PROCESSED)/* 
+	rm -rf analysis/data/* 
