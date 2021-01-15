@@ -13,7 +13,7 @@ RCLONE_FLAGS=--config secrets/rclone.conf -v
 
 ##@ Basic usage
 .PHONY: all
-all: getSource runR  ## Download source data and run R analysis
+all: path/to/output  ## Download source data and run R analysis
 
 .PHONY: clean
 clean: clean/source_data clean/output_data  ## Clean files
@@ -25,17 +25,16 @@ help:  ## Display this help
 
 
 ##@ Analysis
-.PHONY: runR
-runR: analysis/analysis.R  ## Run R analysis on the downloaded data, including saving output
+path/to/output: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
 	@echo "Running R analysis"
-	Rscript $< 
+	Rscript analysis/analysis.R
 
 
 ##@ Source files
-.PHONY: getSource
-getSource:  ## Download a test input csv to source data directory
+analysis/source_data/input.csv:  ## Download a test input csv to source data directory
 	@echo "Downloading source data"
-	curl https://raw.githubusercontent.com/themarshallproject/COVID_prison_data/master/data/covid_prison_cases.csv -o "analysis/source_data/input.csv"
+	curl https://raw.githubusercontent.com/themarshallproject/COVID_prison_data/master/data/covid_prison_cases.csv -o $@
+
 
 ##@ Upload/sync
 
