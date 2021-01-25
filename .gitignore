@@ -9,3 +9,4 @@ asset_manifest.json
 secrets/
 analysis/source
 analysis/data/test.csv
+.Rhistory
