@@ -13,7 +13,7 @@ RCLONE_FLAGS=--config secrets/rclone.conf -v
 
 ##@ Basic usage
 .PHONY: all
-all: path/to/output  ## Download source data and run R analysis
+all: analysis/output_data/output.csv  ## Download source data and run R analysis
 
 .PHONY: clean
 clean: clean/source_data clean/output_data  ## Clean files
@@ -25,7 +25,7 @@ help:  ## Display this help
 
 
 ##@ Analysis
-path/to/output: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
+analysis/output_data/output.csv: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
 	@echo "Running R analysis"
 	Rscript analysis/analysis.R
 
