@@ -46,7 +46,7 @@ function deployData(done) {
       accessKeyId: creds['gfx-aws-access'],
       secretAccessKey: creds['gfx-aws-secret']
     });
-    gulp.src('analysis/data/**', { base: 'analysis/data' })
+    gulp.src('analysis/output_data/**', { base: 'analysis/output_data' })
       .pipe(s3({
         bucket: config.data_bucket,
         ACL: 'public-read',
