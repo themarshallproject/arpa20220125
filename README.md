@@ -365,6 +365,10 @@ Sometimes our partners will request that we provide an iframe of a graphic. Gett
 
 Note that it is up to you to make sure your graphic is responsive, and works well within an iframe. It is up to the partner to make sure that the iframe is suitably sized and resizes dynamically, perhaps using a tool like [NPR's pym](http://blog.apps.npr.org/pym.js/).
 
+## Running data analysis
+
+When a project has data analysis associated with its graphic(s), you can include code for the source data, analysis, and output data in the `analysis/` folder. You can also set up a workflow to run our analysis from scratch using `Makefile`. For example, `make all` would run the analysis workflow; `make clean` would remove all outputs from previous runs of the analysis; `make deploy` would upload data from the `output_data/` folder onto S3 for sharing. See `Makefile` for more documentation of commands and to create your own analysis workflows.
+
 
 ## Tips
 
