@@ -7,6 +7,5 @@ asset_manifest.json
 .DS_Store
 .credentials.json
 secrets/
-analysis/source
-analysis/data/test.csv
+analysis/source_data
 .Rhistory
