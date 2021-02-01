@@ -8,8 +8,6 @@ export
 # Environment(s)
 PYENV=pipenv run
 
-# Flags
-RCLONE_FLAGS=--config secrets/rclone.conf -v
 
 ##@ Basic usage
 .PHONY: all
