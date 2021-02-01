@@ -5,7 +5,7 @@ _Data processing scripts and pipeline for this project. Describe what it does he
 The short version:
 
 * Build everything: `make all`
-* Deploy to S3: `gulp deploy:data`
+* Deploy to S3: `make deploy`
 * Get help: `make` or `make help`
 * Clean up: `make clean`
 
