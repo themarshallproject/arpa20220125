@@ -15,10 +15,12 @@ M M M M M M M M M   /_/  /_/  \___/_/ /\__/\__/\__/
 
 ```
 
-Our toolchain for building and deploying graphics, custom posts, and post headers.
+Our toolchain for building and deploying graphics, custom posts, post headers, and clean data.
 
 View some [examples of common graphics](/examples/), or check out TMP's
 [Visual Style Guide](https://docs.google.com/document/d/1h0O0xyToUZZyrG_sJtf23Z1ej6ZoSjlcx8g0EzNP9Lk/edit) for some guidelines on how to design charts.
+
+Processing data? See [analysis/README.md](analysis/README.md) to learn about any custom data processing this project may handle.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
@@ -364,6 +366,10 @@ Sometimes our partners will request that we provide an iframe of a graphic. Gett
 4. You can now send the iframe to the partner with some sample code like this: `<iframe width="100%" height="900" src="https://www.themarshallproject.org/embed/graphic/<graphic-id>" frameborder="0"></iframe>`, replacing the graphic id again.
 
 Note that it is up to you to make sure your graphic is responsive, and works well within an iframe. It is up to the partner to make sure that the iframe is suitably sized and resizes dynamically, perhaps using a tool like [NPR's pym](http://blog.apps.npr.org/pym.js/).
+
+## Running data analysis
+
+When a project has data analysis associated with its graphic(s), you can include code for the source data, analysis, and output data in the `analysis/` folder. You can also set up workflows to run your analysis from scratch using the `Makefile`. For example, `make all` would run the analysis workflow; `make clean` would remove all outputs from previous runs of the analysis; `make deploy` would upload data from the `output_data/` folder onto S3 for sharing. See `Makefile` for more documentation of commands and to create your own analysis workflows.
 
 
 ## Tips
