@@ -15,10 +15,12 @@ M M M M M M M M M   /_/  /_/  \___/_/ /\__/\__/\__/
 
 ```
 
-Our toolchain for building and deploying graphics, custom posts, and post headers.
+Our toolchain for building and deploying graphics, custom posts, post headers, and clean data.
 
 View some [examples of common graphics](/examples/), or check out TMP's
 [Visual Style Guide](https://docs.google.com/document/d/1h0O0xyToUZZyrG_sJtf23Z1ej6ZoSjlcx8g0EzNP9Lk/edit) for some guidelines on how to design charts.
+
+Processing data? See [analysis/README.md](analysis/README.md) to learn about any custom data processing this project may handle.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
