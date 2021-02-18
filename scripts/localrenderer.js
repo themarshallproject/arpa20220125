@@ -1,13 +1,21 @@
-var fs = require('fs');
-var config = require('../config.json');
-var marked = require('marked');
+const fs = require('fs');
+const config = require('../config.json');
+const marked = require('marked');
 
 function renderTemplate(options) {
+  let renderedTemplate;
   if (config.multiple_graphics || options.examples) {
-    return renderMultiple(options);
+    renderedTemplate = renderMultiple(options);
   } else {
-    return renderSingle(options)
+    renderedTemplate = renderSingle(options);
   }
+
+  return renderMetadata(renderedTemplate);
+}
+
+
+function renderMetadata(html) {
+  return html.replace(/\|META:(.*)\|/, (match, group1) => config[group1]);
 }
 
 

@@ -45,6 +45,7 @@ Processing data? See [analysis/README.md](analysis/README.md) to learn about any
 - [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
     + [Using custom heds and other graphics](#using-custom-heds-and-other-graphics)
 - [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
+- [Running data analysis](#running-data-analysis)
 - [Tips](#tips)
 - [Other commands](#other-commands)
 - [Running on non-Mac platforms](#running-on-non-mac-platforms)
