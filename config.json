@@ -7,7 +7,7 @@
   "data_bucket": "tmp-gfx-public-data",
   "cdn": "https://d63kb4t2ifcex.cloudfront.net",
   "inline_threshold": 4000,
-  "endrun_host": "https://www.themarshallproject.org",
+  "endrun_host": "http://localhost:7000",
   "use_es6": true,
   "multiple_graphics": false,
   "spreadsheet_id": ""

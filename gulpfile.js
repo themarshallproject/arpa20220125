@@ -277,6 +277,9 @@ function revision() {
 }
 
 
+
+
+
 function endrunDeploy(done, host) {
   credentials.ensureCredentials(function(creds) {
     host = host || config.endrun_host;
@@ -299,7 +302,7 @@ function endrunDeploy(done, host) {
       url: host + endpoint,
       json: true,
       body: body
-    }, function(error, response, body) {
+    }, function (error, response, body) {
       if (error) {
         log.error(error);
       }
@@ -319,6 +322,46 @@ function endrunDeploy(done, host) {
     });
   });
 }
+
+
+function getPostData(done, host) {
+  credentials.ensureCredentials(function(creds) {
+    host = host || config.endrun_host;
+    var endpoint = '/admin/api/v2/get_freeform_post_data';
+    var body = {
+      token: creds['gfx-endrun'],
+      id: 2485,
+    }
+
+    log(host + endpoint)
+
+    request.post({
+      url: host + endpoint,
+      json: true,
+      body: body,
+    }, function (error, response, body) {
+      if (error) {
+        log.error(error);
+      }
+
+      if (response.statusCode === 403) {
+        log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
+      }
+
+      if (response && response.statusCode !== 200) {
+        log.error(response.statusCode + ': ' + body.error);
+        done(body.error);
+      }
+
+      log('Saving post data for custom header');
+      const content = JSON.stringify(response.body);
+      fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
+
+      done();
+    });
+  });
+}
+
 
 var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
 
@@ -343,6 +386,7 @@ gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
+gulp.task('post_data:download', getPostData)
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);
