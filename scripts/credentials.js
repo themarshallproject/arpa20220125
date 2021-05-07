@@ -10,6 +10,11 @@ const ENDRUN = {
   name: 'EndRun API key',
   hint: 'You can get your API key at https://www.themarshallproject.org/admin/api_keys. They expire after 30 days.'
 };
+const ENDRUN_LOCAL = {
+  key: 'gfx-endrun-local',
+  name: 'Local or staging EndRun API key',
+  hint: 'For use with non-default EndRun hosts, which can be specified in config.json. You can get your API key on the specified EndRun host.'
+};
 const AWS_SECRET = {
   key: 'gfx-aws-secret',
   name: 'AWS Secret Token'
@@ -41,7 +46,7 @@ const MUX_ACCESS = {
   key: 'gfx-mux-access',
   name: 'Mux Access token'
 };
-const REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
+const REQUIRED_CREDS = [ENDRUN, ENDRUN_LOCAL, AWS_SECRET, AWS_ACCESS, GITHUB];
 
 // In MacOS we use the system-wide keychain to store credentials. On
 // other platforms we just use a plain JSON file.
@@ -204,6 +209,11 @@ function resetEndrunKey(done) {
 }
 
 
+function resetEndrunLocalKey(done) {
+  resetServicePassword(ENDRUN_LOCAL, done);
+}
+
+
 function resetGithubKey(done) {
   resetServicePassword(GITHUB, done);
 }
@@ -303,6 +313,7 @@ module.exports = {
   getMuxCredentials,
   resetAWSKeys,
   resetEndrunKey,
+  resetEndrunLocalKey,
   resetGithubKey,
   resetGoogleClient,
   resetGoogleToken,
