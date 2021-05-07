@@ -325,41 +325,46 @@ function endrunDeploy(done, host) {
 
 
 function getPostData(done, host) {
-  credentials.ensureCredentials(function(creds) {
-    host = host || config.endrun_host;
-    var endpoint = '/admin/api/v2/get_freeform_post_data';
-    var body = {
-      token: creds['gfx-endrun'],
-      id: 2485,
-    }
-
-    log(host + endpoint)
-
-    request.post({
-      url: host + endpoint,
-      json: true,
-      body: body,
-    }, function (error, response, body) {
-      if (error) {
-        log.error(error);
+  if (config.endrun_post_id) {
+    credentials.ensureCredentials(function(creds) {
+      host = host || config.endrun_host;
+      var endpoint = '/admin/api/v2/get_freeform_post_data';
+      var body = {
+        token: creds['gfx-endrun'],
+        id: config.endrun_post_id,
       }
 
-      if (response.statusCode === 403) {
-        log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
-      }
+      request.post({
+        url: host + endpoint,
+        json: true,
+        body: body,
+      }, function (error, response, body) {
+        if (error) {
+          log.error(error);
+        }
 
-      if (response && response.statusCode !== 200) {
-        log.error(response.statusCode + ': ' + body.error);
-        done(body.error);
-      }
+        if (response.statusCode === 403) {
+          log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
+        }
 
-      log('Saving post data for custom header');
-      const content = JSON.stringify(response.body);
-      fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
+        if (response && response.statusCode !== 200) {
+          log.error(response.statusCode + ': ' + body.error + '\nNo post data saved.');
+          done(body.error);
+        }
 
-      done();
+        if (response && response.statusCode == 200) {
+          log('Saving post data for custom header.');
+          const content = JSON.stringify(response.body);
+          fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
+        }
+
+        done();
+      });
     });
-  });
+  } else {
+    log('You must specify an Endrun post id in config.json to download custom header data.')
+    done();
+  }
 }
 
 
