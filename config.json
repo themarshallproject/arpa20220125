@@ -1,8 +1,8 @@
 {
   "slug": "cecinestpasuneslug",
   "local_markdown": false,
-  "local_template": "post",
-  "type": "graphic",
+  "local_template": "freeform-header",
+  "type": "header",
   "bucket": "tmp-production-story-assets",
   "data_bucket": "tmp-gfx-public-data",
   "cdn": "https://d63kb4t2ifcex.cloudfront.net",
@@ -10,5 +10,6 @@
   "endrun_host": "http://localhost:7000",
   "use_es6": true,
   "multiple_graphics": false,
-  "spreadsheet_id": ""
+  "spreadsheet_id": "",
+  "endrun_post_id": 2485
 }

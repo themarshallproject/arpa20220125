@@ -1,6 +1,7 @@
 const fs = require('fs');
 const config = require('../config.json');
 const marked = require('marked');
+const Mustache = require('mustache');
 
 function renderTemplate(options) {
   let renderedTemplate;
