@@ -10,6 +10,11 @@ const ENDRUN = {
   name: 'EndRun API key',
   hint: 'You can get your API key at https://www.themarshallproject.org/admin/api_keys. They expire after 30 days.'
 };
+const ENDRUN_LOCAL = {
+  key: 'gfx-endrun-local',
+  name: 'Local or staging EndRun API key',
+  hint: 'For use with non-default EndRun hosts, which can be specified in config.json. You can get your API key on the specified EndRun host.'
+};
 const AWS_SECRET = {
   key: 'gfx-aws-secret',
   name: 'AWS Secret Token'
@@ -155,6 +160,14 @@ function getMuxCredentials(callback) {
 }
 
 
+function getEndrunLocalCredentials(callback) {
+  const endrunLocalCreds = [ENDRUN_LOCAL];
+  ensureRequestedCredentials(endrunLocalCreds, () => {
+    getRequestedCredentials(endrunLocalCreds, callback);
+  });
+}
+
+
 function getRequestedCredentials(requestedKeys, cb) {
   var keys = {};
   var keyCount = 0;
@@ -201,6 +214,11 @@ function ensureCredentialsTask(done) {
 
 function resetEndrunKey(done) {
   resetServicePassword(ENDRUN, done);
+}
+
+
+function resetEndrunLocalKey(done) {
+  resetServicePassword(ENDRUN_LOCAL, done);
 }
 
 
@@ -301,8 +319,10 @@ module.exports = {
   getCredentials,
   getGoogleClient,
   getMuxCredentials,
+  getEndrunLocalCredentials,
   resetAWSKeys,
   resetEndrunKey,
+  resetEndrunLocalKey,
   resetGithubKey,
   resetGoogleClient,
   resetGoogleToken,
