@@ -287,6 +287,8 @@ function endrunDeploy(done, host) {
     });
   } else {
     credentials.getEndrunLocalCredentials(function(creds) {
+      log(`Reminder: You are deploying to an Endrun install hosted at ${ host }. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`)
+
       var endrunCredsKey = 'gfx-endrun-local';
       var endrunTask = 'endrun_local';
       endrunDeployRequest(creds, endrunCredsKey, endrunTask)
@@ -340,7 +342,7 @@ var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, open
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
-  github.ensureRepoCleanAndPushed,
+  //github.ensureRepoCleanAndPushed,
   buildProduction,
   revision,
   s3.deploy,
