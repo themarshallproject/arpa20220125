@@ -277,16 +277,13 @@ function revision() {
 }
 
 
-
-
-
-function endrunDeploy(done, host) {
+function routeEndrunRequest(done, host, callback) {
   host = host || config.endrun_host;
   if (host == 'https://www.themarshallproject.org') {
     credentials.ensureCredentials(function(creds) {
       var endrunCredsKey = 'gfx-endrun';
       var endrunTask = 'endrun';
-      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
+      callback(host, creds[endrunCredsKey], endrunTask)
     });
   } else {
     credentials.getEndrunLocalCredentials(function(creds) {
@@ -294,11 +291,14 @@ function endrunDeploy(done, host) {
 
       var endrunCredsKey = 'gfx-endrun-local';
       var endrunTask = 'endrun_local';
-      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
+      callback(host, creds[endrunCredsKey], endrunTask)
     });
   }
+}
 
-  function endrunDeployRequest(endrunToken, endrunTask) {
+
+function endrunDeploy(done, host) {
+  routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
     var endpoint = "/admin/api/v2/deploy-gfx";
     var body = {
       token: endrunToken,
@@ -336,17 +336,17 @@ function endrunDeploy(done, host) {
 
       done();
     });
-  }
+  });
 }
 
 
 function getPostData(done, host) {
-  if (config.endrun_post_id) {
-    credentials.ensureCredentials(function(creds) {
+  routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
+    if (config.endrun_post_id) {
       host = host || config.endrun_host;
       var endpoint = '/admin/api/v2/get_freeform_post_data';
       var body = {
-        token: creds['gfx-endrun'],
+        token: endrunToken,
         id: config.endrun_post_id,
       }
 
@@ -360,7 +360,7 @@ function getPostData(done, host) {
         }
 
         if (response.statusCode === 403) {
-          log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
+          log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
         }
 
         if (response && response.statusCode !== 200) {
@@ -376,11 +376,11 @@ function getPostData(done, host) {
 
         done();
       });
-    });
-  } else {
-    log('You must specify an Endrun post id in config.json to download custom header data.')
-    done();
-  }
+    } else {
+      log('You must specify an Endrun post id in config.json to download custom header data.')
+      done();
+    }
+  });
 }
 
 
