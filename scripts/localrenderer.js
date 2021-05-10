@@ -20,6 +20,23 @@ function renderMetadata(html) {
 }
 
 
+function renderFromPostData(html) {
+  if (config.endrun_post_id) {
+    try {
+      var postData = require('../post-templates/custom-header-data.json');
+      var customTags = ['<%', '%>'];
+      var renderedHtml = Mustache.render(html, postData, {}, customTags);
+      return renderedHtml;
+    } catch(err) {
+      if (err.code != 'MODULE_NOT_FOUND') {
+        console.log(err);
+      }
+    }
+    return html;
+  }
+}
+
+
 function renderSingle(options) {
   var content = fs.readFileSync('./build/graphic.html', 'utf-8');
   var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
@@ -29,6 +46,8 @@ function renderSingle(options) {
   } else {
     contentHTML = content;
   }
+
+  contentHTML = renderFromPostData(contentHTML)
 
   var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
   html = html.replace('|GRAPHIC_CONTENT|', '');
@@ -63,6 +82,7 @@ function renderMultiple(options) {
   }
 
   if (headerContent) {
+    headerContent = renderFromPostData(headerContent);
     var html = template.replace('|CONTENT|', getIncludes(options) + headerContent);
     html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
   } else {
