@@ -283,7 +283,7 @@ function endrunDeploy(done, host) {
     credentials.ensureCredentials(function(creds) {
       var endrunCredsKey = 'gfx-endrun';
       var endrunTask = 'endrun';
-      endrunDeployRequest(creds, endrunCredsKey, endrunTask)
+      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
     });
   } else {
     credentials.getEndrunLocalCredentials(function(creds) {
@@ -291,14 +291,14 @@ function endrunDeploy(done, host) {
 
       var endrunCredsKey = 'gfx-endrun-local';
       var endrunTask = 'endrun_local';
-      endrunDeployRequest(creds, endrunCredsKey, endrunTask)
+      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
     });
   }
 
-  function endrunDeployRequest(creds, endrunCredsKey, endrunTask) {
+  function endrunDeployRequest(endrunToken, endrunTask) {
     var endpoint = "/admin/api/v2/deploy-gfx";
     var body = {
-      token: creds[endrunCredsKey],
+      token: endrunToken,
       type: config.type,
       slug: config.slug,
       repo: github.getRemoteUrl()
@@ -342,7 +342,7 @@ var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, open
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
-  //github.ensureRepoCleanAndPushed,
+  github.ensureRepoCleanAndPushed,
   buildProduction,
   revision,
   s3.deploy,
