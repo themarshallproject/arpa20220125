@@ -368,7 +368,7 @@ function getPostData(done, host) {
 }
 
 
-var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
+var defaultTask = gulp.series(clean, startServer, getPostData, buildDev, examples.build, openBrowser, watch);
 
 // Primary interface
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
