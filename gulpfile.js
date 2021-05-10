@@ -278,16 +278,22 @@ function revision() {
 
 
 function endrunDeploy(done, host) {
-  credentials.ensureCredentials(function(creds) {
-    host = host || config.endrun_host;
-    if (host == 'https://www.themarshallproject.org') {
+  host = host || config.endrun_host;
+  if (host == 'https://www.themarshallproject.org') {
+    credentials.ensureCredentials(function(creds) {
       var endrunCredsKey = 'gfx-endrun';
       var endrunTask = 'endrun';
-    } else {
+      endrunDeployRequest(creds, endrunCredsKey, endrunTask)
+    });
+  } else {
+    credentials.getEndrunLocalCredentials(function(creds) {
       var endrunCredsKey = 'gfx-endrun-local';
       var endrunTask = 'endrun_local';
-    }
+      endrunDeployRequest(creds, endrunCredsKey, endrunTask)
+    });
+  }
 
+  function endrunDeployRequest(creds, endrunCredsKey, endrunTask) {
     var endpoint = "/admin/api/v2/deploy-gfx";
     var body = {
       token: creds[endrunCredsKey],
@@ -325,7 +331,7 @@ function endrunDeploy(done, host) {
 
       done();
     });
-  });
+  }
 }
 
 var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);

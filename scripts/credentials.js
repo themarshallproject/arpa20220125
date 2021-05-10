@@ -46,7 +46,7 @@ const MUX_ACCESS = {
   key: 'gfx-mux-access',
   name: 'Mux Access token'
 };
-const REQUIRED_CREDS = [ENDRUN, ENDRUN_LOCAL, AWS_SECRET, AWS_ACCESS, GITHUB];
+const REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
 
 // In MacOS we use the system-wide keychain to store credentials. On
 // other platforms we just use a plain JSON file.
@@ -156,6 +156,14 @@ function getMuxCredentials(callback) {
   const MUX_CREDENTIALS = [MUX_ACCESS, MUX_SECRET];
   ensureRequestedCredentials(MUX_CREDENTIALS, () => {
     getRequestedCredentials(MUX_CREDENTIALS, callback);
+  });
+}
+
+
+function getEndrunLocalCredentials(callback) {
+  const endrunLocalCreds = [ENDRUN_LOCAL];
+  ensureRequestedCredentials(endrunLocalCreds, () => {
+    getRequestedCredentials(endrunLocalCreds, callback);
   });
 }
 
@@ -311,6 +319,7 @@ module.exports = {
   getCredentials,
   getGoogleClient,
   getMuxCredentials,
+  getEndrunLocalCredentials,
   resetAWSKeys,
   resetEndrunKey,
   resetEndrunLocalKey,
