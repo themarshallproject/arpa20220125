@@ -278,11 +278,27 @@ function revision() {
 
 
 function endrunDeploy(done, host) {
-  credentials.ensureCredentials(function(creds) {
-    host = host || config.endrun_host;
+  host = host || config.endrun_host;
+  if (host == 'https://www.themarshallproject.org') {
+    credentials.ensureCredentials(function(creds) {
+      var endrunCredsKey = 'gfx-endrun';
+      var endrunTask = 'endrun';
+      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
+    });
+  } else {
+    credentials.getEndrunLocalCredentials(function(creds) {
+      log(`Reminder: You are deploying to an Endrun install hosted at ${ host }. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`)
+
+      var endrunCredsKey = 'gfx-endrun-local';
+      var endrunTask = 'endrun_local';
+      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
+    });
+  }
+
+  function endrunDeployRequest(endrunToken, endrunTask) {
     var endpoint = "/admin/api/v2/deploy-gfx";
     var body = {
-      token: creds['gfx-endrun'],
+      token: endrunToken,
       type: config.type,
       slug: config.slug,
       repo: github.getRemoteUrl()
@@ -305,7 +321,7 @@ function endrunDeploy(done, host) {
       }
 
       if (response.statusCode === 403) {
-        log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
+        log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
       }
 
       if (response && response.statusCode !== 200) {
@@ -317,7 +333,7 @@ function endrunDeploy(done, host) {
 
       done();
     });
-  });
+  }
 }
 
 var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
@@ -360,6 +376,7 @@ gulp.task('deploy:data', s3.deployData);
 gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
+gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 gulp.task('credentials:github', credentials.resetGithubKey);
 gulp.task('credentials:google', credentials.resetGoogleToken);
