@@ -23,13 +23,14 @@ function renderMetadata(html) {
 function renderFromPostData(html) {
   if (config.endrun_post_id) {
     try {
-      var postData = require('../post-templates/custom-header-data.json');
+      var postResponse = fs.readFileSync('./post-templates/custom-header-data.json');
+      var postData = JSON.parse(postResponse);
       var customTags = ['<%', '%>'];
       var renderedHtml = Mustache.render(html, postData, {}, customTags);
       return renderedHtml;
     } catch(err) {
-      if (err.code != 'MODULE_NOT_FOUND') {
-        console.log(err);
+      if (err.code != 'ENOENT') {
+        console.error(err);
       }
     }
     return html;
