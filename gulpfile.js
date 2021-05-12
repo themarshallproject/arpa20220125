@@ -297,6 +297,17 @@ function routeEndrunRequest(done, host, callback) {
 }
 
 
+function defaultEndrunResponseHandler(error, response, endrunTask) {
+  if (error) {
+    log.error(error);
+  }
+
+  if (response.statusCode === 403) {
+    log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
+  }
+}
+
+
 function endrunDeploy(done, host) {
   routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
     var endpoint = "/admin/api/v2/deploy-gfx";
@@ -319,13 +330,7 @@ function endrunDeploy(done, host) {
       json: true,
       body: body
     }, function (error, response, body) {
-      if (error) {
-        log.error(error);
-      }
-
-      if (response.statusCode === 403) {
-        log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
-      }
+      defaultEndrunResponseHandler(error, response, endrunTask);
 
       if (response && response.statusCode !== 200) {
         log.error(response.statusCode + ': ' + body.error);
@@ -344,32 +349,22 @@ function getPostData(done, host) {
   routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
     if (config.endrun_post_id) {
       host = host || config.endrun_host;
-      var endpoint = '/admin/api/v2/get_freeform_post_data';
-      var body = {
-        token: endrunToken,
-        id: config.endrun_post_id,
-      }
+      var endpoint = `/admin/api/v2/post-data/${ config.endrun_post_id }00?token=${ endrunToken }`;
 
-      request.post({
+      request.get({
         url: host + endpoint,
         json: true,
-        body: body,
       }, function (error, response, body) {
-        if (error) {
-          log.error(error);
-        }
+        defaultEndrunResponseHandler(error, response, endrunTask);
 
-        if (response.statusCode === 403) {
-          log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
-        }
-
-        if (response && response.statusCode !== 200) {
+        if (response && response.statusCode == 404) {
+          log.error(response.statusCode + ': ' + body.error + '\nYou must set a valid post id.');
+          done(body.error);
+        } else if (response && response.statusCode !== 200) {
           log.error(response.statusCode + ': ' + body.error + '\nNo post data saved.');
           done(body.error);
-        }
-
-        if (response && response.statusCode == 200) {
-          log('Saving post data for custom header.');
+        } else if (response && response.statusCode == 200) {
+          log('Writing post data to post-templates/custom-header-data.json.');
           const content = JSON.stringify(response.body);
           fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
         }
@@ -407,7 +402,7 @@ gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
-gulp.task('post_data:download', getPostData)
+gulp.task('posts:download', getPostData)
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);
