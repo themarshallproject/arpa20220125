@@ -349,7 +349,7 @@ function getPostData(done, host) {
   routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
     if (config.endrun_post_id) {
       host = host || config.endrun_host;
-      var endpoint = `/admin/api/v2/post-data/${ config.endrun_post_id }00?token=${ endrunToken }`;
+      var endpoint = `/admin/api/v2/post-data/${ config.endrun_post_id }?token=${ endrunToken }`;
 
       request.get({
         url: host + endpoint,

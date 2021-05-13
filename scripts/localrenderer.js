@@ -4,13 +4,7 @@ const marked = require('marked');
 const Mustache = require('mustache');
 
 function renderTemplate(options) {
-  let renderedTemplate;
-  if (config.multiple_graphics || options.examples) {
-    renderedTemplate = renderMultiple(options);
-  } else {
-    renderedTemplate = renderSingle(options);
-  }
-
+  const renderedTemplate = renderGraphics(options);
   return renderMetadata(renderedTemplate);
 }
 
@@ -21,60 +15,43 @@ function renderMetadata(html) {
 
 
 function renderFromPostData(html) {
-  if (config.endrun_post_id) {
-    try {
-      var postResponse = fs.readFileSync('./post-templates/custom-header-data.json');
-      var postData = JSON.parse(postResponse);
-      var customTags = ['<%', '%>'];
-      var renderedHtml = Mustache.render(html, postData, {}, customTags);
-      return renderedHtml;
-    } catch(err) {
-      if (err.code != 'ENOENT') {
-        console.error(err);
-      }
-    }
-    return html;
+  try {
+    var postResponse = fs.readFileSync('./post-templates/custom-header-data.json');
+    var postData = JSON.parse(postResponse);
+    var renderedHtml = Mustache.render(html, postData);
+    return renderedHtml;
+  } catch(err) {
+    console.error(err);
   }
-}
-
-
-function renderSingle(options) {
-  var content = fs.readFileSync('./build/graphic.html', 'utf-8');
-  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
-  var contentHTML;
-  if (config.local_markdown === true) {
-    contentHTML = marked(content);
-  } else {
-    contentHTML = content;
-  }
-
-  contentHTML = renderFromPostData(contentHTML)
-
-  var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
-  html = html.replace('|GRAPHIC_CONTENT|', '');
   return html;
 }
 
 
-function renderMultiple(options) {
+function renderGraphics(options) {
   var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
   var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
   var graphics = options.examples ? getExamples(options) : getGraphics(options);
-  var headerContent = graphics['header'];
+  var graphicKeys = Object.keys(graphics);
+  var headerHTML = graphics['header'];
 
   if (localText && !options.examples) {
     content = replaceGraphics(graphics, localText);
   } else {
     content = '';
-    for (key in graphics) {
-      if (key !== 'header') {
+    for (i in graphicKeys) {
+      const key = graphicKeys[i];
+      if (graphicKeys.length > 1 && i < graphicKeys.length - 1) {
+        // If we have multiple graphics and it's not the last graphic in the list, we want to add some lorem ipsum to space them out.
         graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
         content += graphicHTML;
+      } else if (key !== 'header') {
+        content += graphics[key];
       }
     }
   }
+
   var contentHTML;
   if (config.local_markdown === true) {
     contentHTML = marked(content);
@@ -82,9 +59,14 @@ function renderMultiple(options) {
     contentHTML = content;
   }
 
-  if (headerContent) {
-    headerContent = renderFromPostData(headerContent);
-    var html = template.replace('|CONTENT|', getIncludes(options) + headerContent);
+  // For a custom header using mustache
+  if (fs.existsSync('./src/header.mustache')) {
+    var headerMustache = fs.readFileSync('./src/header.mustache', 'utf-8');
+    headerHTML = renderFromPostData(headerMustache);
+  }
+
+  if (headerHTML) {
+    var html = template.replace('|CONTENT|', getIncludes(options) + headerHTML);
     html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
   } else {
     var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
