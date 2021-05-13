@@ -251,7 +251,7 @@ function watch() {
   gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
   gulp.watch(['examples/*/assets/**'], examples.assets);
 
-  return gulp.watch(['src/*.html', 'src/template-files'], html);
+  return gulp.watch(['src/*.html', 'src/*.mustache', 'src/template-files'], html);
 }
 
 
