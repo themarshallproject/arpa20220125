@@ -59,13 +59,11 @@ function renderGraphics(options) {
     contentHTML = content;
   }
 
-  // For a custom header using mustache
-  if (fs.existsSync('./src/header.mustache')) {
-    var headerMustache = fs.readFileSync('./src/header.mustache', 'utf-8');
-    headerHTML = renderFromPostData(headerMustache);
-  }
-
   if (headerHTML) {
+    // Render mustache templates using post data from Endrun.
+    // TODO currently this is running no matter what -- should we only run if
+    // we know it originated from a `.mustache` file?
+    headerHTML = renderFromPostData(headerHTML);
     var html = template.replace('|CONTENT|', getIncludes(options) + headerHTML);
     html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
   } else {
@@ -124,6 +122,14 @@ function getGraphics(options) {
       }
     }
   });
+
+  // If a custom header using mustache exists, use that as header graphic
+  // but do not render data yet -- that should only happen on the local server
+  var headerMustache = fs.readFileSync('./src/header.mustache', 'utf-8');
+  if (headerMustache) {
+    graphics['header'] = headerMustache;
+  }
+
   return graphics;
 }
 

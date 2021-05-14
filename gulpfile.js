@@ -318,12 +318,13 @@ function endrunDeploy(done, host) {
       repo: github.getRemoteUrl()
     }
 
-    if (config.multiple_graphics) {
+    // TODO why do we need this?
+    //if (config.multiple_graphics) {
       body['contents'] = getGraphics({ isProduction: true });
-    } else {
-      var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
-      body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
-    }
+    //} else {
+      //var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
+      //body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
+    //}
 
     request.post({
       url: host + endpoint,
