@@ -366,9 +366,9 @@ function endrunDeploy(done, host) {
 
 function getPostData(done, host) {
   routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
-    if (config.endrun_post_id) {
+    if (config.slug) {
       host = host || config.endrun_host;
-      var endpoint = `/admin/api/v2/post-data/${ config.endrun_post_id }?token=${ endrunToken }`;
+      var endpoint = `/admin/api/v2/post-data/${ config.slug }?token=${ endrunToken }`;
 
       request.get({
         url: host + endpoint,
@@ -377,7 +377,7 @@ function getPostData(done, host) {
         defaultEndrunResponseHandler(error, response, endrunTask);
 
         if (response && response.statusCode == 404) {
-          log.error(response.statusCode + ': ' + body.error + '\nYou must set a valid post id.');
+          log.error(response.statusCode + ': ' + body.error + '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.');
           done(body.error);
         } else if (response && response.statusCode !== 200) {
           log.error(response.statusCode + ': ' + body.error + '\nNo post data saved.');
@@ -391,7 +391,7 @@ function getPostData(done, host) {
         done();
       });
     } else {
-      log('You must specify an Endrun post id in config.json to download custom header data.')
+      log('You must specify a slug in config.json to download custom header data.')
       done();
     }
   });
