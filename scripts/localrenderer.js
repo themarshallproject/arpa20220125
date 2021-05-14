@@ -112,23 +112,18 @@ function getGraphics(options) {
   var isProduction = options && options.isProduction || false;
 
   files.forEach(function(filename) {
+    let key;
     if (filename.match(/[^_].*\.html$/)) {
-      var key = filename.replace(/\.html$/, '');
-      if (isProduction) {
-        var htmlFile = require('../dist/rev-manifest.json')[filename];
-        graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
-      } else {
-        graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
-      }
+      key = filename.replace(/\.html$/, '');
     } else if (filename == 'header.mustache') {
-      // If a custom header using mustache exists, use that as header graphic
-      // but do not render data yet -- that should only happen on the local server
-      if (isProduction) {
-        var htmlFile = require('../dist/rev-manifest.json')[filename];
-        graphics['header'] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
-      } else {
-        graphics['header'] = fs.readFileSync(dirPath + filename, 'utf-8');
-      }
+      key = 'header';
+    }
+
+    if (isProduction) {
+      var htmlFile = require('../dist/rev-manifest.json')[filename];
+      graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
+    } else {
+      graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
     }
   });
 
