@@ -109,6 +109,13 @@ function readme() {
 }
 
 
+function mustache() {
+  return gulp.src('src/header.mustache')
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
+}
+
+
 function html() {
   return gulp.src('src/*.html')
     .pipe(externalData.getExternalData())
@@ -230,7 +237,7 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme));
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
 
@@ -244,6 +251,7 @@ function watch() {
 
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
+  gulp.watch(['post-templates/**'], mustache);
 
   // Examples
   gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);
@@ -251,7 +259,8 @@ function watch() {
   gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
   gulp.watch(['examples/*/assets/**'], examples.assets);
 
-  return gulp.watch(['src/*.html', 'src/*.mustache', 'src/template-files'], html);
+  gulp.watch(['src/*.mustache'], mustache);
+  return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
 

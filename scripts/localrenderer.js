@@ -42,7 +42,7 @@ function renderGraphics(options) {
     content = '';
     for (i in graphicKeys) {
       const key = graphicKeys[i];
-      if (graphicKeys.length > 1 && i < graphicKeys.length - 1) {
+      if (key !== 'header' && graphicKeys.length > 1 && i < graphicKeys.length - 1) {
         // If we have multiple graphics and it's not the last graphic in the list, we want to add some lorem ipsum to space them out.
         graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
         content += graphicHTML;
@@ -120,15 +120,12 @@ function getGraphics(options) {
       } else {
         graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
       }
+    } else if (filename == 'header.mustache') {
+      // If a custom header using mustache exists, use that as header graphic
+      // but do not render data yet -- that should only happen on the local server
+      graphics['header'] = fs.readFileSync(dirPath + filename, 'utf-8');
     }
   });
-
-  // If a custom header using mustache exists, use that as header graphic
-  // but do not render data yet -- that should only happen on the local server
-  var headerMustache = fs.readFileSync('./src/header.mustache', 'utf-8');
-  if (headerMustache) {
-    graphics['header'] = headerMustache;
-  }
 
   return graphics;
 }
