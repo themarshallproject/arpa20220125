@@ -287,7 +287,7 @@ function revision() {
       // If you want an unversioned file. Careful deploying with this, the
       // cache times are long.
       // dontRenameFile: [/.*.csv/],
-      includeFilesInManifest: ['.html', '.js', '.css']
+      includeFilesInManifest: ['.html', '.mustache', '.js', '.css']
     }))
     .pipe(gulp.dest('dist'))
     .pipe(RevAll.manifestFile())
@@ -391,7 +391,7 @@ function getPostData(done, host) {
         done();
       });
     } else {
-      log('You must specify a slug in config.json to download custom header data.')
+      log.error('You must specify a slug in config.json to download custom header data.')
       done();
     }
   });

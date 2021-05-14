@@ -123,7 +123,12 @@ function getGraphics(options) {
     } else if (filename == 'header.mustache') {
       // If a custom header using mustache exists, use that as header graphic
       // but do not render data yet -- that should only happen on the local server
-      graphics['header'] = fs.readFileSync(dirPath + filename, 'utf-8');
+      if (isProduction) {
+        var htmlFile = require('../dist/rev-manifest.json')[filename];
+        graphics['header'] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
+      } else {
+        graphics['header'] = fs.readFileSync(dirPath + filename, 'utf-8');
+      }
     }
   });
 
