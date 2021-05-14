@@ -119,10 +119,11 @@ function getGraphics(options) {
       key = 'header';
     }
 
-    if (isProduction) {
+    if (key && isProduction) {
       var htmlFile = require('../dist/rev-manifest.json')[filename];
+      console.log(filename, htmlFile)
       graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
-    } else {
+    } else if (key) {
       graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
     }
   });
