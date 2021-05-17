@@ -50,32 +50,26 @@ function handleMatchingRepo(cb) {
 
 function handleHeaderTemplateFiles(cb) {
   const readPathMustache = './post-templates/_dynamic-header.mustache';
-  const readPathData = './post-templates/default-header-data.json';
   const writePathMustache = './src/header.mustache';
-  const writePathData = './post-templates/custom-header-data.json';
 
-  function writeTemplateFile(src, dest, callback) {
-    if (fs.existsSync(dest)) {
-      getBooleanInput(`Do you want to overwrite the existing ${ dest } file?`, (overwrite) => {
-        if (overwrite) {
-          fs.copyFileSync(src, dest);
-          console.log(`Template copied to ${ dest }`)
-        } else {
-          console.log('Did not copy template.');
-        }
+  if (fs.existsSync(writePathMustache)) {
+    getBooleanInput(`Do you want to overwrite the existing ${ writePathMustache } file?`, (overwrite) => {
+      if (overwrite) {
+        fs.copyFileSync(readPathMustache, writePathMustache);
+        console.log(`Template copied to ${ writePathMustache }`)
+      } else {
+        console.log('Did not copy template.');
+      }
 
-        callback();
-      });
-    } else {
-      fs.copyFileSync(src, dest);
-      console.log(`Header template file copied to ${ dest }`)
       callback();
-    }
+    });
+  } else {
+    fs.copyFileSync(readPathMustache, writePathMustache);
+    console.log(`Header template file copied to ${ writePathMustache }`)
+    callback();
   }
 
-  writeTemplateFile(readPathMustache, writePathMustache, () => {
-    writeTemplateFile(readPathData, writePathData, cb);
-  });
+  cb();
 }
 
 
