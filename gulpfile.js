@@ -110,14 +110,14 @@ function readme() {
 
 
 function mustache() {
-  return gulp.src('src/header.mustache')
+  return gulp.src('src/*.mustache')
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
 
 function productionMustache() {
-  return gulp.src('src/header.mustache')
+  return gulp.src('src/*.mustache')
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
     .pipe(insert.prepend(includes.javascriptIncludeText()))
     .pipe(gulp.dest('build'))

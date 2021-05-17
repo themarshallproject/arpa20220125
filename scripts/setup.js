@@ -61,15 +61,13 @@ function handleHeaderTemplateFiles(cb) {
         console.log('Did not copy template.');
       }
 
-      callback();
+      cb();
     });
   } else {
     fs.copyFileSync(readPathMustache, writePathMustache);
     console.log(`Header template file copied to ${ writePathMustache }`)
-    callback();
+    cb();
   }
-
-  cb();
 }
 
 
