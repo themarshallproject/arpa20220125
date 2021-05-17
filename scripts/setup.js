@@ -179,6 +179,5 @@ function getBooleanInput(prompt, cb) {
 
 module.exports = {
   setup: setup,
-  resetType: resetType,
-  handleHeaderTemplateFiles: handleHeaderTemplateFiles
+  resetType: resetType
 };
