@@ -10,6 +10,5 @@
   "endrun_host": "http://localhost:7000",
   "use_es6": true,
   "multiple_graphics": true,
-  "spreadsheet_id": "",
-  "endrun_post_id": 2485
+  "spreadsheet_id": ""
 }
