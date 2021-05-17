@@ -68,7 +68,7 @@ function handleHeaderTemplateFiles(cb) {
       });
     } else {
       fs.copyFileSync(src, dest);
-      console.log(`Template copied to ${ dest }`)
+      console.log(`Header template file copied to ${ dest }`)
       callback();
     }
   }
