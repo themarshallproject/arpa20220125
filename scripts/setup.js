@@ -24,16 +24,57 @@ function setup(done) {
     config.slug = slug;
     getType(function() {
       fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-      getBooleanInput('Do you want to create a matching Github repo?', function(repo) {
-        if (repo) {
-          github.createAndSetRepository(() => {
-            github.setupDefaultLabels(cleanup);
-          });
-        } else {
-          cleanup();
-        }
-      });
+
+      if (config.type == 'header') {
+        handleHeaderTemplateFiles(() => handleMatchingRepo(cleanup))
+      } else {
+        handleMatchingRepo(cleanup);
+      }
     });
+  });
+}
+
+
+function handleMatchingRepo(cb) {
+  getBooleanInput('Do you want to create a matching Github repo?', function(repo) {
+    if (repo) {
+      github.createAndSetRepository(() => {
+        github.setupDefaultLabels(cb);
+      });
+    } else {
+      cb();
+    }
+  });
+}
+
+
+function handleHeaderTemplateFiles(cb) {
+  const readPathMustache = './post-templates-_dynamic-header.mustache';
+  const readPathData = './post-templates/default-header-data.json';
+  const writePathMustache = './src/header.mustache';
+  const writePathData = './post-templates/custom-header-data.json';
+
+  function writeTemplateFile(src, dest, callback) {
+    if (fs.existsSync(dest)) {
+      getBooleanInput(`Do you want to overwrite the existing ${ dest } file?`, (overwrite) => {
+        if (overwrite) {
+          fs.copyFileSync(src, dest);
+          console.log(`Template copied to ${ dest }`)
+        } else {
+          console.log('Did not copy template.');
+        }
+
+        callback();
+      });
+    } else {
+      fs.copyFileSync(src, dest);
+      console.log(`Template copied to ${ dest }`)
+      callback();
+    }
+  }
+
+  writeTemplateFile(readPathMustache, writePathMustache, () => {
+    writeTemplateFile(readPathData, writePathData, cb);
   });
 }
 
@@ -138,5 +179,6 @@ function getBooleanInput(prompt, cb) {
 
 module.exports = {
   setup: setup,
-  resetType: resetType
+  resetType: resetType,
+  handleHeaderTemplateFiles: handleHeaderTemplateFiles
 };
