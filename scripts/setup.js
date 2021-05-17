@@ -49,7 +49,7 @@ function handleMatchingRepo(cb) {
 
 
 function handleHeaderTemplateFiles(cb) {
-  const readPathMustache = './post-templates-_dynamic-header.mustache';
+  const readPathMustache = './post-templates/_dynamic-header.mustache';
   const readPathData = './post-templates/default-header-data.json';
   const writePathMustache = './src/header.mustache';
   const writePathData = './post-templates/custom-header-data.json';
