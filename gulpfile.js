@@ -376,7 +376,7 @@ function getPostData(done, host) {
       }, function (error, response, body) {
         defaultEndrunResponseHandler(error, response, endrunTask);
 
-        if (response && response.statusCode == 400) {
+        if (response && response.statusCode == 404) {
           log.error(response.statusCode + ': ' + JSON.stringify(body) + '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.');
           done(body.error);
         } else if (response && response.statusCode !== 200) {
