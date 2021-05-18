@@ -260,7 +260,7 @@ function watch() {
 
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
-  gulp.watch(['post-templates/**'], mustache);
+  gulp.watch(['post-templates/custom-post-data.json'], mustache);
 
   // Examples
   gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);

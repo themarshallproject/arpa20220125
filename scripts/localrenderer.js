@@ -15,15 +15,10 @@ function renderMetadata(html) {
 
 
 function renderFromPostData(html) {
-  try {
-    var postResponse = fs.readFileSync('./post-templates/custom-header-data.json');
-    var postData = JSON.parse(postResponse);
-    var renderedHtml = Mustache.render(html, postData);
-    return renderedHtml;
-  } catch(err) {
-    console.error(err);
-  }
-  return html;
+  var postResponse = fs.readFileSync('./post-templates/custom-header-data.json');
+  var postData = JSON.parse(postResponse);
+  var renderedHtml = Mustache.render(html, postData);
+  return renderedHtml;
 }
 
 
