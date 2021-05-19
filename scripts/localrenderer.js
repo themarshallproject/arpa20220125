@@ -101,7 +101,7 @@ function renderWarning(text) {
 
 
 function getGraphics(options) {
-  var dirPath = options.dirPath || './build/';
+  var dirPath = options && options.dirPath || './build/';
   var files = fs.readdirSync(dirPath, 'utf-8');
   var graphics = {};
   var isProduction = options && options.isProduction || false;

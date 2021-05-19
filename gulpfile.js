@@ -41,6 +41,7 @@ var videos = require('./scripts/videos.js');
 var s3 = require('./scripts/s3.js');
 
 var serverPort, lrPort;
+var multiple_graphics;
 
 function startServer() {
   return firstOpenPort(3000).then(function(port) {
@@ -135,7 +136,7 @@ function html() {
 
 
 function productionHtml() {
-  if (config.multiple_graphics) {
+  if (multiple_graphics) {
     fs.writeFileSync('./build/includes.html',
       includes.stylesheetIncludeText() + includes.javascriptIncludeText())
   }
@@ -155,13 +156,28 @@ function productionHtml() {
 
 
 function singleOrHeader(file) {
-  if (!config.multiple_graphics) {
+  if (multiple_graphics) {
     return true;
   }
-  if (path.basename(file.path) === 'header.html') {
+  if (path.basename(file.path, path.extname(file.path)) == 'header') {
     return true;
   }
   return false;
+}
+
+
+function checkGraphicsCount(done) {
+  const files = fs.readdirSync('./src/', 'utf-8');
+  let fileCount = 0;
+
+  files.forEach(function(filename) {
+    if (filename.match(/[^_].*\.html$/) || filename == 'header.mustache') {
+      fileCount++;
+    }
+  });
+
+  multiple_graphics = fileCount > 1;
+  done();
 }
 
 
@@ -248,7 +264,7 @@ function assets() {
 
 const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme));
 
-const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionMustache, productionHtml);
+const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
 
 function watch() {
@@ -336,13 +352,7 @@ function endrunDeploy(done, host) {
       repo: github.getRemoteUrl()
     }
 
-    // TODO why do we need this?
-    //if (config.multiple_graphics) {
-      body['contents'] = getGraphics({ isProduction: true });
-    //} else {
-      //var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
-      //body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
-    //}
+    body['contents'] = getGraphics({ isProduction: true });
 
     request.post({
       url: host + endpoint,
