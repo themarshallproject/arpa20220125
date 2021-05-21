@@ -33,24 +33,27 @@ Processing data? See [analysis/README.md](analysis/README.md) to learn about any
 - [Run](#run)
 - [Deploy](#deploy)
 - [Notes on JavaScript](#notes-on-javascript)
+- [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
+    + [Basic use](#basic-use)
+    + [Custom headers](#custom-headers)
+    + [Customizing the layout of graphics locally](#customizing-the-layout-of-graphics-locally)
 - [Examples](#examples)
-- [Using pre-configured templates](#using-pre-configured-templates)
-  * [Chart templates](#chart-templates)
-  * [ai2html template](#ai2html-template)
-  * [Scrolly template TK](#scrolly-template-tk)
 - [Using external data sources in your HTML](#using-external-data-sources-in-your-html)
     + [Example: basic table](#example-basic-table)
     + [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
     + [CSV data formats](#csv-data-formats)
-- [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
-    + [Using custom heds and other graphics](#using-custom-heds-and-other-graphics)
+- [Using pre-configured templates](#using-pre-configured-templates)
+  * [Chart templates](#chart-templates)
+  * [ai2html template](#ai2html-template)
+  * [Scrolly template TK](#scrolly-template-tk)
+- [Advanced Features](#advanced-features)
+    + [Google Sheets Integration](#google-sheets-integration)
+    + [Using Endrun metadata to develop custom headers](#using-endrun-metadata-to-develop-custom-headers)
 - [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
 - [Running data analysis](#running-data-analysis)
 - [Tips](#tips)
 - [Other commands](#other-commands)
 - [Running on non-Mac platforms](#running-on-non-mac-platforms)
-- [Advanced Features](#advanced-features)
-  * [Google Sheets Integration](#google-sheets-integration)
 - [Editing this template](#editing-this-template)
 - [Thoughts? Ideas? Issues?](#thoughts-ideas-issues)
 
@@ -76,12 +79,13 @@ Processing data? See [analysis/README.md](analysis/README.md) to learn about any
 
 - Run `gulp` which will start the local server, and live-reload your changes.
 - Edit files only inside of the `src` directory.
-- To change post format, edit `config.json` and re-run `gulp`.
+- To change post format, run `gulp reset:type` and then re-run `gulp`.
 
 ## Deploy
 
 - Run `gulp deploy` to send files to S3 and EndRun.
 - You will be prompted for credentials if you have not entered them before. You will need an AWS keypair, a Github API token, and an EndRun API key.
+
 
 ## Notes on JavaScript
 
@@ -89,77 +93,39 @@ Processing data? See [analysis/README.md](analysis/README.md) to learn about any
 - You can use ES5 by setting the `use_es6` configuration option in `config.json` to `false`. This creates a slightly different compilation behavior. Any `.js` file in the `src/` folder will be included automatically. Your code in `graphic.js` will always come last in the concatenated file.
 
 
-## Examples
+## Deploying multiple graphics from one repo
 
-- View [examples of common graphics here](/examples/), or check out the
-  code in `examples/`.
-- To add a new example to the page:
-  - create a new directory in `examples/` with a directory name that describes the graphic.
-  - Place your html, javascript and sass inside. You can also include assets and
-    external data, preserving the same folder structure that you'd use
-    within `src/`.
-  - You're good to go!
+You can use a single repo to house multiple graphics and/or a custom header, and deploy them all at once. This is very useful for a post with multiple components. Or when you have several similar charts that would benefit from sharing CSS and/or JS.
 
+#### Basic use
 
-## Using pre-configured templates
+By default, the `src/` folder will contain a single html file:
+`graphic.html`. If you have more than one html file in `src/`, each html file will become its own graphic. The name of the file will be used to identify it in EndRun. The shortcode will take the form `[graphic slug=<graphicreposlug>:<filename>]`.
 
-The `templates` directory houses frequently used graphic formats and
-javascript modules for basic d3.js charts.
+When you are ready to deploy, if you are not using a custom hed, you have to manually add the asset include graphic in the post. This will be slugged `<yourmainslug>:includes`. Add it to the bottom of the post. The `includes` graphic allows us to load the project's JS and CSS once despite being shared across multiple graphics.
 
-### Chart templates
+#### Custom headers
 
-Our chart templates are javascript modules that can be used to create
-basic d3.js charts with configurable options. Documentation for the
-templates, including instructions for setup, can be found in the [Chart
-Templates README](templates/charts/README.md).
+When you set up a project, you can choose "freeform header" as the
+graphic type. This will add a file called `header.mustache` into `src/`,
+which will be used to build your header. This mustache filetype will
+allow you to pull down actual post data from Endrun, like the post's
+headline and publish time. [(Read more on this below.)](#using-endrun-metadata-to-develop-custom-headers) If you'd prefer to hard-code everything, you
+can rename the file to `header.html` and just write standard html in it.
 
+When you deploy, the file named `header.mustache` or `header.html` will
+appear at the top of the post. If you have additional graphics in the
+post, you do not need to include the `includes` graphic as above. The
+assets will be included in the `header` file.
 
-### ai2html template
+#### Customizing the layout of graphics locally
 
-If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo. Or use this command:
+By default during local development each graphic is concatenated together (with a placeholder paragraph in between) in the template. You can customize the layout of the graphics in development by editing `post-templates/localtext.md`. This file is designed to work with the same stuff you would put into an EndRun post. You may, in fact, want to just paste in a semi-produced post, graphic shortcodes and all.
 
-```
-cp -r templates/ai2html/src .
-```
+Your graphics will be placed according to where the graphic shortcodes appear in `localtext.md`. These shortcodes take the form of `[graphic slug=<graphicreposlug>:<filename>]`. So if you had a file named `intro.html` in a repo with the slug `slugfest`, the shortcode would `[graphic slug=slugfest:intro]`.
 
-After you've copied over the template, you can find an Illustrator template in `src/ai2html/base-graphic.ai`. Build your graphic here.
+Remember that you don't have to use `localtext.md` at all. A normal workflow might be leaving it empty while you develop prototypes of your various graphics, and then deploy and put them in a post. Then copy the produced post's contents back down to `localtext.md`, so that your graphics environment more closely resembles the real post.
 
-Once you're ready to see it on the page, run the
-`src/ai2html/ai2html.js` script and the output will automatically be
-dropped in the correct location at
-`src/template-files/base-graphic.html`. This file will be completely
-overwritten every time you run the ai2html script. The background images
-are placed in `src/assets`.
-
-The ai2html output is imported into your main `graphic.html` file, so
-you can add additional HTML around your graphic without it being
-overwritten by the script.
-
-In most cases, you can refer to the [ai2html documentation](http://ai2html.org/)
-from the New York Times graphics desk. However, we have one additional
-feature: constrained artboard widths.
-
-Our ai2html template defaults to using "dynamic" responsive sizing --
-that is, the graphic will always fill 100% of the width of its
-container. But sometimes this leads to graphics looking too stretched
-out. To constrain an artboard to a maximum width, you can add a
-`data-constrain-` attribute to the parent element in `src/graphic.html`.
-
-For example, to constrain an artboard named "small" to stretch no more
-than 350px, your code would look like this:
-
-```
-  <div class="g-ai2html-wrapper" data-constrain-small="350">
-    {% include "template-files/base-graphic.html" %}
-  </div>
-```
-
-To do away with these constraints altogether, just remove the
-data-attributes from the parent.
-
-### Scrolly template TK
-
-Details TK.
 
 ## Using external data sources in your HTML
 
@@ -336,26 +302,113 @@ would return a JSON like this:
 }
 ```
 
-## Deploying multiple graphics from one repo
 
-You can use a single repo to house multiple graphics and/or a custom header, and deploy them all at once. This is very useful for a post with multiple components. Or when you have several similar charts that would benefit from sharing CSS and/or JS.
+## Using pre-configured templates
 
-1. Set the `multiple_graphics` option in `config.json` to `true`.
-2. Now each html file in `src/` will become it's own graphic. The name of the file will be used to identify it in EndRun.
-3. By default during local development each graphic is concatenated together (with a placeholder paragraph in between) in the template.
-4. You can customize the layout of the graphics in development by editing `post-templates/localtext.md`. This file is designed to work with the same stuff you would put into an EndRun post. You may, in fact, want to just paste in a semi-produced post, graphic shortcodes and all.
-5. Your graphics will be placed according to where the graphic shortcodes appear in `localtext.md`. These shortcodes take the form of `[graphic slug=<graphicreposlug>:<filename>]`. So if you had a file named `intro.html` in a repo with the slug `slugfest`, the shortcode would `[graphic slug=slugfest:intro]`.
-6. Remember that you don't have to use `localtext.md` at all. A normal workflow might be leaving it empty while you develop prototypes of your various graphics, and then deploy and put them in a post. Then copy the produced post's contents back down to `localtext.md`, so that your graphics environment more closely resembles the real post.
-7. When you are ready to deploy, if you are not using a custom hed, you have to manually add the asset include graphic in the post. This will be slugged `<yourmainslug>:includes`. Add it to the bottom of the post.
+The `templates` directory houses frequently used graphic formats and
+javascript modules for basic d3.js charts.
 
-#### Using custom heds and other graphics
+### Chart templates
 
-To incorporate a custom hed with multiple graphics:
+Our chart templates are javascript modules that can be used to create
+basic d3.js charts with configurable options. Documentation for the
+templates, including instructions for setup, can be found in the [Chart
+Templates README](templates/charts/README.md).
 
-1. Choose freeform header as the graphic type.
-2. Create a file called `src/header.html`. Your header lives in here. The name is all that identifies it.
-3. Your other graphics can go in other html files, as above.
-4. You do not need to manually include the header in `localtext.md`, and you do not need to include the `includes` graphic in the post, as above. The assets will be included with `header.html`.
+
+### ai2html template
+
+If you build a graphic using ai2html, you can do so directly from within this rig. Copy the `src` folder from `templates/ai2html` into the base directory of this repo. Or use this command:
+
+```
+cp -r templates/ai2html/src .
+```
+
+After you've copied over the template, you can find an Illustrator template in `src/ai2html/base-graphic.ai`. Build your graphic here.
+
+Once you're ready to see it on the page, run the
+`src/ai2html/ai2html.js` script and the output will automatically be
+dropped in the correct location at
+`src/template-files/base-graphic.html`. This file will be completely
+overwritten every time you run the ai2html script. The background images
+are placed in `src/assets`.
+
+The ai2html output is imported into your main `graphic.html` file, so
+you can add additional HTML around your graphic without it being
+overwritten by the script.
+
+In most cases, you can refer to the [ai2html documentation](http://ai2html.org/)
+from the New York Times graphics desk. However, we have one additional
+feature: constrained artboard widths.
+
+Our ai2html template defaults to using "dynamic" responsive sizing --
+that is, the graphic will always fill 100% of the width of its
+container. But sometimes this leads to graphics looking too stretched
+out. To constrain an artboard to a maximum width, you can add a
+`data-constrain-` attribute to the parent element in `src/graphic.html`.
+
+For example, to constrain an artboard named "small" to stretch no more
+than 350px, your code would look like this:
+
+```
+  <div class="g-ai2html-wrapper" data-constrain-small="350">
+    {% include "template-files/base-graphic.html" %}
+  </div>
+```
+
+To do away with these constraints altogether, just remove the
+data-attributes from the parent.
+
+### Scrolly template TK
+
+Details TK.
+
+
+## Advanced Features
+
+#### Google Sheets Integration
+
+It is possible to download google spreadsheets into local csv files. This can be helpful for projects with complex editorial-driven fields that will need to be frequently edited. Outside of this specific situation, you probably don't need this and should consider simpler solutions. To set it up, specify a `spreadsheet_id`, which is the long, alphanumeric string in the url of a google sheet. Next run `gulp sheets:download`, which will ask you for a series of credentials with links on where to find them (you'll need to be logged into your google account and have access to our google cloud console). Follow along with these instructions.
+
+The `client_secret.json` identifies our 'app' and shouldn't ever change. The bearer token can expire. If it does, you might see an error like `invalid_grant` or something similar. To refresh this token you can run `gulp credentials:google`. If for some reason you do need to reset the client app credentials you should run `gulp credentials:google_client`.
+
+Once you've been properly authorized (which you shouldn't need to do again for a good long while), the download task will convert each sheet of the spreadsheet into a separate csv file in `src/template-files`, using the name of the sheet as the name of the file. You can then import this data into your templates using the process described in [using external data sources in your HTML](#using-external-data-sources-in-your-html).
+
+#### Using Endrun metadata to develop custom headers
+
+When we develop custom headers, we often include information that is
+normally edited in or generated by Endrun (e.g. post headline, byline,
+publish time). To avoid having to manually update this information every
+time it changes, you can pull post data down from Endrun.
+
+By default when you setup a project with the freeform header type, a
+file called `header.mustache` will be created in `src/`. This uses the
+[Mustache templating engine](https://github.com/janl/mustache.js/) to
+dynamically render html based on a json of post data. The file includes
+some boilerplate code for you to work off of, and pulls example data
+from `post-templates/custom-header-data.json`.
+
+To download data from an actual post in Endrun, you'll want to first
+deploy your graphic to create a new post, or add the graphic slug to an
+existing post's "Internal Slug" field in the advanced post editor. Once
+the slug is associated with a specific post in Endrun, you can download
+metadata for that post by running `gulp posts:download`.
+
+Take a look at `post-templates/custom-header-data.json` to see what
+fields are available to use in developing a custom header.
+
+
+## Examples
+
+- View [examples of common graphics here](/examples/), or check out the
+  code in `examples/`.
+- To add a new example to the page:
+  - create a new directory in `examples/` with a directory name that describes the graphic.
+  - Place your html, javascript and sass inside. You can also include assets and
+    external data, preserving the same folder structure that you'd use
+    within `src/`.
+  - You're good to go!
+
 
 ## Sharing graphics outside of TMP
 
@@ -413,16 +466,6 @@ Theoretically the graphics rig should be supported by any platform that supports
 (the ssh folder is convenient because it will already have appropriately restrictive permissions, but you can put it anywhere).
 
 It's possible you may also run into some difficulties with the packages that require some compiled dependencies (notably node-sass). You're best bet is google, but feel free to ask around if you do run into trouble!
-
-## Advanced Features
-
-### Google Sheets Integration
-
-It is possible to download google spreadsheets into local csv files. This can be helpful for projects with complex editorial-driven fields that will need to be frequently edited. Outside of this specific situation, you probably don't need this and should consider simpler solutions. To set it up, specify a `spreadsheet_id`, which is the long, alphanumeric string in the url of a google sheet. Next run `gulp sheets:download`, which will ask you for a series of credentials with links on where to find them (you'll need to be logged into your google account and have access to our google cloud console). Follow along with these instructions.
-
-The `client_secret.json` identifies our 'app' and shouldn't ever change. The bearer token can expire. If it does, you might see an error like `invalid_grant` or something similar. To refresh this token you can run `gulp credentials:google`. If for some reason you do need to reset the client app credentials you should run `gulp credentials:google_client`.
-
-Once you've been properly authorized (which you shouldn't need to do again for a good long while), the download task will convert each sheet of the spreadsheet into a separate csv file in `src/template-files`, using the name of the sheet as the name of the file. You can then import this data into your templates using the process described in [using external data sources in your HTML](#using-external-data-sources-in-your-html).
 
 ## Editing this template
 
