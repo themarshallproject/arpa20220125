@@ -14,7 +14,6 @@ var replace = require('gulp-replace');
 var sass = require('gulp-dart-sass');
 
 var externalData = require('./externaldata.js');
-var getGraphics = require('./localrenderer.js').getGraphics;
 
 
 // Retrieve an example's slug from its path within /examples/
