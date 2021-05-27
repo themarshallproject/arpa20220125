@@ -156,7 +156,7 @@ function productionHtml() {
 
 
 function singleOrHeader(file) {
-  if (multiple_graphics) {
+  if (!multiple_graphics) {
     return true;
   }
   if (path.basename(file.path, path.extname(file.path)) == 'header') {
