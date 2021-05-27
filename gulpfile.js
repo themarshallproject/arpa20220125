@@ -120,7 +120,7 @@ function mustache() {
 function productionMustache() {
   return gulp.src('src/*.mustache')
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
-    .pipe(insert.prepend(includes.javascriptIncludeText()))
+    .pipe(insert.prepend(includes.javascriptIncludeText(true)))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -149,17 +149,17 @@ function productionHtml() {
         insert.prepend(includes.stylesheetIncludeText())))
     .pipe(
       gulpIf(singleOrHeader,
-        insert.append(includes.javascriptIncludeText())))
+        insert.append(includes.javascriptIncludeText(true))))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
 
 function singleOrHeader(file) {
-  if (!multiple_graphics) {
+  if (path.basename(file.path, path.extname(file.path)) == 'header') {
     return true;
   }
-  if (path.basename(file.path, path.extname(file.path)) == 'header') {
+  if (!multiple_graphics) {
     return true;
   }
   return false;
