@@ -28,7 +28,7 @@ function renderGraphics(options) {
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
   var graphics = options.examples ? getExamples(options) : getGraphics(options);
-  var graphicKeys = Object.keys(graphics);
+  var graphicKeys = Object.keys(graphics).filter(k => k != 'header');
   var headerHTML = graphics['header'];
 
   if (localText && !options.examples) {
@@ -37,11 +37,12 @@ function renderGraphics(options) {
     content = '';
     for (i in graphicKeys) {
       const key = graphicKeys[i];
-      if (key !== 'header' && graphicKeys.length > 1 && i < graphicKeys.length - 1) {
-        // If we have multiple graphics and it's not the last graphic in the list, we want to add some lorem ipsum to space them out.
+      if (i < graphicKeys.length - 1) {
+        // If we have multiple graphics and it's not the last graphic in the
+        // list, we want to add some lorem ipsum to space them out.
         graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
         content += graphicHTML;
-      } else if (key !== 'header') {
+      } else {
         content += graphics[key];
       }
     }
@@ -56,8 +57,6 @@ function renderGraphics(options) {
 
   if (headerHTML) {
     // Render mustache templates using post data from Endrun.
-    // TODO currently this is running no matter what -- should we only run if
-    // we know it originated from a `.mustache` file?
     headerHTML = renderFromPostData(headerHTML);
     var html = template.replace('|CONTENT|', getIncludes(options) + headerHTML);
     html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
