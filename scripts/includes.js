@@ -12,7 +12,7 @@ function stylesheetIncludeText() {
   log('Handling css file ', filename, size + 'b minified');
 
   if (config.type === 'header') {
-    log('Inlinining CSS for freeform header');
+    log('Inlining CSS for freeform header');
     stylesheets = '<style>' + fs.readFileSync(filepath) + '</style>';
   } else if (size < config.inline_threshold) {
     log('Small CSS file found, inlining');
@@ -21,7 +21,7 @@ function stylesheetIncludeText() {
     log('Empty CSS file found, omitting');
     stylesheets = '';
   } else {
-    log('Largs CSS file found, will load asynchronously');
+    log('Large CSS file found, will load asynchronously');
     stylesheets = '<link rel="stylesheet" href="/' + filename + '">';
   }
 
@@ -37,7 +37,7 @@ function javascriptIncludeText() {
   log('Handling js file graphic.js ' + size + 'b minified');
 
   if (size > config.inline_threshold) {
-    log('Largs JS file found, will load asynchronously');
+    log('Large JS file found, will load asynchronously');
     scripts = '<script src="/' + filename + '" type="text/javascript"></script>';
   } else if (size === 0) {
     log('Empty JS file found, omitting');
