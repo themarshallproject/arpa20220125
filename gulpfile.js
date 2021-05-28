@@ -321,7 +321,7 @@ function routeEndrunRequest(done, host, callback) {
     });
   } else {
     credentials.getEndrunLocalCredentials(function(creds) {
-      log(`Reminder: You are deploying to an Endrun install hosted at ${ host }. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`)
+      log(`Reminder: You are using an Endrun install hosted at ${ host }. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`)
 
       var endrunCredsKey = 'gfx-endrun-local';
       var endrunTask = 'endrun_local';
@@ -387,6 +387,10 @@ function getPostData(done, host) {
         defaultEndrunResponseHandler(error, response, endrunTask);
 
         if (response && response.statusCode == 404) {
+          // This is not necessarily an error -- `getPostData` will run by
+          // default regardless of whether there's an associated post. We do
+          // not want to force the gulp series to break because that is normal
+          // behavior. Most graphics will not be using post data.
           log.error(response.statusCode + ': ' + JSON.stringify(body) + '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.');
           done();
         } else if (response && response.statusCode !== 200) {
