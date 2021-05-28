@@ -4,14 +4,17 @@ const log = require('fancy-log');
 var config = require('../config.json');
 
 
-function stylesheetIncludeText(forceAsync) {
+function stylesheetIncludeText(options={}) {
   var stylesheets;
   var filename = 'graphic.css';
   var filepath = './build/' + filename;
   var size = fs.statSync(filepath).size;
   log('Handling css file ', filename, size + 'b minified');
 
-  if (forceAsync || size > config.inline_threshold) {
+  if (config.type === 'header') {
+    log('Inlining CSS for freeform header')
+    stylesheets = '<style>' + fs.readFileSync(filepath) + '</style>';
+  } else if (options.forceAsync || size > config.inline_threshold) {
     log('Large CSS file found, will load asynchronously');
     stylesheets = '<link rel="stylesheet" href="/' + filename + '">';
   } else if (size === 0) {
@@ -26,14 +29,14 @@ function stylesheetIncludeText(forceAsync) {
 }
 
 
-function javascriptIncludeText(forceAsync) {
+function javascriptIncludeText(options={}) {
   var scripts;
   var filename = 'graphic.js';
   var filepath = './build/' + filename;
   var size = fs.statSync(filepath).size;
   log('Handling js file graphic.js ' + size + 'b minified');
 
-  if (forceAsync || size > config.inline_threshold) {
+  if (options.forceAsync || size > config.inline_threshold) {
     log('Large JS file found, will load asynchronously');
     scripts = '<script src="/' + filename + '" type="text/javascript"></script>';
   } else if (size === 0) {

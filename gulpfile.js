@@ -120,7 +120,7 @@ function mustache() {
 function productionMustache() {
   return gulp.src('src/*.mustache')
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
-    .pipe(insert.prepend(includes.javascriptIncludeText(true)))
+    .pipe(insert.prepend(includes.javascriptIncludeText({ forceAsync: true})))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -149,7 +149,7 @@ function productionHtml() {
         insert.prepend(includes.stylesheetIncludeText())))
     .pipe(
       gulpIf(singleOrHeader,
-        insert.append(includes.javascriptIncludeText(true))))
+        insert.append(includes.javascriptIncludeText())))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
