@@ -120,7 +120,7 @@ function mustache() {
 function productionMustache() {
   return gulp.src('src/*.mustache')
     .pipe(insert.prepend(includes.stylesheetIncludeText()))
-    .pipe(insert.prepend(includes.javascriptIncludeText({ forceAsync: true})))
+    .pipe(insert.prepend(includes.javascriptIncludeText({ forceAsync: true })))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
