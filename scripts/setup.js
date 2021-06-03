@@ -24,17 +24,50 @@ function setup(done) {
     config.slug = slug;
     getType(function() {
       fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-      getBooleanInput('Do you want to create a matching Github repo?', function(repo) {
-        if (repo) {
-          github.createAndSetRepository(() => {
-            github.setupDefaultLabels(cleanup);
-          });
-        } else {
-          cleanup();
-        }
-      });
+
+      if (config.type == 'header') {
+        handleHeaderTemplateFiles(() => handleMatchingRepo(cleanup))
+      } else {
+        handleMatchingRepo(cleanup);
+      }
     });
   });
+}
+
+
+function handleMatchingRepo(cb) {
+  getBooleanInput('Do you want to create a matching Github repo?', function(repo) {
+    if (repo) {
+      github.createAndSetRepository(() => {
+        github.setupDefaultLabels(cb);
+      });
+    } else {
+      cb();
+    }
+  });
+}
+
+
+function handleHeaderTemplateFiles(cb) {
+  const readPathMustache = './post-templates/_dynamic-header.mustache';
+  const writePathMustache = './src/header.mustache';
+
+  if (fs.existsSync(writePathMustache)) {
+    getBooleanInput(`Do you want to overwrite the existing ${ writePathMustache } file?`, (overwrite) => {
+      if (overwrite) {
+        fs.copyFileSync(readPathMustache, writePathMustache);
+        console.log(`Template copied to ${ writePathMustache }`)
+      } else {
+        console.log('Did not copy template.');
+      }
+
+      cb();
+    });
+  } else {
+    fs.copyFileSync(readPathMustache, writePathMustache);
+    console.log(`Header template file copied to ${ writePathMustache }`)
+    cb();
+  }
 }
 
 

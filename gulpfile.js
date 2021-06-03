@@ -41,6 +41,7 @@ var videos = require('./scripts/videos.js');
 var s3 = require('./scripts/s3.js');
 
 var serverPort, lrPort;
+var multiple_graphics;
 
 function startServer() {
   return firstOpenPort(3000).then(function(port) {
@@ -109,6 +110,22 @@ function readme() {
 }
 
 
+function mustache() {
+  return gulp.src('src/*.mustache')
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
+}
+
+
+function productionMustache() {
+  return gulp.src('src/*.mustache')
+    .pipe(insert.prepend(includes.stylesheetIncludeText()))
+    .pipe(insert.prepend(includes.javascriptIncludeText({ forceAsync: true })))
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
+}
+
+
 function html() {
   return gulp.src('src/*.html')
     .pipe(externalData.getExternalData())
@@ -119,7 +136,7 @@ function html() {
 
 
 function productionHtml() {
-  if (config.multiple_graphics) {
+  if (multiple_graphics) {
     fs.writeFileSync('./build/includes.html',
       includes.stylesheetIncludeText() + includes.javascriptIncludeText())
   }
@@ -139,13 +156,28 @@ function productionHtml() {
 
 
 function singleOrHeader(file) {
-  if (!config.multiple_graphics) {
+  if (path.basename(file.path, path.extname(file.path)) == 'header') {
     return true;
   }
-  if (path.basename(file.path) === 'header.html') {
+  if (!multiple_graphics) {
     return true;
   }
   return false;
+}
+
+
+function checkGraphicsCount(done) {
+  const files = fs.readdirSync('./src/', 'utf-8');
+  let fileCount = 0;
+
+  files.forEach(function(filename) {
+    if (filename.match(/[^_].*\.html$/) || filename == 'header.mustache') {
+      fileCount++;
+    }
+  });
+
+  multiple_graphics = fileCount > 1;
+  done();
 }
 
 
@@ -230,9 +262,9 @@ function assets() {
 }
 
 
-const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme, graphicsReadme));
+const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme));
 
-const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
+const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
 
 function watch() {
@@ -244,6 +276,7 @@ function watch() {
 
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
+  gulp.watch(['post-templates/custom-post-data.json'], mustache);
 
   // Examples
   gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);
@@ -251,6 +284,7 @@ function watch() {
   gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
   gulp.watch(['examples/*/assets/**'], examples.assets);
 
+  gulp.watch(['src/*.mustache'], mustache);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
@@ -269,7 +303,7 @@ function revision() {
       // If you want an unversioned file. Careful deploying with this, the
       // cache times are long.
       // dontRenameFile: [/.*.csv/],
-      includeFilesInManifest: ['.html', '.js', '.css']
+      includeFilesInManifest: ['.html', '.mustache', '.js', '.css']
     }))
     .pipe(gulp.dest('dist'))
     .pipe(RevAll.manifestFile())
@@ -277,25 +311,39 @@ function revision() {
 }
 
 
-function endrunDeploy(done, host) {
+function routeEndrunRequest(done, host, callback) {
   host = host || config.endrun_host;
   if (host == 'https://www.themarshallproject.org') {
     credentials.ensureCredentials(function(creds) {
       var endrunCredsKey = 'gfx-endrun';
       var endrunTask = 'endrun';
-      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
+      callback(host, creds[endrunCredsKey], endrunTask)
     });
   } else {
     credentials.getEndrunLocalCredentials(function(creds) {
-      log(`Reminder: You are deploying to an Endrun install hosted at ${ host }. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`)
+      log(`Reminder: You are using an Endrun install hosted at ${ host }. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`)
 
       var endrunCredsKey = 'gfx-endrun-local';
       var endrunTask = 'endrun_local';
-      endrunDeployRequest(creds[endrunCredsKey], endrunTask)
+      callback(host, creds[endrunCredsKey], endrunTask)
     });
   }
+}
 
-  function endrunDeployRequest(endrunToken, endrunTask) {
+
+function defaultEndrunResponseHandler(error, response, endrunTask) {
+  if (error) {
+    log.error(error);
+  }
+
+  if (response.statusCode === 403) {
+    log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
+  }
+}
+
+
+function endrunDeploy(done, host) {
+  routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
     var endpoint = "/admin/api/v2/deploy-gfx";
     var body = {
       token: endrunToken,
@@ -304,25 +352,14 @@ function endrunDeploy(done, host) {
       repo: github.getRemoteUrl()
     }
 
-    if (config.multiple_graphics) {
-      body['contents'] = getGraphics({ isProduction: true });
-    } else {
-      var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
-      body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
-    }
+    body['contents'] = getGraphics({ isProduction: true });
 
     request.post({
       url: host + endpoint,
       json: true,
       body: body
-    }, function(error, response, body) {
-      if (error) {
-        log.error(error);
-      }
-
-      if (response.statusCode === 403) {
-        log(`Your API key is invalid! You can get a new one at ${ config.endrun_host }/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${ endrunTask }\n\n`);
-      }
+    }, function (error, response, body) {
+      defaultEndrunResponseHandler(error, response, endrunTask);
 
       if (response && response.statusCode !== 200) {
         log.error(response.statusCode + ': ' + body.error);
@@ -333,10 +370,49 @@ function endrunDeploy(done, host) {
 
       done();
     });
-  }
+  });
 }
 
-var defaultTask = gulp.series(clean, startServer, buildDev, examples.build, openBrowser, watch);
+
+function getPostData(done, host) {
+  routeEndrunRequest(done, host, function(host, endrunToken, endrunTask) {
+    if (config.slug) {
+      host = host || config.endrun_host;
+      var endpoint = `/admin/api/v2/post-data/${ config.slug }?token=${ endrunToken }`;
+
+      request.get({
+        url: host + endpoint,
+        json: true,
+      }, function (error, response, body) {
+        defaultEndrunResponseHandler(error, response, endrunTask);
+
+        if (response && response.statusCode == 404) {
+          // This is not necessarily an error -- `getPostData` will run by
+          // default regardless of whether there's an associated post. We do
+          // not want to force the gulp series to break because that is normal
+          // behavior. Most graphics will not be using post data.
+          log.error(response.statusCode + ': ' + JSON.stringify(body) + '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.');
+          done();
+        } else if (response && response.statusCode !== 200) {
+          log.error(response.statusCode + ': ' + body.error + '\nNo post data saved.');
+          done(body.error);
+        } else if (response && response.statusCode == 200) {
+          log('Writing post data to post-templates/custom-header-data.json.');
+          const content = JSON.stringify(response.body);
+          fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
+        }
+
+        done();
+      });
+    } else {
+      log.error('You must specify a slug in config.json to download custom header data.')
+      done();
+    }
+  });
+}
+
+
+var defaultTask = gulp.series(clean, startServer, getPostData, buildDev, examples.build, openBrowser, watch);
 
 // Primary interface
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
@@ -359,6 +435,7 @@ gulp.task('build:production', buildProduction);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
+gulp.task('posts:download', getPostData)
 
 // Deployment
 gulp.task('deploy:endrun', endrunDeploy);

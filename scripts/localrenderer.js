@@ -1,15 +1,10 @@
 const fs = require('fs');
 const config = require('../config.json');
 const marked = require('marked');
+const Mustache = require('mustache');
 
 function renderTemplate(options) {
-  let renderedTemplate;
-  if (config.multiple_graphics || options.examples) {
-    renderedTemplate = renderMultiple(options);
-  } else {
-    renderedTemplate = renderSingle(options);
-  }
-
+  const renderedTemplate = renderGraphics(options);
   return renderMetadata(renderedTemplate);
 }
 
@@ -19,41 +14,40 @@ function renderMetadata(html) {
 }
 
 
-function renderSingle(options) {
-  var content = fs.readFileSync('./build/graphic.html', 'utf-8');
-  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
-  var contentHTML;
-  if (config.local_markdown === true) {
-    contentHTML = marked(content);
-  } else {
-    contentHTML = content;
-  }
-
-  var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
-  html = html.replace('|GRAPHIC_CONTENT|', '');
-  return html;
+function renderFromPostData(html) {
+  var postResponse = fs.readFileSync('./post-templates/custom-header-data.json');
+  var postData = JSON.parse(postResponse);
+  var renderedHtml = Mustache.render(html, postData);
+  return renderedHtml;
 }
 
 
-function renderMultiple(options) {
+function renderGraphics(options) {
   var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
   var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
   var graphics = options.examples ? getExamples(options) : getGraphics(options);
-  var headerContent = graphics['header'];
+  var graphicKeys = Object.keys(graphics).filter(k => k != 'header');
+  var headerHTML = graphics['header'];
 
   if (localText && !options.examples) {
     content = replaceGraphics(graphics, localText);
   } else {
     content = '';
-    for (key in graphics) {
-      if (key !== 'header') {
+    for (i in graphicKeys) {
+      const key = graphicKeys[i];
+      if (i < graphicKeys.length - 1) {
+        // If we have multiple graphics and it's not the last graphic in the
+        // list, we want to add some lorem ipsum to space them out.
         graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
         content += graphicHTML;
+      } else {
+        content += graphics[key];
       }
     }
   }
+
   var contentHTML;
   if (config.local_markdown === true) {
     contentHTML = marked(content);
@@ -61,8 +55,10 @@ function renderMultiple(options) {
     contentHTML = content;
   }
 
-  if (headerContent) {
-    var html = template.replace('|CONTENT|', getIncludes(options) + headerContent);
+  if (headerHTML) {
+    // Render mustache templates using post data from Endrun.
+    headerHTML = renderFromPostData(headerHTML);
+    var html = template.replace('|CONTENT|', getIncludes(options) + headerHTML);
     html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
   } else {
     var html = template.replace('|CONTENT|', getIncludes(options) + contentHTML);
@@ -104,22 +100,27 @@ function renderWarning(text) {
 
 
 function getGraphics(options) {
-  var dirPath = options.dirPath || './build/';
+  var dirPath = options && options.dirPath || './build/';
   var files = fs.readdirSync(dirPath, 'utf-8');
   var graphics = {};
   var isProduction = options && options.isProduction || false;
 
   files.forEach(function(filename) {
+    let key;
     if (filename.match(/[^_].*\.html$/)) {
-      var key = filename.replace(/\.html$/, '');
-      if (isProduction) {
-        var htmlFile = require('../dist/rev-manifest.json')[filename];
-        graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
-      } else {
-        graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
-      }
+      key = filename.replace(/\.html$/, '');
+    } else if (filename == 'header.mustache') {
+      key = 'header';
+    }
+
+    if (key && isProduction) {
+      var htmlFile = require('../dist/rev-manifest.json')[filename];
+      graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
+    } else if (key) {
+      graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
     }
   });
+
   return graphics;
 }
 

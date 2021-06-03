@@ -57,6 +57,7 @@
     "merge-stream": "^1.0.1",
     "minimist": "^1.2.0",
     "moment": "^2.24.0",
+    "mustache": "^4.2.0",
     "opn": "^5.4.0",
     "request": "^2.88.0",
     "url-join": "^4.0.0"
