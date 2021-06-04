@@ -398,7 +398,7 @@ function getPostData(done, host) {
           done(body.error);
         } else if (response && response.statusCode == 200) {
           log('Writing post data to post-templates/custom-header-data.json.');
-          const content = JSON.stringify(response.body);
+          const content = JSON.stringify(response.body, null, 2);
           fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
         }
 
