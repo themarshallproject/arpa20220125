@@ -178,7 +178,13 @@ the slug is associated with a specific post in Endrun, you can download
 metadata for that post by running `gulp posts:download`.
 
 Take a look at `post-templates/custom-header-data.json` to see what
-fields are available to use in developing a custom header.
+fields are available to use in developing a custom header. 
+
+Some fields (byline, producer byline, social tools) will appear by
+default within the sidebar of an Endrun post. If you use those fields in
+your custom header and wish to hide the defaults that appear in the
+sidebar, you can hide the entire sidebar with `.container article > aside.col4 { display: none; }`
+or can choose to hide individual children within that container.
 
 
 #### Customizing the layout of graphics locally
