@@ -5,12 +5,19 @@ const Mustache = require('mustache');
 
 function renderTemplate(options) {
   const renderedTemplate = renderGraphics(options);
-  return renderMetadata(renderedTemplate);
+  const renderedWithNav = renderNavBar(renderedTemplate);
+  return renderMetadata(renderedWithNav);
 }
 
 
 function renderMetadata(html) {
   return html.replace(/\|META:(.*)\|/, (match, group1) => config[group1]);
+}
+
+
+function renderNavBar(html) {
+  var navBarHtml = fs.readFileSync('./post-templates/_nav-bar.html');
+  return html.replace(/\|NAV_BAR\|/, navBarHtml);
 }
 
 
