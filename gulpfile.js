@@ -2,7 +2,7 @@ var RevAll = require('gulp-rev-all');
 var autoprefixer = require('gulp-autoprefixer');
 var babel = require('gulp-babel');
 var babelify = require('babelify');
-var bro = require('gulp-bro');
+var webpackStream = require('webpack-stream');
 var changedInPlace = require('gulp-changed-in-place');
 var checkFileSize = require('gulp-check-filesize');
 var concat = require('gulp-concat');
@@ -201,14 +201,7 @@ function scripts() {
     var libJs = gulp.src('src/lib/*.js');
 
     var graphicJs = gulp.src('src/graphic.js')
-      .pipe(bro({
-        paths: [
-          '../templates'
-        ],
-        transform: [
-          babelify.configure({ presets: ['@babel/preset-env'] })
-        ]
-      }));
+      .pipe(webpackStream(require('./webpack.config.js')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
