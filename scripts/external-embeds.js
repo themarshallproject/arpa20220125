@@ -30,7 +30,7 @@ function renderEmbed(filename) {
   import TMPGraphicEmbed from './embed-loader.js';
   const tmpEmbed = new TMPGraphicEmbed({
     id: '${ embedId }',
-    graphicUrl: './graphic.html',
+    graphicUrl: './contents/${ filename }.html',
     jsUrl: '${ jsFilepath }',
     cssUrl: '${ cssFilepath }'
     });

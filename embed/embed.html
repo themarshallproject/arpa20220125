@@ -1,0 +1,29 @@
+<h1>
+  Here is my test page!
+</h1>
+
+<h2>Graphic 1</h2>
+
+<div id="g-tmp-embed-cecinestpasuneslug-graphic"></div>
+<script type="module">
+  import TMPGraphicEmbed from './embed-loader.js';
+  const tmpEmbed = new TMPGraphicEmbed({
+    id: 'g-tmp-embed-cecinestpasuneslug-graphic',
+    graphicUrl: './contents/graphic.html',
+    jsUrl: '../graphic.js',
+    cssUrl: '../graphic.css'
+    });
+</script>
+
+<h2>Graphic 2</h2>
+
+<div id="g-tmp-embed-cecinestpasuneslug-other"></div>
+<script type="module">
+  import TMPGraphicEmbed from './embed-loader.js';
+  const tmpEmbed = new TMPGraphicEmbed({
+    id: 'g-tmp-embed-cecinestpasuneslug-other',
+    graphicUrl: './contents/other.html',
+    jsUrl: '../graphic.js',
+    cssUrl: '../graphic.css'
+    });
+</script>
