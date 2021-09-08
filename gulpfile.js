@@ -32,6 +32,7 @@ var credentials = require('./scripts/credentials.js');
 var endrun = require('./scripts/endrun.js');
 var examples = require('./scripts/examples.js');
 var externalData = require('./scripts/externaldata.js');
+var externalEmbeds = require('./scripts/external-embeds.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
 var github = require('./scripts/github.js');
 var includes = require('./scripts/includes.js');
@@ -167,12 +168,6 @@ function singleOrHeader(file) {
 }
 
 
-function createEmbedFile() {
-  return gulp.src('build/*.html')
-    .pipe(gulp.dest('embed'));
-}
-
-
 function checkGraphicsCount(done) {
   const files = fs.readdirSync('./src/', 'utf-8');
   let fileCount = 0;
@@ -273,7 +268,7 @@ const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, script
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
-const buildEmbed = gulp.series(buildProduction, createEmbedFile);
+const buildEmbed = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, externalEmbeds.embedGraphicHtml, externalEmbeds.embedLoaderHtml);
 
 function watch() {
   gulp.watch(['README.md'], readme);
