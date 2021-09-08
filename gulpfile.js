@@ -168,6 +168,16 @@ function singleOrHeader(file) {
 }
 
 
+function embedGraphicHtml() {
+  return gulp.src('src/*.html')
+    .pipe(externalData.getExternalData())
+    .pipe(externalData.renderGraphicHTML())
+    .pipe(gulpIf(config.local_markdown, markdown()))
+    .pipe(gulp.dest('embed/contents'))
+    .pipe(livereload());
+}
+
+
 function checkGraphicsCount(done) {
   const files = fs.readdirSync('./src/', 'utf-8');
   let fileCount = 0;
@@ -268,7 +278,7 @@ const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, script
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
-const buildEmbed = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, externalEmbeds.embedGraphicHtml, externalEmbeds.embedLoaderHtml);
+const buildEmbed = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, embedGraphicHtml, externalEmbeds.embedLoaderHtml);
 
 function watch() {
   gulp.watch(['README.md'], readme);
