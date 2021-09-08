@@ -25,7 +25,7 @@ function renderEmbed(filename) {
   const embedId = `g-tmp-embed-${ config.slug }-${ filename }`;
   const jsFilepath = '../graphic.js';
   const cssFilepath = '../graphic.css';
-  return `<div id="${ embedId }"></div>
+  return `<div id="${ embedId }" data-tmp-slug="${ config.slug }"></div>
 <script type="module">
   import TMPGraphicEmbed from './embed-loader.js';
   const tmpEmbed = new TMPGraphicEmbed({
