@@ -18,6 +18,16 @@ module.exports = function(options) {
     res.send(renderer.renderTemplate({ lrPort: lrPort }));
   });
 
+  app.get('/embed/graphic.html', function(req,res) {
+    var content = fs.readFileSync('./embed/graphic.html', 'utf-8');
+    res.send(content);
+  })
+
+  app.get('/embed/', function(req,res) {
+    var content = fs.readFileSync('./embed/embed.html', 'utf8')
+    res.send(content);
+  })
+
   app.get('/examples/', function(req, res) {
     res.send(renderer.renderTemplate({
       lrPort: lrPort,

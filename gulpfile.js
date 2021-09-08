@@ -167,6 +167,12 @@ function singleOrHeader(file) {
 }
 
 
+function createEmbedFile() {
+  return gulp.src('build/*.html')
+    .pipe(gulp.dest('embed'));
+}
+
+
 function checkGraphicsCount(done) {
   const files = fs.readdirSync('./src/', 'utf-8');
   let fileCount = 0;
@@ -267,6 +273,7 @@ const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, script
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
+const buildEmbed = gulp.series(buildProduction, createEmbedFile);
 
 function watch() {
   gulp.watch(['README.md'], readme);
@@ -332,6 +339,7 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
+gulp.task('build:embed', buildEmbed);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
