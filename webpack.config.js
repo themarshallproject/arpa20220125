@@ -23,7 +23,6 @@ function getConfig(env) {
         // transpile js
         {
           test: /\.js$/,
-          exclude: [/node_modules/],
           use: {
             loader: 'babel-loader'
           }
@@ -59,6 +58,7 @@ function getConfig(env) {
       ]
     },
     mode: env,
+    devtool: env === 'production' ? false : 'inline-source-map'
   }
 
   if (env === 'production') {

@@ -4,10 +4,7 @@
   "description": "Publishing tool for creating graphics and custom posts at The Marshall Project.",
   "main": "",
   "author": "Gabe Isman <isman@themarshallproject.org>",
-  "browserslist": [
-    "last 2 versions",
-    "ie 9"
-  ],
+  "browserslist": "> 0.25%, not dead",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.1",
