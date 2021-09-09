@@ -1,7 +1,5 @@
 var RevAll = require('gulp-rev-all');
 var autoprefixer = require('gulp-autoprefixer');
-var babel = require('gulp-babel');
-var babelify = require('babelify');
 var webpackStream = require('webpack-stream');
 var changedInPlace = require('gulp-changed-in-place');
 var checkFileSize = require('gulp-check-filesize');
