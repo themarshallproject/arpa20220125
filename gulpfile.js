@@ -28,6 +28,7 @@ var uglify = require('gulp-uglify');
 var urljoin = require('url-join');
 
 var config = require('./config.json');
+var webpackConfig = require('./webpack.config.js');
 var credentials = require('./scripts/credentials.js');
 var endrun = require('./scripts/endrun.js');
 var examples = require('./scripts/examples.js');
@@ -201,7 +202,7 @@ function scripts() {
     var libJs = gulp.src('src/lib/*.js');
 
     var graphicJs = gulp.src('src/graphic.js')
-      .pipe(webpackStream(require('./webpack.config.js')));
+      .pipe(webpackStream(webpackConfig('development')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
@@ -224,19 +225,11 @@ function productionScripts() {
     var libJs = gulp.src('src/lib/*.js');
 
     var graphicJs = gulp.src('src/graphic.js')
-      .pipe(bro({
-        paths: [
-          '../templates'
-        ],
-        transform: [
-          babelify.configure({ presets: ['@babel/preset-env'] })
-        ]
-      }));
+      .pipe(webpackStream(webpackConfig('production')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-      .pipe(uglify())
       .pipe(gulp.dest('build'))
   } else {
     return gulp.src('src/*.js')
