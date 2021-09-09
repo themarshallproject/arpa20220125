@@ -1,9 +1,5 @@
 const fs = require('fs');
 const glob = require('glob');
-const gulp = require('gulp');
-const gulpIf = require('gulp-if');
-const livereload = require('gulp-livereload');
-const markdown = require('gulp-markdown');
 const path = require('path');
 
 const config = require('../config.json');
