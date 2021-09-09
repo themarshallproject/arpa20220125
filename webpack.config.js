@@ -3,9 +3,6 @@ const path = require('path');
 
 function getConfig(env) {
   const config = {
-    entry: {
-      graphic: ['./src/graphic.js']
-    },
     output: {
       path: __dirname + '/build',
       filename: '[name].js',
@@ -13,10 +10,14 @@ function getConfig(env) {
     },
     resolve: {
       alias: {
-        svelte: path.dirname(require.resolve('svelte/package.json'))
+        svelte: path.dirname(require.resolve('svelte/package.json')),
       },
       extensions: ['.mjs', '.js', '.svelte'],
-      mainFields: ['svelte', 'browser', 'module', 'main']
+      mainFields: ['svelte', 'browser', 'module', 'main'],
+      modules: [
+        path.resolve(__dirname, 'templates'),
+        'node_modules'
+      ],
     },
     module: {
       rules: [

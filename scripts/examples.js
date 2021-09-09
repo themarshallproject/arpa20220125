@@ -1,6 +1,3 @@
-var babel = require('gulp-babel');
-var babelify = require('babelify');
-var bro = require('gulp-bro');
 var concat = require('gulp-concat');
 var del = require('del');
 var flatmap = require('gulp-flatmap');
@@ -12,8 +9,10 @@ var mergeStream = require('merge-stream');
 var notify = require('gulp-notify');
 var replace = require('gulp-replace');
 var sass = require('gulp-dart-sass');
+var webpackStream = require('webpack-stream');
 
 var externalData = require('./externaldata.js');
+var webpackConfig = require('../webpack.config.js');
 
 
 // Retrieve an example's slug from its path within /examples/
@@ -88,14 +87,7 @@ function exampleScripts() {
       var exampleSlug = getSlugFromExamples(file);
 
       return gulp.src(file.path)
-        .pipe(bro({
-          paths: [
-            '../../templates'
-          ],
-          transform: [
-            babelify.configure({ presets: ['@babel/preset-env'] })
-          ]
-        }))
+        .pipe(webpackStream(webpackConfig('development')))
         .pipe(addSlugToPaths(exampleSlug))
     }))
 
