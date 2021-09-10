@@ -4,16 +4,13 @@
   "description": "Publishing tool for creating graphics and custom posts at The Marshall Project.",
   "main": "",
   "author": "Gabe Isman <isman@themarshallproject.org>",
-  "browserslist": [
-    "last 2 versions",
-    "ie 9"
-  ],
+  "browserslist": "> 0.25%, not dead",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.1",
     "@octokit/rest": "^16.24.1",
     "axios": "^0.18.0",
-    "babelify": "^10.0.0",
+    "babel-loader": "^8.2.2",
     "csv-parse": "^4.4.0",
     "csv-stringify": "^5.3.0",
     "d3": "^5.9.2",
@@ -27,8 +24,6 @@
     "gulp": "^4.0.2",
     "gulp-asset-manifest": "0.0.6",
     "gulp-autoprefixer": "^6.0.0",
-    "gulp-babel": "^8.0.0",
-    "gulp-bro": "^1.0.3",
     "gulp-changed-in-place": "^2.3.0",
     "gulp-check-filesize": "^2.0.1",
     "gulp-concat": "^2.6.1",
@@ -60,7 +55,10 @@
     "mustache": "^4.2.0",
     "opn": "^5.4.0",
     "request": "^2.88.0",
-    "url-join": "^4.0.0"
+    "svelte-loader": "^3.1.2",
+    "url-join": "^4.0.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-stream": "^7.0.0"
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
