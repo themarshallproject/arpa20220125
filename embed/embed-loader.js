@@ -1,17 +1,41 @@
 export default class TMPGraphicEmbed {
   constructor(config) {
     this.containerEl = document.getElementById(config.id);
+    this.baseUrl = config.baseUrl;
+    this.graphicPath = config.graphicPath;
     this.graphicSlug = this.containerEl.dataset.tmpSlug;
-    this.graphicUrl = config.graphicUrl;
-    this.jsUrl = config.jsUrl;
-    this.cssUrl = config.cssUrl;
-    this.skipResources = this.checkSharedResources();
+
+    this.loadManifest();
+  }
+
+
+  getRequest(url, callback) {
+    const req = new XMLHttpRequest();
+    req.addEventListener('load', () => {
+      callback(req.response);
+    });
+    req.open('GET', url, true)
+    req.send();
+  }
+
+
+  loadManifest() {
+    const manifestUrl = `${ this.baseUrl }/rev-manifest.json`;
+    this.getRequest(manifestUrl, (data) => this.loadGraphic(JSON.parse(data)));
+  }
+
+
+  loadGraphic(data) {
+    const skipResources = this.checkSharedResources();
+    const graphicUrl = `${ this.baseUrl }/${ data[this.graphicPath] }`;
+    const jsUrl = `${ this.baseUrl }/${ data['graphic.js'] }`;
+    const cssUrl = `${ this.baseUrl }/${ data['graphic.css'] }`;
 
     if (!this.skipResources) {
-      this.loadCSS();
+      this.loadCSS(cssUrl);
     }
 
-    this.getEmbedBody();
+    this.getEmbedBody(graphicUrl, jsUrl);
   }
 
 
@@ -21,37 +45,34 @@ export default class TMPGraphicEmbed {
   }
 
 
-  getEmbedBody() {
-    const embedRequest = new XMLHttpRequest();
-    embedRequest.addEventListener('load', () => this.initEmbed(embedRequest.response));
-    embedRequest.open('GET', this.graphicUrl, true)
-    embedRequest.send();
+  getEmbedBody(graphicUrl, jsUrl) {
+    this.getRequest(graphicUrl, (data) => this.initEmbed(data, jsUrl));
   }
 
 
-  initEmbed(response) {
+  initEmbed(response, jsUrl) {
     this.containerEl.innerHTML = response;
     if (!this.skipResources) {
-      this.loadJavascript();
+      this.loadJavascript(jsUrl);
     }
   }
 
 
-  loadCSS() {
-    if (this.cssUrl) {
+  loadCSS(cssUrl) {
+    if (cssUrl) {
       const cssLink = document.createElement('link');
       cssLink.rel = "stylesheet";
-      cssLink.href = this.cssUrl;
+      cssLink.href = cssUrl;
       this.containerEl.before(cssLink);
     }
   }
 
 
-  loadJavascript() {
-    if (this.jsUrl) {
+  loadJavascript(jsUrl) {
+    if (jsUrl) {
       const jsLink = document.createElement('script');
       jsLink.type = "text/javascript";
-      jsLink.src = this.jsUrl;
+      jsLink.src = jsUrl;
       this.containerEl.after(jsLink);
     }
   }

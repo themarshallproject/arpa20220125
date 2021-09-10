@@ -172,7 +172,7 @@ function embedGraphicHtml() {
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
     .pipe(gulpIf(config.local_markdown, markdown()))
-    .pipe(gulp.dest('embed/contents'))
+    .pipe(gulp.dest('build/embed/contents'))
     .pipe(livereload());
 }
 
@@ -292,7 +292,7 @@ function clean() {
 
 
 function revision() {
-  return gulp.src('build/**')
+  return gulp.src('build/**', { base: 'build' })
     .pipe(RevAll.revision({
       transformPath: (rev, source, file) => {
         return urljoin(config.cdn, config.slug, rev);
@@ -314,12 +314,13 @@ var defaultTask = gulp.series(clean, startServer, endrun.getPostData, buildDev, 
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
-  github.ensureRepoCleanAndPushed,
+  // github.ensureRepoCleanAndPushed,
   buildProduction,
+  buildEmbed,
   revision,
-  s3.deploy,
-  endrun.endrunDeploy,
-  buildDev
+  // s3.deploy,
+  // endrun.endrunDeploy,
+  // buildDev
 ));
 
 // Asset tasks

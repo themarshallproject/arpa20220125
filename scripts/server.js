@@ -8,6 +8,7 @@ module.exports = function(options) {
   app.use('/examples', express.static('build-examples'));
   app.use(express.static('post-templates'));
   app.use('/embed', express.static('embed'));
+  app.use('/dist', express.static('dist'));
 
   var config;
   config = JSON.parse(fs.readFileSync('./config.json'), 'utf-8');
