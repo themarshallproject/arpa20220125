@@ -32,6 +32,21 @@ function renderEmbed(filename) {
 </script>`;
 }
 
+
+function getEmbedLoaders(options) {
+  const dirPath = './embed/loaders/';
+  const files = fs.readdirSync(dirPath, 'utf-8');
+  const loaders = {};
+
+  files.forEach(function(filename) {
+    const key = filename.replace(/embed-(.+).html/, '$1');
+    loaders[key] = fs.readFileSync(dirPath + filename, 'utf-8');
+  });
+
+  return loaders;
+}
+
 module.exports = {
-  embedLoaderHtml: embedLoaderHtml
+  embedLoaderHtml: embedLoaderHtml,
+  getEmbedLoaders: getEmbedLoaders
 }

@@ -316,11 +316,12 @@ gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   // github.ensureRepoCleanAndPushed,
   buildProduction,
-  buildEmbed,
+  embedGraphicHtml,
+  externalEmbeds.embedLoaderHtml,
   revision,
-  // s3.deploy,
-  // endrun.endrunDeploy,
-  // buildDev
+  s3.deploy,
+  endrun.endrunDeploy,
+  buildDev
 ));
 
 // Asset tasks
