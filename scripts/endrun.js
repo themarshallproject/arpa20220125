@@ -51,8 +51,10 @@ function endrunDeploy(done, host) {
     }
 
     body['contents'] = getGraphics({ isProduction: true });
-    body['embeds'] = getEmbedLoaders();
-    console.log(body);
+
+    if (config.generate_external_embeds) {
+      body['embeds'] = getEmbedLoaders();
+    }
 
     request.post({
       url: host + endpoint,

@@ -262,7 +262,14 @@ const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, script
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
-const buildEmbed = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, embedGraphicHtml, externalEmbeds.embedLoaderHtml);
+const buildEmbed = gulp.series(embedGraphicHtml, externalEmbeds.embedLoaderHtml);
+
+function buildEmbedIfFlagged(done) {
+  if (config.generate_external_embeds) {
+    return buildEmbed;
+  }
+  done();
+}
 
 function watch() {
   gulp.watch(['README.md'], readme);
@@ -287,7 +294,7 @@ function watch() {
 
 
 function clean() {
-  return del(['dist/**', 'build/**']);
+  return del(['dist/**', 'build/**', 'embed/loaders/**']);
 }
 
 
@@ -316,8 +323,7 @@ gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   // github.ensureRepoCleanAndPushed,
   buildProduction,
-  embedGraphicHtml,
-  externalEmbeds.embedLoaderHtml,
+  buildEmbedIfFlagged(),
   revision,
   s3.deploy,
   endrun.endrunDeploy,
@@ -330,7 +336,7 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
-gulp.task('build:embed', buildEmbed);
+gulp.task('build:embed', gulp.series(buildProduction, buildEmbed));
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)
