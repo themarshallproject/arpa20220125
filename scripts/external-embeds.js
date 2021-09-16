@@ -23,8 +23,8 @@ function embedLoaderHtml(cb) {
 function renderEmbed(filename) {
   const embedId = `g-tmp-embed-${ config.slug }-${ filename }`;
   return `<div id="${ embedId }" data-tmp-slug="${ config.slug }"></div>
-<script type="text/javascript" src="${ config.cdn }/tmp-gfx-embed-loader/loader-${ loaderScriptVersion }.js">
-<script type="module">
+<script type="text/javascript" src="${ config.cdn }/tmp-gfx-embed-loader/loader-${ loaderScriptVersion }.js"></script>
+<script type="text/javascript">
   var tmpEmbed = new TMPGraphicEmbed({
     id: '${ embedId }',
     graphicPath: 'embed/contents/${ filename }.html',
