@@ -3,6 +3,7 @@ const glob = require('glob');
 const path = require('path');
 
 const config = require('../config.json');
+const loaderScriptVersion = '1.0.0';
 
 function embedLoaderHtml(cb) {
   const graphicPaths = glob.sync('src/*.html');
@@ -22,9 +23,9 @@ function embedLoaderHtml(cb) {
 function renderEmbed(filename) {
   const embedId = `g-tmp-embed-${ config.slug }-${ filename }`;
   return `<div id="${ embedId }" data-tmp-slug="${ config.slug }"></div>
+<script type="text/javascript" src="${ config.cdn }/tmp-gfx-embed-loader/loader-${ loaderScriptVersion }.js">
 <script type="module">
-  import TMPGraphicEmbed from './embed-loader.js';
-  const tmpEmbed = new TMPGraphicEmbed({
+  var tmpEmbed = new TMPGraphicEmbed({
     id: '${ embedId }',
     graphicPath: 'embed/contents/${ filename }.html',
     baseUrl: '${ config.cdn }/${ config.slug }',

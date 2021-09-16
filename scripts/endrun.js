@@ -51,7 +51,7 @@ function endrunDeploy(done, host) {
     }
 
     body['contents'] = getGraphics({ isProduction: true });
-    body['embed-loaders'] = getEmbedLoaders();
+    body['embeds'] = getEmbedLoaders();
     console.log(body);
 
     request.post({
