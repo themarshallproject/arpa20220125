@@ -3,7 +3,7 @@ const glob = require('glob');
 const path = require('path');
 
 const config = require('../config.json');
-const loaderScriptVersion = '1.0.0';
+const loaderScriptVersion = '0.1.11';
 
 function embedLoaderHtml(cb) {
   const graphicPaths = glob.sync('src/*.html');
