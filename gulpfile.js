@@ -172,7 +172,7 @@ function embedGraphicHtml() {
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
     .pipe(gulpIf(config.local_markdown, markdown()))
-    .pipe(gulp.dest('build/embed/contents'))
+    .pipe(gulp.dest('build/embed-contents'))
     .pipe(livereload());
 }
 
@@ -294,7 +294,7 @@ function watch() {
 
 
 function clean() {
-  return del(['dist/**', 'build/**', 'embed/loaders/**']);
+  return del(['dist/**', 'build/**', 'embed-loaders/**']);
 }
 
 

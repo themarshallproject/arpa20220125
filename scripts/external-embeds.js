@@ -11,7 +11,7 @@ function embedLoaderHtml(cb) {
   for (i in graphicPaths) {
     const filename = path.basename(graphicPaths[i], '.html');
     const embedLoaders = renderEmbed(filename);
-    const loadersPath = './embed/loaders';
+    const loadersPath = './embed-loaders';
     fs.mkdirSync(loadersPath, { recursive: true });
     fs.writeFileSync(`${ loadersPath }/embed-${ filename }.html`, embedLoaders);
   }
@@ -27,7 +27,7 @@ function renderEmbed(filename) {
 <script type="text/javascript">
   var tmpEmbed = new TMPGraphicEmbed({
     id: '${ embedId }',
-    graphicPath: 'embed/contents/${ filename }.html',
+    graphicPath: 'embed-contents/${ filename }.html',
     baseUrl: '${ config.cdn }/${ config.slug }',
     });
 </script>`;
@@ -35,7 +35,7 @@ function renderEmbed(filename) {
 
 
 function getEmbedLoaders(options) {
-  const dirPath = './embed/loaders/';
+  const dirPath = './embed-loaders/';
   const files = fs.readdirSync(dirPath, 'utf-8');
   const loaders = {};
 
