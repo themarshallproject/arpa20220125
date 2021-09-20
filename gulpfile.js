@@ -264,12 +264,16 @@ const buildProduction = gulp.series(clean, productionStyles, productionScripts, 
 
 const buildEmbed = gulp.series(embedGraphicHtml, externalEmbeds.embedLoaderHtml);
 
-function buildEmbedIfFlagged(done) {
-  if (config.generate_external_embeds) {
-    return buildEmbed;
+function buildEmbedIfFlagged() {
+  return function(cb) {
+    if (config.generate_external_embeds) {
+      buildEmbed(cb);
+    } else {
+      cb();
+    }
   }
-  done();
 }
+
 
 function watch() {
   gulp.watch(['README.md'], readme);
