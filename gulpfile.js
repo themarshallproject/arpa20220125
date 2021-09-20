@@ -265,12 +265,12 @@ const buildProduction = gulp.series(clean, productionStyles, productionScripts, 
 const buildEmbed = gulp.series(embedGraphicHtml, externalEmbeds.embedLoaderHtml);
 
 function buildEmbedIfFlagged() {
-  return function(cb) {
-    if (config.generate_external_embeds) {
-      buildEmbed(cb);
-    } else {
-      cb();
-    }
+  function skipEmbed(cb) { cb(); }
+
+  if (config.generate_external_embeds) {
+    return buildEmbed;
+  } else {
+    return skipEmbed;
   }
 }
 
