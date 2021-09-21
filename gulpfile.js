@@ -325,7 +325,7 @@ var defaultTask = gulp.series(clean, startServer, endrun.getPostData, buildDev, 
 gulp.task('setup', gulp.series(setup.setup, defaultTask));
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
-  // github.ensureRepoCleanAndPushed,
+  github.ensureRepoCleanAndPushed,
   buildProduction,
   buildEmbedIfFlagged(),
   revision,
