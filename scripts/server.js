@@ -7,8 +7,6 @@ module.exports = function(options) {
   app.use(express.static('build'));
   app.use('/examples', express.static('build-examples'));
   app.use(express.static('post-templates'));
-  app.use('/embed', express.static('embed'));
-  app.use('/dist', express.static('dist'));
 
   var config;
   config = JSON.parse(fs.readFileSync('./config.json'), 'utf-8');
@@ -19,11 +17,6 @@ module.exports = function(options) {
   app.get('/', function(req, res) {
     res.send(renderer.renderTemplate({ lrPort: lrPort }));
   });
-
-  app.get('/embed/', function(req,res) {
-    var content = fs.readFileSync('./embed/embed.html', 'utf8')
-    res.send(content);
-  })
 
   app.get('/examples/', function(req, res) {
     res.send(renderer.renderTemplate({
