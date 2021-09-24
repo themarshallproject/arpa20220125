@@ -298,7 +298,7 @@ function watch() {
 
 
 function clean() {
-  return del(['dist/**', 'build/**', 'embed-loaders/**']);
+  return del(['dist/**', 'build/**']);
 }
 
 
