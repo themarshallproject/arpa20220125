@@ -4,8 +4,8 @@ const request = require('request');
 
 const config = require('../config.json');
 const credentials = require('./credentials.js');
-const getGraphics = require('./localrenderer.js').getGraphics;
-const getEmbedLoaders = require('./external-embeds.js').getEmbedLoaders;
+const { getGraphics } = require('./localrenderer.js');
+const { getEmbedLoaders } = require('./external-embeds.js');
 const github = require('./github.js');
 
 
