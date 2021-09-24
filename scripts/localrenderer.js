@@ -30,8 +30,9 @@ function renderFromPostData(html) {
 
 
 function renderGraphics(options) {
-  var template = fs.readFileSync('./post-templates/' + config.local_template + '.html', 'utf-8');
-  var multiTemplate = fs.readFileSync('./post-templates/_multi-graphic.html', 'utf-8');
+  var templateName = options.template || config.local_template;
+  var template = fs.readFileSync(`./post-templates/${ templateName }.html`, 'utf-8');
+  var multiTemplate = fs.readFileSync(`./post-templates/_multi-graphic.html`, 'utf-8');
   var localText = fs.readFileSync('./post-templates/localtext.md', 'utf-8').trim();
 
   var graphics = options.examples ? getExamples(options) : getGraphics(options);

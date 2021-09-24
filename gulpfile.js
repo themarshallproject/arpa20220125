@@ -172,8 +172,7 @@ function embedGraphicHtml() {
     .pipe(externalData.getExternalData())
     .pipe(externalData.renderGraphicHTML())
     .pipe(gulpIf(config.local_markdown, markdown()))
-    .pipe(gulp.dest('build/embed-contents'))
-    .pipe(livereload());
+    .pipe(gulp.dest('build/embed-contents'));
 }
 
 

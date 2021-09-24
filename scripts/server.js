@@ -25,6 +25,13 @@ module.exports = function(options) {
     }));
   });
 
+  app.get('/embeds/', function(req, res) {
+    res.send(renderer.renderTemplate({
+      lrPort: lrPort,
+      template: 'embeds'
+    }))
+  });
+
   app.get('/readme/', function(req, res) {
     res.send(renderer.renderReadme({ lrPort: lrPort }))
   });
