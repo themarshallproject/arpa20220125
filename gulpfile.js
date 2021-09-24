@@ -341,7 +341,7 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
-gulp.task('build:embed', gulp.series(buildProduction, buildEmbed));
+gulp.task('build:embed', gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed));
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const gulp = require('gulp');
+const jeditor = require('gulp-json-editor');
 const transform = require('gulp-transform');
 const rename = require('gulp-rename');
 
@@ -41,7 +42,22 @@ function getEmbedLoaders(options) {
   return loaders;
 }
 
+
+function setEmbedConfigFlag(done) {
+  if (!config.generate_external_embeds) {
+    console.log('Setting config.generate_external_embeds to true. Deploying will include graphic embed code.')
+    return gulp.src('./config.json')
+      .pipe(jeditor({
+        'generate_external_embeds': true
+      }))
+      .pipe(gulp.dest('./'));
+  }
+  done();
+}
+
+
 module.exports = {
   embedLoaderHtml: embedLoaderHtml,
-  getEmbedLoaders: getEmbedLoaders
+  getEmbedLoaders: getEmbedLoaders,
+  setEmbedConfigFlag: setEmbedConfigFlag
 }
