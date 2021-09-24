@@ -1,6 +1,7 @@
 const fs = require('fs');
 const gulp = require('gulp');
 const transform = require('gulp-transform');
+const rename = require('gulp-rename');
 
 const config = require('../config.json');
 const loaderScriptVersion = '0.1.11';
@@ -8,6 +9,7 @@ const loaderScriptVersion = '0.1.11';
 function embedLoaderHtml(cb) {
   return gulp.src('src/*.html')
     .pipe(transform('utf-8', renderEmbed))
+    .pipe(rename({ prefix: 'embed-' }))
     .pipe(gulp.dest('build/embed-loaders'));
 }
 
@@ -27,7 +29,7 @@ function renderEmbed(contents, file) {
 
 
 function getEmbedLoaders(options) {
-  const dirPath = './embed-loaders/';
+  const dirPath = './dist/embed-loaders/';
   const files = fs.readdirSync(dirPath, 'utf-8');
   const loaders = {};
 

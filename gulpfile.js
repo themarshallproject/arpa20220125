@@ -308,6 +308,7 @@ function revision() {
       transformPath: (rev, source, file) => {
         return urljoin(config.cdn, config.slug, rev);
       },
+      dontGlobal: [/.*\/embed-loaders\/*/],
       // If you want an unversioned file. Careful deploying with this, the
       // cache times are long.
       // dontRenameFile: [/.*.csv/],
