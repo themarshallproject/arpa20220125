@@ -5,7 +5,6 @@ const transform = require('gulp-transform');
 const rename = require('gulp-rename');
 
 const config = require('../config.json');
-const loaderScriptVersion = '0.1.11';
 
 function embedLoaderHtml(cb) {
   return gulp.src('src/*.html')
@@ -18,7 +17,7 @@ function embedLoaderHtml(cb) {
 function renderEmbed(contents, file) {
   const embedId = `g-tmp-embed-${ config.slug }-${ file.stem }`;
   return `<div id="${ embedId }" data-tmp-slug="${ config.slug }"></div>
-<script type="text/javascript" src="${ config.cdn }/tmp-gfx-embed-loader/loader-${ loaderScriptVersion }.js"></script>
+<script type="text/javascript" src="${ config.cdn }/tmp-gfx-embed-loader/loader-${ config.embed_loader_version }.js"></script>
 <script type="text/javascript">
   var tmpEmbed = new TMPGraphicEmbed({
     id: '${ embedId }',
