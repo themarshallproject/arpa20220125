@@ -23,7 +23,7 @@ function renderEmbed(contents, file) {
     id: '${ embedId }',
     graphicPath: 'embed-contents/${ file.basename }',
     baseUrl: '${ config.cdn }/${ config.slug }',
-    });
+  });
 </script>`;
 }
 
@@ -44,7 +44,7 @@ function getEmbedLoaders(options) {
 
 function setEmbedConfigFlag(done) {
   if (!config.generate_external_embeds) {
-    console.log('Setting config.generate_external_embeds to true. Deploying will include graphic embed code.')
+    console.log('Setting config.generate_external_embeds to true. Deploying from now on will include graphic embed code.')
     return gulp.src('./config.json')
       .pipe(jeditor({
         'generate_external_embeds': true
