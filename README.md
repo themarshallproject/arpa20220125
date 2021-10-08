@@ -500,14 +500,21 @@ We can share graphics with partners by generating a code snippet that
 loads a graphic onto a partner's story page. The partner must have the
 ability to include inline javascript and html within their article.
 
-To generate a graphic embed code, set `generate_external_embeds: true`
-within your `config.json`. When you deploy your graphic, it will publish
-your assets and html to s3 and upload an embed code to Endrun. You can
-then find the embed snippet in the [graphics admin in Endrun](https://www.themarshallproject.org/admin/graphics).
+To generate a graphic embed code, run `gulp build:embed`, which will set
+`generate_external_embeds: true` within your `config.json`. You only
+need to run this once. After that, any time you deploy your graphic, it
+will publish your assets and html to s3 and upload an embed code to
+Endrun. You can then find the embed snippet in the [graphics admin in
+Endrun](https://www.themarshallproject.org/admin/graphics).
 
 If you are embedding multiple graphics, you do *not* need to include a
 separate embed for script includes — they will be loaded by the embed
 code.
+
+Embeds should not rely on any external javascript or CSS that is
+typically loaded on themarshallproject.org. To ensure that you aren't
+relying on any external code, you can preview your embeds at
+[localhost:3000/embeds/](/embeds).
 
 ### Legacy instructions - embedding as iframe
 
