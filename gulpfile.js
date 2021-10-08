@@ -31,6 +31,7 @@ var credentials = require('./scripts/credentials.js');
 var endrun = require('./scripts/endrun.js');
 var examples = require('./scripts/examples.js');
 var externalData = require('./scripts/externaldata.js');
+var externalEmbeds = require('./scripts/external-embeds.js');
 var getGraphics = require('./scripts/localrenderer.js').getGraphics;
 var github = require('./scripts/github.js');
 var includes = require('./scripts/includes.js');
@@ -166,6 +167,15 @@ function singleOrHeader(file) {
 }
 
 
+function embedGraphicHtml() {
+  return gulp.src('src/*.html')
+    .pipe(externalData.getExternalData())
+    .pipe(externalData.renderGraphicHTML())
+    .pipe(gulpIf(config.local_markdown, markdown()))
+    .pipe(gulp.dest('build/embed-contents'));
+}
+
+
 function checkGraphicsCount(done) {
   const files = fs.readdirSync('./src/', 'utf-8');
   let fileCount = 0;
@@ -251,6 +261,18 @@ const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, script
 
 const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
 
+const buildEmbed = gulp.series(embedGraphicHtml, externalEmbeds.embedLoaderHtml);
+
+function buildEmbedIfFlagged() {
+  function skipEmbed(cb) { cb(); }
+
+  if (config.generate_external_embeds) {
+    return buildEmbed;
+  } else {
+    return skipEmbed;
+  }
+}
+
 
 function watch() {
   gulp.watch(['README.md'], readme);
@@ -280,11 +302,12 @@ function clean() {
 
 
 function revision() {
-  return gulp.src('build/**')
+  return gulp.src('build/**', { base: 'build' })
     .pipe(RevAll.revision({
       transformPath: (rev, source, file) => {
         return urljoin(config.cdn, config.slug, rev);
       },
+      dontGlobal: [/.*\/embed-loaders\/*/],
       // If you want an unversioned file. Careful deploying with this, the
       // cache times are long.
       // dontRenameFile: [/.*.csv/],
@@ -304,6 +327,7 @@ gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
   buildProduction,
+  buildEmbedIfFlagged(),
   revision,
   s3.deploy,
   endrun.endrunDeploy,
@@ -316,6 +340,7 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
+gulp.task('build:embed', gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed));
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos)

@@ -54,6 +54,7 @@ any custom data processing this project may handle.
     + [Google Sheets Integration](#google-sheets-integration)
 - [Examples](#examples)
 - [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
+  * [Legacy instructions - embedding as iframe](#legacy-instructions---embedding-as-iframe)
 - [Running data analysis](#running-data-analysis)
 - [Tips](#tips)
 - [Other commands](#other-commands)
@@ -495,9 +496,32 @@ HTML](#using-external-data-sources-in-your-html).
 
 ## Sharing graphics outside of TMP
 
-Sometimes our partners will request that we provide an iframe of a graphic.
-Getting one to send them can take a little bit of work, especially for multiple
-graphics setups, but it's doable.
+We can share graphics with partners by generating a code snippet that
+loads a graphic onto a partner's story page. The partner must have the
+ability to include inline javascript and html within their article.
+
+To generate a graphic embed code, run `gulp build:embed`, which will set
+`generate_external_embeds: true` within your `config.json`. You only
+need to run this once. After that, any time you deploy your graphic, it
+will publish your assets and html to s3 and upload an embed code to
+Endrun. You can then find the embed snippet in the [graphics admin in
+Endrun](https://www.themarshallproject.org/admin/graphics).
+
+If you are embedding multiple graphics, you do *not* need to include a
+separate embed for script includes — they will be loaded by the embed
+code.
+
+Embeds should not rely on any external javascript or CSS that is
+typically loaded on themarshallproject.org. To ensure that you aren't
+relying on any external code, you can preview your embeds at
+[localhost:3000/embeds/](/embeds).
+
+### Legacy instructions - embedding as iframe
+
+If a partner can't publish inline javascript in their CMS, you can
+provide an iframe of a graphic.  Getting one to send them can take a
+little bit of work, especially for multiple graphics setups, but it's
+doable.
 
 1. A deployed graphic will be served to the public from
    `https://www.themarshallproject.org/embed/graphic/<graphic-id>` replacing

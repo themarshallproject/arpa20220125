@@ -4,7 +4,8 @@ const request = require('request');
 
 const config = require('../config.json');
 const credentials = require('./credentials.js');
-const getGraphics = require('./localrenderer.js').getGraphics;
+const { getGraphics } = require('./localrenderer.js');
+const { getEmbedLoaders } = require('./external-embeds.js');
 const github = require('./github.js');
 
 
@@ -50,6 +51,10 @@ function endrunDeploy(done, host) {
     }
 
     body['contents'] = getGraphics({ isProduction: true });
+
+    if (config.generate_external_embeds) {
+      body['embeds'] = getEmbedLoaders();
+    }
 
     request.post({
       url: host + endpoint,

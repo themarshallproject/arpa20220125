@@ -12,7 +12,10 @@ function deploy(done) {
       accessKeyId: creds['gfx-aws-access'],
       secretAccessKey: creds['gfx-aws-secret']
     });
-    gulp.src('dist/**', { base: 'dist' })
+    gulp.src('dist/**', {
+      base: 'dist',
+      ignore: 'dist/embed-loaders/*'
+    })
       .pipe(
         gulpIf(
           (file) => { return !file.path.match(/\.mp4$/) },
