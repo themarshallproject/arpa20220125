@@ -12,6 +12,6 @@
   "use_es6": true,
   "multiple_graphics": false,
   "generate_external_embeds": false,
-  "embed_loader_version": "0.1.14",
+  "embed_loader_version": "0.1.15",
   "spreadsheet_id": ""
 }
