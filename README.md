@@ -601,6 +601,7 @@ for a full accounting.
    setting up the repo. Handy if you made a mistake, or are just rearranging
    things.
 2. `gulp credentials:endrun` will allow to enter a fresh API token.
+3. `gulp credentials:github` will allow you to enter a new [personal Github access token](https://github.com/settings/tokens) when your old one expires.
 
 ## Running on non-Mac platforms
 
