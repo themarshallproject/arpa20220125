@@ -1,5 +1,12 @@
 const path = require('path');
 
+const babelPreset = {
+  loader: 'babel-loader',
+  options: {
+    presets: ['@babel/preset-env']
+  }
+};
+
 
 function getConfig(env) {
   const config = {
@@ -24,20 +31,18 @@ function getConfig(env) {
         // transpile js
         {
           test: /\.js$/,
-          use: {
-            loader: 'babel-loader'
-          }
+          use: babelPreset
         },
         // transpile js svelte helpers
         {
           test: /\.m?js$/,
           include: [/svelte/],
-          use: ['babel-loader'],
+          use: babelPreset,
         },
         {
           test: /\.svelte$/,
           use: [
-            'babel-loader',
+            babelPreset,
             {
               loader: 'svelte-loader',
               options: {
