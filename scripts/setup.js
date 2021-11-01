@@ -36,15 +36,29 @@ function setup(done) {
 
 
 function handleMatchingRepo(cb) {
-  getBooleanInput('Do you want to create a matching Github repo?', function(repo) {
-    if (repo) {
-      github.createAndSetRepository(() => {
-        github.setupDefaultLabels(cb);
-      });
-    } else {
-      cb();
+  getBooleanInput(
+    "Do you want to create a matching Github repo?",
+    function (repo) {
+      if (repo) {
+        github.createAndSetRepository(() => {
+          getBooleanInput(
+            "Do you want to automatically create GitHub issues for this project? This will give you a headstart on tracking what needs to be done.",
+            (yes) => {
+              if (yes) {
+                github.setupDefaultLabels(() => {
+                  github.createDefaultIssues(cb);
+                });
+              } else {
+                github.setupDefaultLabels(cb);
+              }
+            }
+          );
+        });
+      } else {
+        cb();
+      }
     }
-  });
+  );
 }
 
 
