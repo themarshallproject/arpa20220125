@@ -4,6 +4,7 @@ const child_process = require('child_process');
 const log = require('fancy-log');
 const gitLabel = require('git-label');
 
+const owner = 'themarshallproject';
 
 function createRepository(name, cb) {
   credentials.ensureCredentials(function(creds) {
@@ -12,7 +13,7 @@ function createRepository(name, cb) {
     });
     log('Creating github repo themarshallproject/' + name);
     client.repos.createInOrg({
-      org: 'themarshallproject',
+      org: owner,
       name: name,
       private: true,
       has_issues: true,
@@ -51,7 +52,7 @@ function setupDefaultLabels(done) {
   credentials.ensureCredentials(function(creds) {
     const repoConfig = {
       api: 'https://api.github.com',
-      repo: `themarshallproject/${config.slug}`,
+      repo: `${owner}/${config.slug}`,
       token: creds['gfx-github']
     };
 
@@ -151,6 +152,27 @@ function getRemoteUrl() {
   return child_process.execFileSync('git', ['config', '--get', 'remote.origin.url']).toString().trim();
 }
 
+function createDefaultIssues(done) {
+  const { slug } = require('../config.json');
+  const issues = require('./issues.json');
+
+  credentials.ensureCredentials(async (creds) => {
+    const client = new Octokit({
+      auth: creds['gfx-github'],
+    });
+
+    for (const issue of issues) {
+      await client.issues.create({
+        owner,
+        repo: slug,
+        title: issue.title,
+        labels: issue.labels,
+      })
+    }
+
+    done();
+  });
+}
 
 module.exports = {
   createRepository,
@@ -159,5 +181,6 @@ module.exports = {
   ensureRepoCleanAndPushed,
   getRemoteUrl,
   ensureUpdatesRemote,
-  pullUpdates
+  pullUpdates,
+  createDefaultIssues,
 };
