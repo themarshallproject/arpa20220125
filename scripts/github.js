@@ -2,8 +2,6 @@ const Octokit = require('@octokit/rest');
 const credentials = require('./credentials.js');
 const child_process = require('child_process');
 const log = require('fancy-log');
-const gitLabel = require('git-label');
-
 
 function createRepository(name, cb) {
   credentials.ensureCredentials(function(creds) {
@@ -43,63 +41,85 @@ function createAndSetRepository(done) {
   });
 }
 
-
 function setupDefaultLabels(done) {
-  log('Removing default labels');
-  var config = require('../config.json');
+  log("Customizing repo issue labels...");
+  const { slug } = require("../config.json");
 
-  credentials.ensureCredentials(function(creds) {
-    const repoConfig = {
-      api: 'https://api.github.com',
-      repo: `themarshallproject/${config.slug}`,
-      token: creds['gfx-github']
-    };
+  const labelsToRemove = [
+    "bug",
+    "duplicate",
+    "enhancement",
+    "help wanted",
+    "good first issue",
+    "invalid",
+    "question",
+    "wontfix",
+  ];
 
-    const defaultLabelsToRemove = [
-      { "name": "bug", "color": "#fc2929" },
-      { "name": "duplicate", "color": "#cccccc" },
-      { "name": "enhancement", "color": "#84b6eb" },
-      { "name": "help wanted", "color": "#159818" },
-      { "name": "good first issue", "color": "#7057ff" },
-      { "name": "invalid", "color": "#e6e6e6" },
-      { "name": "question", "color": "#cc317c" },
-      { "name": "wontfix", "color": "#ffffff" }
-    ];
+  const labelsToAdd = [
+    { name: "Type: Bug", color: "fc2929" },
+    { name: "Type: Duplicate", color: "ffa6e8" },
+    { name: "Type: Question", color: "5783b2" },
+    { name: "Type: Major feature", color: "f34dfc" },
+    { name: "Type: Minor feature", color: "a574f4" },
+    { name: "Type: Nice to have", color: "e1d2fd" },
+    { name: "Status: Blocked", color: "f4782f" },
+    { name: "Status: In progress", color: "f8e400" },
+    { name: "Status: Pending review", color: "00d0a9" },
+    { name: "Status: wontfix", color: "ffffff" },
+    { name: "Browser: Android", color: "baffac" },
+    { name: "Browser: IE/Edge", color: "b2f9fc" },
+    { name: "Browser: Chrome", color: "ffc6c8" },
+    { name: "Browser: Safari", color: "8ec1eb" },
+    { name: "Browser: Firefox", color: "ffcb8b" },
+    { name: "Browser: Mobile", color: "aaaaaa" },
+  ];
 
-    const newLabelsToAdd = [
-      { "name": "Type: Bug", "color": "#fc2929" },
-      { "name": "Type: Duplicate", "color": "#ffa6e8" },
-      { "name": "Type: Question", "color": "#5783b2" },
-      { "name": "Type: Major feature", "color": "#f34dfc" },
-      { "name": "Type: Minor feature", "color": "#a574f4" },
-      { "name": "Type: Nice to have", "color": "#e1d2fd" },
-      { "name": "Status: Blocked", "color": "#f4782f" },
-      { "name": "Status: In progress", "color": "#f8e400" },
-      { "name": "Status: Pending review", "color": "#00d0a9" },
-      { "name": "Status: wontfix", "color": "#ffffff" },
-      { "name": "Browser: Android", "color": "#baffac" },
-      { "name": "Browser: IE/Edge", "color": "#b2f9fc" },
-      { "name": "Browser: Chrome", "color": "#ffc6c8" },
-      { "name": "Browser: Safari", "color": "#8ec1eb" },
-      { "name": "Browser: Firefox", "color": "#ffcb8b" },
-      { "name": "Browser: Mobile", "color": "#aaaaaa" }
-    ];
+  credentials.ensureCredentials(async (creds) => {
+    const client = new Octokit({
+      auth: creds["gfx-github"],
+    });
 
-    gitLabel.remove(repoConfig, defaultLabelsToRemove)
-      .then((result) => {
-        log('Replacing default issue labels with more helpful ones');
-        gitLabel.add(repoConfig, newLabelsToAdd)
-          .then(result => {
-            done(result.data);
-          }).catch(error => {
-            log.error('Error when creating new issue labels:', error);
-          })
-      }).catch(error => {
-        log.error('Error when removing default issue labels: ', error)
-      });
+    // first remove the default labels, if they exist
+    log("Removing default labels");
+    for (const name of labelsToRemove) {
+      try {
+        await client.issues.deleteLabel({
+          owner: "themarshallproject",
+          repo: slug,
+          name,
+        });
+      } catch (e) {
+        // 404 means the label already didn't exist
+        // https://docs.github.com/en/rest/reference/issues#delete-a-label
+        if (e.status !== 404) {
+          throw e;
+        }
+      }
+    }
+
+    // then add our custom ones
+    log("Replacing default issue labels with more helpful ones");
+    for (const { name, color } of labelsToAdd) {
+      try {
+        await client.issues.createLabel({
+          owner: "themarshallproject",
+          repo: slug,
+          name,
+          color,
+        });
+      } catch (e) {
+        // 422 means the label already exists, which is fine
+        // https://docs.github.com/en/rest/reference/issues#create-a-label
+        if (e.status !== 422) {
+          throw e;
+        }
+      }
+    }
+
+    done();
   });
 }
-
 
 function ensureUpdatesRemote(done) {
   log('Adding original gfx repo as remote updates');
