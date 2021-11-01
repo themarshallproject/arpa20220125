@@ -12,7 +12,7 @@
     "axios": "^0.18.0",
     "babel-loader": "^8.2.2",
     "csv-parse": "^4.4.0",
-    "csv-stringify": "^5.3.0",
+    "csv-stringify": "^5.6.5",
     "d3": "^5.9.2",
     "del": "^4.0.0",
     "express": "^4.17.1",
