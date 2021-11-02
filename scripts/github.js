@@ -1,4 +1,4 @@
-const Octokit = require('@octokit/rest');
+const { Octokit } = require('@octokit/rest');
 const credentials = require('./credentials.js');
 const child_process = require('child_process');
 const log = require('fancy-log');
