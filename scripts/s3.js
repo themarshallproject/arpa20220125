@@ -23,13 +23,20 @@ function deploy(done) {
       .pipe(s3({
         bucket: config.bucket,
         ACL: 'public-read',
-        CacheControl: 'max-age=2592000', // One month
         keyTransform: function(filename) {
           const key = config.slug + '/' + filename;
           console.log(config.cdn + '/' + key);
           return key;
         },
         maps: {
+          CacheControl: (keyname) => {
+            if (keyname.match(/manifest-\.json/)) {
+              console.log('Set 30-second max-age on rev-manifest.json');
+              return 'max-age=30'
+            }
+            console.log('Set month-long max age on other files');
+            return 'max-age=2592000'
+          },
           ContentEncoding: (keyname) => {
             if (keyname.match(/\.mp4$/)) {
               console.log('Skipping gzip for mp4');
