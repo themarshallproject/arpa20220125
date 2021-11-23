@@ -1,6 +1,7 @@
 {
   "name": "gfx-v2",
-  "version": "0.0.1",
+  "private": true,
+  "type": "module",
   "description": "Publishing tool for creating graphics and custom posts at The Marshall Project.",
   "main": "",
   "author": "Gabe Isman <isman@themarshallproject.org>",
