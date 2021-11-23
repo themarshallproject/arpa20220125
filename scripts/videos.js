@@ -1,15 +1,16 @@
-const credentials = require('./credentials.js');
-const fs = require('fs');
-const urljoin = require('url-join');
-const config = require('../config.json');
-const axios = require('axios');
+import * as credentials from "./credentials.js";
+import fs from "fs";
+import urljoin from "url-join";
+import axios from "axios";
+import { readJsonSync } from "./utils.js";
 
+const config = readJsonSync("./config.json");
 
-const MANIFEST_LOCATION = './video-manifest.json';
+const MANIFEST_LOCATION = "./video-manifest.json";
 
 function getVideoUrls() {
   const results = [];
-  fs.readdirSync('./dist/assets').forEach((file) => {
+  fs.readdirSync("./dist/assets").forEach((file) => {
     if (!file.match(/.mp4$/)) {
       return;
     }
@@ -18,20 +19,17 @@ function getVideoUrls() {
   return results;
 }
 
-
 function getCDNUrl(filename) {
-  return urljoin(config.cdn, config.slug, 'assets', filename);
+  return urljoin(config.cdn, config.slug, "assets", filename);
 }
-
 
 function getTranscodingParams(url) {
   return {
-    playback_policy: 'public',
+    playback_policy: "public",
     per_title_encode: true, // https://docs.mux.com/docs/per-title-encoding
-    input: url
+    input: url,
   };
 }
-
 
 function getManifest() {
   let manifestText;
@@ -53,11 +51,9 @@ function getManifest() {
   return manifest;
 }
 
-
 function writeManifest(data) {
   fs.writeFileSync(MANIFEST_LOCATION, JSON.stringify(data, null, 2));
 }
-
 
 function transcodeAll(creds) {
   const existingTranscodings = getManifest();
@@ -71,18 +67,23 @@ function transcodeAll(creds) {
 
   const promises = videoUrls.map((url) => {
     if (existingTranscodings[url]) {
-      console.log(`Found existing transcoding for ${url}, at ${existingTranscodings[url]}`);
+      console.log(
+        `Found existing transcoding for ${url}, at ${existingTranscodings[url]}`
+      );
       alreadyExistingCount += 1;
       return Promise.resolve({ [url]: existingTranscodings[url] });
     } else {
-      return axios.post('https://api.mux.com/video/v1/assets',
-        getTranscodingParams(url),
-        {
-          auth: {
-            username: creds['gfx-mux-access'],
-            password: creds['gfx-mux-secret'],
+      return axios
+        .post(
+          "https://api.mux.com/video/v1/assets",
+          getTranscodingParams(url),
+          {
+            auth: {
+              username: creds["gfx-mux-access"],
+              password: creds["gfx-mux-secret"],
+            },
           }
-        })
+        )
         .then((res) => {
           return formatOutput(url, res.data);
         })
@@ -93,9 +94,13 @@ function transcodeAll(creds) {
   });
 
   if (alreadyExistingCount === videoUrls.length) {
-    console.log(`All videos already transcoded. You can check ${MANIFEST_LOCATION} for the urls.`)
+    console.log(
+      `All videos already transcoded. You can check ${MANIFEST_LOCATION} for the urls.`
+    );
   } else {
-    console.log("Successfully uploaded videos to Mux, they are now transcoding. This shouldn't take too long. If it fails, the video won't work. You can check for errors here:");
+    console.log(
+      "Successfully uploaded videos to Mux, they are now transcoding. This shouldn't take too long. If it fails, the video won't work. You can check for errors here:"
+    );
     console.log("\nhttps://dashboard.mux.com/activity/events");
   }
 
@@ -108,7 +113,6 @@ function transcodeAll(creds) {
   });
 }
 
-
 function getCredentials() {
   return new Promise((resolve, reject) => {
     credentials.getMuxCredentials((creds) => {
@@ -117,23 +121,16 @@ function getCredentials() {
   });
 }
 
-
 function formatOutput(url, responseData) {
   return {
     [url]: `https://stream.mux.com/${responseData.data.playback_ids[0].id}.m3u8`,
   };
 }
 
-
-function transcodeUploadedVideos() {
+export function transcodeUploadedVideos() {
   return getCredentials()
     .then(transcodeAll)
     .then((output) => {
       console.log("\n\n", JSON.stringify(output, null, 2), "\n\n");
     });
-}
-
-
-module.exports = {
-  transcodeUploadedVideos
 }

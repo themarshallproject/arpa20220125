@@ -1,127 +1,123 @@
-var concat = require('gulp-concat');
-var del = require('del');
-var flatmap = require('gulp-flatmap');
-var gulp = require('gulp');
-var header = require('gulp-header');
-var livereload = require('gulp-livereload');
-var log = require('fancy-log');
-var mergeStream = require('merge-stream');
-var notify = require('gulp-notify');
-var replace = require('gulp-replace');
-var sass = require('gulp-dart-sass');
-var webpackStream = require('webpack-stream');
+import concat from "gulp-concat";
+import del from "del";
+import flatmap from "gulp-flatmap";
+import gulp from "gulp";
+import header from "gulp-header";
+import livereload from "gulp-livereload";
+import mergeStream from "merge-stream";
+import { onError } from "gulp-notify";
+import replace from "gulp-replace";
+import sass from "gulp-dart-sass";
+import webpackStream from "webpack-stream";
 
-var externalData = require('./externaldata.js');
-var webpackConfig = require('../webpack.config.js');
+import { getExternalData, renderGraphicHTML } from "./externaldata.js";
+import webpackConfig from "../webpack.config.js";
 
+const { src, dest, series, parallel } = gulp;
 
 // Retrieve an example's slug from its path within /examples/
 function getSlugFromExamples(file) {
   return file.path.match(/\/examples\/([^\/]+)\//)[1];
 }
 
-
 // Retrieve an example's slug from its path within /build-examples/
 function getSlugFromBuild(file) {
   return file.path.match(/\/build-examples\/([^\/]+)\//)[1];
 }
 
-
 // Use gulp-replace to add example slug to asset paths
 function addSlugToPaths(exampleSlug) {
   const replacer = /(assets\/[\w-\/]+\.\w{2,4})(\W)/g;
-  return replace(replacer, `${ exampleSlug }/$1$2`);
+  return replace(replacer, `${exampleSlug}/$1$2`);
 }
-
 
 function exampleHtml() {
-  return gulp.src('examples/*/*.html')
-    .pipe(externalData.getExternalData({ examples: true }))
-    .pipe(externalData.renderGraphicHTML({ examples: true }))
-    .pipe(gulp.dest('build-examples'))
-    .pipe(flatmap(function(stream, file) {
-      // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = getSlugFromBuild(file);
-      var pathData = {
-        relative: file.relative,
-      };
+  return src("examples/*/*.html")
+    .pipe(getExternalData({ examples: true }))
+    .pipe(renderGraphicHTML({ examples: true }))
+    .pipe(dest("build-examples"))
+    .pipe(
+      flatmap(function (stream, file) {
+        // Replace asset paths to use subfolders that correspond to slug for the given example
+        var exampleSlug = getSlugFromBuild(file);
+        var pathData = {
+          relative: file.relative,
+        };
 
-      return gulp.src(file.path)
-        .pipe(addSlugToPaths(exampleSlug))
-        .pipe(header('<!-- Find this example at examples/${ relative } -->', pathData))
-        .pipe(gulp.dest(`${ file.base }/${ exampleSlug }`))
-    }))
+        return src(file.path)
+          .pipe(addSlugToPaths(exampleSlug))
+          .pipe(
+            header(
+              "<!-- Find this example at examples/${ relative } -->",
+              pathData
+            )
+          )
+          .pipe(dest(`${file.base}/${exampleSlug}`));
+      })
+    )
     .pipe(livereload());
 }
-
 
 function exampleStyles() {
-  return gulp.src('examples/*/graphic.scss')
-    .pipe(flatmap(function(stream, file) {
-      // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = getSlugFromExamples(file);
+  return src("examples/*/graphic.scss")
+    .pipe(
+      flatmap(function (stream, file) {
+        // Replace asset paths to use subfolders that correspond to slug for the given example
+        var exampleSlug = getSlugFromExamples(file);
 
-      return gulp.src(file.path)
-        .pipe(sass({
-          includePaths: [
-            'src/',
-            'templates/'
-          ]
-        })
-          .on('error', notify.onError("SASS <%= error.formatted %>")))
-        .pipe(addSlugToPaths(exampleSlug))
-    }))
-    .pipe(concat('graphic.css'))
-    .pipe(gulp.dest('build-examples'))
+        return src(file.path)
+          .pipe(
+            sass({
+              includePaths: ["src/", "templates/"],
+            }).on("error", onError("SASS <%= error.formatted %>"))
+          )
+          .pipe(addSlugToPaths(exampleSlug));
+      })
+    )
+    .pipe(concat("graphic.css"))
+    .pipe(dest("build-examples"))
     .pipe(livereload());
 }
-
 
 function exampleScripts() {
   // Compile the vendor js
-  var libJs = gulp.src('examples/*/lib/*.js');
+  var libJs = src("examples/*/lib/*.js");
 
-  var graphicJs = gulp.src('examples/*/graphic.js')
-    .pipe(flatmap(function(stream, file) {
+  var graphicJs = src("examples/*/graphic.js").pipe(
+    flatmap(function (stream, file) {
       // Replace asset paths to use subfolders that correspond to slug for the given example
       var exampleSlug = getSlugFromExamples(file);
 
-      return gulp.src(file.path)
-        .pipe(webpackStream(webpackConfig('development')))
-        .pipe(addSlugToPaths(exampleSlug))
-    }))
+      return src(file.path)
+        .pipe(webpackStream(webpackConfig("development")))
+        .pipe(addSlugToPaths(exampleSlug));
+    })
+  );
 
   return mergeStream(libJs, graphicJs)
-    .pipe(concat('graphic.js'))
-    .pipe(gulp.dest('build-examples'))
+    .pipe(concat("graphic.js"))
+    .pipe(dest("build-examples"))
     .pipe(livereload());
 }
-
 
 function exampleAssets() {
-  return gulp.src('examples/*/assets/**', { base: 'examples' })
-    .pipe(gulp.dest('build-examples'))
+  return src("examples/*/assets/**", { base: "examples" })
+    .pipe(dest("build-examples"))
     .pipe(livereload());
 }
 
-
 function exampleClean() {
-  return del('build-examples/**');
+  return del("build-examples/**");
 }
 
+const exampleBuild = series(
+  exampleClean,
+  parallel(exampleHtml, exampleStyles, exampleScripts, exampleAssets)
+);
 
-const exampleBuild = gulp.series(exampleClean, gulp.parallel(
-  exampleHtml,
-  exampleStyles,
-  exampleScripts,
-  exampleAssets
-));
-
-module.exports = {
-  styles: exampleStyles,
-  html: exampleHtml,
-  scripts: exampleScripts,
-  assets: exampleAssets,
-  clean: exampleClean,
-  build: exampleBuild
-}
+export const styles = exampleStyles;
+export const html = exampleHtml;
+export const scripts = exampleScripts;
+export const assets = exampleAssets;
+export const clean = exampleClean;
+export const build = exampleBuild;

@@ -1,49 +1,59 @@
-const { Octokit } = require('@octokit/rest');
-const credentials = require('./credentials.js');
-const child_process = require('child_process');
-const log = require('fancy-log');
+import { Octokit } from "@octokit/rest";
+import * as credentials from "./credentials.js";
+import child_process from "child_process";
+import log from "fancy-log";
 
-function createRepository(name, cb) {
-  credentials.ensureCredentials(function(creds) {
+export function createRepository(name, cb) {
+  credentials.ensureCredentials(function (creds) {
     const client = new Octokit({
-      auth: `token ${creds['gfx-github']}`
+      auth: `token ${creds["gfx-github"]}`,
     });
-    log('Creating github repo themarshallproject/' + name);
-    client.repos.createInOrg({
-      org: 'themarshallproject',
-      name: name,
-      private: true,
-      has_issues: true,
-      has_projects: false,
-      has_wiki: false,
-      description: 'Repo automatically created by gfx rig.',
-    }).then((result) => {
-      cb(result.data);
-    }).catch((error) => {
-      if (error.code == 422) {
-        log.error(JSON.parse(error.message).errors.map((e) => e.message).join());
-        log('Did someone already set up this repository?');
-      } else {
-        log.error('Unrecognized error:', error);
-      }
-    });
+    log("Creating github repo themarshallproject/" + name);
+    client.repos
+      .createInOrg({
+        org: "themarshallproject",
+        name: name,
+        private: true,
+        has_issues: true,
+        has_projects: false,
+        has_wiki: false,
+        description: "Repo automatically created by gfx rig.",
+      })
+      .then((result) => {
+        cb(result.data);
+      })
+      .catch((error) => {
+        if (error.code == 422) {
+          log.error(
+            JSON.parse(error.message)
+              .errors.map((e) => e.message)
+              .join()
+          );
+          log("Did someone already set up this repository?");
+        } else {
+          log.error("Unrecognized error:", error);
+        }
+      });
   });
 }
 
-
-function createAndSetRepository(done) {
-  var config = require('../config.json');
-  createRepository(config.slug, function(repo) {
-    log('Repo successfully created at ' + repo.html_url);
-    log('Setting new repo to origin remote');
-    log(child_process.execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url]).toString());
+export function createAndSetRepository(done) {
+  var config = require("./config.json");
+  createRepository(config.slug, function (repo) {
+    log("Repo successfully created at " + repo.html_url);
+    log("Setting new repo to origin remote");
+    log(
+      child_process
+        .execFileSync("git", ["remote", "set-url", "origin", repo.ssh_url])
+        .toString()
+    );
     ensureUpdatesRemote(done);
   });
 }
 
-function setupDefaultLabels(done) {
+export function setupDefaultLabels(done) {
   log("Customizing repo issue labels...");
-  const { slug } = require("../config.json");
+  const { slug } = require("./config.json");
 
   const labelsToRemove = [
     "bug",
@@ -121,43 +131,70 @@ function setupDefaultLabels(done) {
   });
 }
 
-function ensureUpdatesRemote(done) {
-  log('Adding original gfx repo as remote updates');
+export function ensureUpdatesRemote(done) {
+  log("Adding original gfx repo as remote updates");
   try {
-    log(child_process.execFileSync('git', ['remote', 'add', 'updates', 'git@github.com:themarshallproject/gfx-v2.git']).toString());
+    log(
+      child_process
+        .execFileSync("git", [
+          "remote",
+          "add",
+          "updates",
+          "git@github.com:themarshallproject/gfx-v2.git",
+        ])
+        .toString()
+    );
   } catch (error) {
-    log('Got error, assuming remote already exists. Carry on.')
+    log("Got error, assuming remote already exists. Carry on.");
   }
   done();
 }
 
-
-function pullUpdates(done) {
+export function pullUpdates(done) {
   ensureUpdatesRemote(() => {
-    log(child_process.execFileSync('git', ['pull', 'updates', 'master']).toString());
-    log(child_process.execFileSync('npm', ['install']).toString());
+    log(
+      child_process
+        .execFileSync("git", ["pull", "updates", "master"])
+        .toString()
+    );
+    log(child_process.execFileSync("npm", ["install"]).toString());
   });
   done();
 }
 
+export function ensureRepoCleanAndPushed(done) {
+  child_process.execFileSync("git", ["fetch"]);
 
-function ensureRepoCleanAndPushed(done) {
-  child_process.execFileSync('git', ['fetch']);
-
-  var statusOutput = child_process.execFileSync('git', ['status', '--porcelain']).toString();
+  var statusOutput = child_process
+    .execFileSync("git", ["status", "--porcelain"])
+    .toString();
   if (statusOutput.length !== 0) {
-    throw new Error('\n\nCowardly refusing to deploy until you\'ve committed (and pushed!) your changes.\n');
+    throw new Error(
+      "\n\nCowardly refusing to deploy until you've committed (and pushed!) your changes.\n"
+    );
   }
 
-  const headSHA = child_process.execFileSync('git', ['rev-parse', 'HEAD']).toString().trim();
-  const currentRef = child_process.execFileSync('git', ['symbolic-ref', '-q', 'HEAD']).toString().trim();
-  const upstream = child_process.execFileSync('git', ['for-each-ref', "--format=%(push:short)", currentRef]).toString().trim();
-  const originSHA = child_process.execFileSync('git', ['rev-parse', upstream]).toString().trim();
+  const headSHA = child_process
+    .execFileSync("git", ["rev-parse", "HEAD"])
+    .toString()
+    .trim();
+  const currentRef = child_process
+    .execFileSync("git", ["symbolic-ref", "-q", "HEAD"])
+    .toString()
+    .trim();
+  const upstream = child_process
+    .execFileSync("git", ["for-each-ref", "--format=%(push:short)", currentRef])
+    .toString()
+    .trim();
+  const originSHA = child_process
+    .execFileSync("git", ["rev-parse", upstream])
+    .toString()
+    .trim();
 
   if (headSHA !== originSHA) {
-    log('Pushing local changes to origin.');
+    log("Pushing local changes to origin.");
     try {
-      child_process.execFileSync('git', ['push', '--porcelain', '--quiet']);
+      child_process.execFileSync("git", ["push", "--porcelain", "--quiet"]);
     } catch (error) {
       log("Maybe you need to \n\n\tgit pull\n\n");
       throw error;
@@ -167,17 +204,9 @@ function ensureRepoCleanAndPushed(done) {
   done();
 }
 
-function getRemoteUrl() {
-  return child_process.execFileSync('git', ['config', '--get', 'remote.origin.url']).toString().trim();
+export function getRemoteUrl() {
+  return child_process
+    .execFileSync("git", ["config", "--get", "remote.origin.url"])
+    .toString()
+    .trim();
 }
-
-
-module.exports = {
-  createRepository,
-  createAndSetRepository,
-  setupDefaultLabels,
-  ensureRepoCleanAndPushed,
-  getRemoteUrl,
-  ensureUpdatesRemote,
-  pullUpdates
-};
