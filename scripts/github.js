@@ -1,6 +1,8 @@
 const { Octokit } = require('@octokit/rest');
 const credentials = require('./credentials.js');
 const child_process = require('child_process');
+const fs = require('fs');
+const yaml = require('yaml');
 const log = require('fancy-log');
 
 function createRepository(name, cb) {
@@ -167,17 +169,34 @@ function ensureRepoCleanAndPushed(done) {
   done();
 }
 
+function updateDependabotSettings(cb) {
+  const configLocation = './.github/dependabot.yml';
+  const dependabotConfigFile = fs.readFileSync(configLocation);
+  const parsedConfig = yaml.parse(dependabotConfigFile.toString());
+  parsedConfig.updates.forEach((ecosystem) => {
+    log(
+      `Setitng dependabot package ecosystem ${ecosystem["package-ecosystem"]} to production dependencies only`
+    );
+    // Only allow updates to the production dependencies (none, by default)
+    ecosystem.allow = [{ 'dependency-type': 'production' }];
+  });
+  const updatedConfigFile = yaml.stringify(parsedConfig);
+  fs.writeFileSync(configLocation, updatedConfigFile);
+  cb();
+}
+
 function getRemoteUrl() {
   return child_process.execFileSync('git', ['config', '--get', 'remote.origin.url']).toString().trim();
 }
 
 
 module.exports = {
-  createRepository,
   createAndSetRepository,
-  setupDefaultLabels,
+  createRepository,
   ensureRepoCleanAndPushed,
-  getRemoteUrl,
   ensureUpdatesRemote,
-  pullUpdates
+  getRemoteUrl,
+  pullUpdates,
+  setupDefaultLabels,
+  updateDependabotSettings,
 };

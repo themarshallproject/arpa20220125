@@ -322,7 +322,17 @@ function revision() {
 var defaultTask = gulp.series(clean, startServer, endrun.getPostData, buildDev, examples.build, openBrowser, watch);
 
 // Primary interface
-gulp.task('setup', gulp.series(setup.setup, defaultTask));
+gulp.task(
+  'setup',
+  gulp.series(
+    setup.setup,
+    setup.handleHeaderTemplateFiles,
+    setup.handleMatchingRepo,
+    github.ensureUpdatesRemote,
+    github.updateDependabotSettings,
+    defaultTask
+  )
+);
 gulp.task('default', defaultTask);
 gulp.task('deploy', gulp.series(
   github.ensureRepoCleanAndPushed,
@@ -370,6 +380,7 @@ gulp.task('credentials:google_client', credentials.resetGoogleClient);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
+gulp.task('dependabot:disable', setup.updateDependabotSettings);
 
 // Rig updates management
 gulp.task('repo:create', github.createAndSetRepository);
