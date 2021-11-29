@@ -1,19 +1,23 @@
+// native
+import { writeFileSync, existsSync, copyFileSync } from 'fs';
+import { basename } from 'path';
+import { createInterface } from 'readline';
+
+// packages
+import moment from 'moment';
+import mri from 'mri';
+
+// local
+import { getLocalConfig } from './config.js';
 import {
   ensureUpdatesRemote,
   createAndSetRepository,
   setupDefaultLabels,
 } from './github.js';
 
-import { createInterface } from 'readline';
-import moment from 'moment';
-import { writeFileSync, existsSync, copyFileSync } from 'fs';
-import { basename } from 'path';
-import minimist from 'minimist';
-import { readJsonSync } from './utils.js';
+var argv = mri(process.argv.slice(2));
 
-var argv = minimist(process.argv.slice(2));
-
-const config = readJsonSync('./config.json');
+const config = getLocalConfig();
 const { slug: _slug, type } = config;
 
 export function setup(done) {
@@ -162,7 +166,7 @@ function getInput(prompt, validator, cb) {
 
   rl.question(`${prompt}: `, (answer) => {
     rl.close();
-    answere = answer.trim();
+    answer = answer.trim();
     var error = validator(answer);
     if (error) {
       console.log(error);
