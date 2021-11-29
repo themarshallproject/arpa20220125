@@ -1,7 +1,12 @@
-import { Octokit } from '@octokit/rest';
-import * as credentials from './credentials.js';
+// native
 import child_process from 'child_process';
+
+// packages
 import log from 'fancy-log';
+import { Octokit } from '@octokit/rest';
+
+// native
+import * as credentials from './credentials.js';
 
 export function createRepository(name, cb) {
   credentials.ensureCredentials(function (creds) {

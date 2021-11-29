@@ -1,15 +1,17 @@
-import concat from 'gulp-concat';
+// packages
 import del from 'del';
-import flatmap from 'gulp-flatmap';
 import gulp from 'gulp';
+import concat from 'gulp-concat';
+import sass from 'gulp-dart-sass';
+import flatmap from 'gulp-flatmap';
 import header from 'gulp-header';
 import livereload from 'gulp-livereload';
-import mergeStream from 'merge-stream';
 import { onError } from 'gulp-notify';
 import replace from 'gulp-replace';
-import sass from 'gulp-dart-sass';
+import mergeStream from 'merge-stream';
 import webpackStream from 'webpack-stream';
 
+// local
 import { getExternalData, renderGraphicHTML } from './externaldata.js';
 import webpackConfig from '../webpack.config.js';
 

@@ -1,9 +1,12 @@
-import keychain from 'keychain';
-import { createInterface } from 'readline';
-import log, { error as _error } from 'fancy-log';
-import { google } from 'googleapis';
+// native
 import { platform } from 'os';
 import { readFileSync, writeFileSync } from 'fs';
+
+// packages
+import log, { error as _error } from 'fancy-log';
+import { google } from 'googleapis';
+import keychain from 'keychain';
+import { createInterface } from 'readline';
 
 const ENDRUN = {
   key: 'gfx-endrun',

@@ -1,9 +1,14 @@
+// native
 import fs from 'fs';
+
+// packages
 import marked from 'marked';
 import Mustache from 'mustache';
-import { readJsonSync } from './utils.js';
 
-const config = readJsonSync('./config.json');
+// local
+import { getLocalConfig } from './config.js';
+
+const config = getLocalConfig();
 
 export function renderTemplate(options) {
   const renderedTemplate = renderGraphics(options);

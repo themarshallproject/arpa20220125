@@ -1,8 +1,13 @@
+// native
 import fs from 'fs';
-import log from 'fancy-log';
-import { readJsonSync } from './utils.js';
 
-const config = readJsonSync('./config.json');
+// packages
+import log from 'fancy-log';
+
+// local
+import { getLocalConfig } from './config.js';
+
+const config = getLocalConfig();
 
 export function stylesheetIncludeText(options = {}) {
   var stylesheets;

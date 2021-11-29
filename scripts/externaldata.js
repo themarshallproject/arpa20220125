@@ -1,15 +1,16 @@
+// native
 import { readFileSync } from 'fs';
-import { warn, error as _error } from 'fancy-log';
 import { extname, basename } from 'path';
-import glob from 'glob';
+
+// packages
 import { csvParse } from 'd3-dsv';
-import nunjucksRender from 'gulp-nunjucks-render';
+import { format } from 'd3-format';
+import { warn, error as _error } from 'fancy-log';
+import glob from 'glob';
 import data from 'gulp-data';
 import { onError } from 'gulp-notify';
+import nunjucksRender from 'gulp-nunjucks-render';
 import marked from 'marked';
-import d3 from 'd3';
-
-const { format } = d3;
 
 function printDataFilenameError(baseFilename, dataFilePath) {
   const dataError = new Error(

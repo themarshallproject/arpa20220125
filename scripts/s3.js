@@ -1,11 +1,14 @@
+// packages
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
 import gzip from 'gulp-gzip';
 import log from 'fancy-log';
-import * as credentials from './credentials.js';
-import { readJsonSync } from './utils.js';
 
-const config = readJsonSync('./config.json');
+// local
+import * as credentials from './credentials.js';
+import { getLocalConfig } from './config.js';
+
+const config = getLocalConfig();
 
 export function deploy(done) {
   credentials.ensureCredentials(function (creds) {

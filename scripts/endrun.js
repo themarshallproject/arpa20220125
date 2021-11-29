@@ -1,14 +1,18 @@
+// native
 import fs from 'fs';
+
+// packages
 import log from 'fancy-log';
 import request from 'request';
 
+// local
+import { getLocalConfig } from './config.js';
 import * as credentials from './credentials.js';
-import { getGraphics } from './localrenderer.js';
 import { getEmbedLoaders } from './external-embeds.js';
 import * as github from './github.js';
-import { readJsonSync } from './utils.js';
+import { getGraphics } from './localrenderer.js';
 
-const config = readJsonSync('./config.json');
+const config = getLocalConfig();
 
 function routeEndrunRequest(done, host, callback) {
   host = host || config.endrun_host;

@@ -1,11 +1,16 @@
+// native
 import fs from 'fs';
+
+// packages
 import gulp from 'gulp';
 import jeditor from 'gulp-json-editor';
 import transform from 'gulp-transform';
 import rename from 'gulp-rename';
-import { readJsonSync } from './utils.js';
 
-const config = readJsonSync('./config.json');
+// local
+import { getLocalConfig } from './config.js';
+
+const config = getLocalConfig();
 
 export function embedLoaderHtml(cb) {
   return gulp

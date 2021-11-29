@@ -3,28 +3,29 @@ import { writeFileSync, readdirSync } from 'fs';
 import { basename, extname } from 'path';
 
 // packages
-import revAll from 'gulp-rev-all';
-import autoprefixer from 'gulp-autoprefixer';
-import webpackStream from 'webpack-stream';
-import changedInPlace from 'gulp-changed-in-place';
-import checkFileSize from 'gulp-check-filesize';
-import concat from 'gulp-concat';
 import del from 'del';
 import firstOpenPort from 'first-open-port';
 import gulp from 'gulp';
+import autoprefixer from 'gulp-autoprefixer';
+import changedInPlace from 'gulp-changed-in-place';
+import checkFileSize from 'gulp-check-filesize';
+import concat from 'gulp-concat';
+import sass from 'gulp-dart-sass';
 import gulpIf from 'gulp-if';
 import { prepend, append } from 'gulp-insert';
 import livereload, { listen } from 'gulp-livereload';
 import markdown from 'gulp-markdown';
-import mergeStream from 'merge-stream';
-import { onError } from 'gulp-notify';
-import opn from 'opn';
-import sass from 'gulp-dart-sass';
-import sort from 'gulp-sort';
 import toc from 'gulp-markdown-toc';
+import { onError } from 'gulp-notify';
+import revAll from 'gulp-rev-all';
+import sort from 'gulp-sort';
 import uglify from 'gulp-uglify';
+import mergeStream from 'merge-stream';
+import opn from 'opn';
 import urljoin from 'url-join';
+import webpackStream from 'webpack-stream';
 
+// local
 import webpackConfig from './webpack.config.js';
 import {
   ensureCredentialsTask,
@@ -65,7 +66,7 @@ import { setup as _setup, resetType } from './scripts/setup.js';
 import { downloadData } from './scripts/sheets.js';
 import { transcodeUploadedVideos } from './scripts/videos.js';
 import { deploy, deployData } from './scripts/s3.js';
-import { readJsonSync } from './scripts/utils.js';
+import { getLocalConfig } from './scripts/config.js';
 
 const { src, dest, series, parallel, watch: _watch, task } = gulp;
 
@@ -73,7 +74,7 @@ var serverPort, lrPort;
 var multiple_graphics;
 
 const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
-  readJsonSync('./config.json');
+  getLocalConfig();
 
 function startServer() {
   return firstOpenPort(3000)
