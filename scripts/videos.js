@@ -1,10 +1,15 @@
-import * as credentials from './credentials.js';
+// native
 import fs from 'fs';
+
+// packages
 import urljoin from 'url-join';
 import axios from 'axios';
-import { readJsonSync } from './utils.js';
 
-const config = readJsonSync('./config.json');
+// local
+import * as credentials from './credentials.js';
+import { getLocalConfig } from './config.js';
+
+const config = getLocalConfig();
 
 const MANIFEST_LOCATION = './video-manifest.json';
 

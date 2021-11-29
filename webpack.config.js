@@ -1,6 +1,7 @@
+// native
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

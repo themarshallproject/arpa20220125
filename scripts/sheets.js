@@ -1,11 +1,15 @@
-import * as credentials from './credentials.js';
-import { readJsonSync } from './utils.js';
-
+// native
 import fs from 'fs';
-import stringify from 'csv-stringify/lib/sync.js';
+
+// packages
+import { csvFormatRows } from 'd3-dsv';
 import { google } from 'googleapis';
 
-const config = readJsonSync('./config.json');
+// local
+import * as credentials from './credentials.js';
+import { getLocalConfig } from './config.js';
+
+const config = getLocalConfig();
 
 export function downloadData(done) {
   credentials.getGoogleClient(downloadSheet.bind(null, done));
@@ -59,7 +63,7 @@ function saveDownloadedSheet(cb, title, err, response) {
     return cb(err);
   }
   console.log('Saving ' + title);
-  const content = stringify(response.data.values);
+  const content = csvFormatRows(response.data.values);
   fs.writeFileSync(`./src/template-files/${title}.csv`, content);
   cb();
 }
