@@ -70,7 +70,7 @@ export default function server(options) {
   app.listen(port);
 
   console.log(
-    'Express server listening on port ' + port + ', livereload on ' + lrPort
+    'Dev server listening on port ' + port + ', livereload on ' + lrPort
   );
   return app;
 }
