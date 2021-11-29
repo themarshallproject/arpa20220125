@@ -38,7 +38,7 @@ function javascriptIncludeText() {
 
   if (size > 0) {
     log('JS found, adding script tag');
-    scripts = '<script src="/' + filename + '" type="text/javascript" defer></script>';
+    scripts = `<script src="/${filename}" defer></script>`;
   } else {
     log('Empty JS file found, omitting');
     scripts = '';
