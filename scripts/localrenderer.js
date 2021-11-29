@@ -1,9 +1,9 @@
-import fs from "fs";
-import marked from "marked";
-import Mustache from "mustache";
-import { readJsonSync } from "./utils.js";
+import fs from 'fs';
+import marked from 'marked';
+import Mustache from 'mustache';
+import { readJsonSync } from './utils.js';
 
-const config = readJsonSync("./config.json");
+const config = readJsonSync('./config.json');
 
 export function renderTemplate(options) {
   const renderedTemplate = renderGraphics(options);
@@ -16,13 +16,13 @@ function renderMetadata(html) {
 }
 
 function renderNavBar(html) {
-  var navBarHtml = fs.readFileSync("./post-templates/_nav-bar.html");
+  var navBarHtml = fs.readFileSync('./post-templates/_nav-bar.html');
   return html.replace(/\|NAV_BAR\|/, navBarHtml);
 }
 
 function renderFromPostData(html) {
   var postResponse = fs.readFileSync(
-    "./post-templates/custom-header-data.json"
+    './post-templates/custom-header-data.json'
   );
   var postData = JSON.parse(postResponse);
   var renderedHtml = Mustache.render(html, postData);
@@ -33,32 +33,32 @@ export function renderGraphics(options) {
   var templateName = options.template || config.local_template;
   var template = fs.readFileSync(
     `./post-templates/${templateName}.html`,
-    "utf-8"
+    'utf-8'
   );
   var multiTemplate = fs.readFileSync(
     `./post-templates/_multi-graphic.html`,
-    "utf-8"
+    'utf-8'
   );
   var localText = fs
-    .readFileSync("./post-templates/localtext.md", "utf-8")
+    .readFileSync('./post-templates/localtext.md', 'utf-8')
     .trim();
 
   var graphics = options.examples ? getExamples(options) : getGraphics(options);
-  var graphicKeys = Object.keys(graphics).filter((k) => k != "header");
-  var headerHTML = graphics["header"];
+  var graphicKeys = Object.keys(graphics).filter((k) => k != 'header');
+  var headerHTML = graphics['header'];
 
   let content;
 
   if (localText && !options.examples) {
     content = replaceGraphics(graphics, localText);
   } else {
-    content = "";
+    content = '';
     for (let i in graphicKeys) {
       const key = graphicKeys[i];
       if (i < graphicKeys.length - 1) {
         // If we have multiple graphics and it's not the last graphic in the
         // list, we want to add some lorem ipsum to space them out.
-        graphicHTML = multiTemplate.replace("|CONTENT|", graphics[key]);
+        graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
         content += graphicHTML;
       } else {
         content += graphics[key];
@@ -76,21 +76,21 @@ export function renderGraphics(options) {
   if (headerHTML) {
     // Render mustache templates using post data from Endrun.
     headerHTML = renderFromPostData(headerHTML);
-    var html = template.replace("|CONTENT|", getIncludes(options) + headerHTML);
-    html = html.replace("|GRAPHIC_CONTENT|", contentHTML);
+    var html = template.replace('|CONTENT|', getIncludes(options) + headerHTML);
+    html = html.replace('|GRAPHIC_CONTENT|', contentHTML);
   } else {
     var html = template.replace(
-      "|CONTENT|",
+      '|CONTENT|',
       getIncludes(options) + contentHTML
     );
-    html = html.replace("|GRAPHIC_CONTENT|", "");
+    html = html.replace('|GRAPHIC_CONTENT|', '');
   }
   return html;
 }
 
 function replaceGraphics(graphics, text) {
   var regex = /\[graphic .*slug=["\']?(\S+):(\S+)[\'"]?\s*.*\]/;
-  var lines = text.split("\n");
+  var lines = text.split('\n');
   return lines
     .map(function (line) {
       var groups = line.match(regex);
@@ -104,42 +104,42 @@ function replaceGraphics(graphics, text) {
       // TODO test these cases
       if (slug != config.slug) {
         return renderWarning(
-          "Found graphic slug that does not match repo slug."
+          'Found graphic slug that does not match repo slug.'
         );
       }
 
       if (graphics[key] === undefined) {
-        return renderWarning("Missing graphic with slug " + slug + ":" + key);
+        return renderWarning('Missing graphic with slug ' + slug + ':' + key);
       }
 
       return graphics[key];
     })
-    .join("\n");
+    .join('\n');
 }
 
 function renderWarning(text) {
-  return '<h1 style="color: red;">' + text + "</h1>";
+  return '<h1 style="color: red;">' + text + '</h1>';
 }
 
 export function getGraphics(options) {
-  var dirPath = (options && options.dirPath) || "./build/";
-  var files = fs.readdirSync(dirPath, "utf-8");
+  var dirPath = (options && options.dirPath) || './build/';
+  var files = fs.readdirSync(dirPath, 'utf-8');
   var graphics = {};
   var isProduction = (options && options.isProduction) || false;
 
   files.forEach(function (filename) {
     let key;
     if (filename.match(/[^_].*\.html$/)) {
-      key = filename.replace(/\.html$/, "");
-    } else if (filename == "header.mustache") {
-      key = "header";
+      key = filename.replace(/\.html$/, '');
+    } else if (filename == 'header.mustache') {
+      key = 'header';
     }
 
     if (key && isProduction) {
-      var htmlFile = require("../dist/rev-manifest.json")[filename];
-      graphics[key] = fs.readFileSync("./dist/" + htmlFile, "utf-8");
+      var htmlFile = require('../dist/rev-manifest.json')[filename];
+      graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
     } else if (key) {
-      graphics[key] = fs.readFileSync(dirPath + filename, "utf-8");
+      graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
     }
   });
 
@@ -147,15 +147,15 @@ export function getGraphics(options) {
 }
 
 function getExamples(options) {
-  var parentDirPath = "./build-examples/";
-  var dirs = fs.readdirSync(parentDirPath, "utf-8").filter((d) => {
+  var parentDirPath = './build-examples/';
+  var dirs = fs.readdirSync(parentDirPath, 'utf-8').filter((d) => {
     return fs.lstatSync(parentDirPath + d).isDirectory();
   });
   var graphics = {};
 
   dirs.forEach((dirPath) => {
     var dirOptions = options;
-    dirOptions["dirPath"] = `${parentDirPath + dirPath}/`;
+    dirOptions['dirPath'] = `${parentDirPath + dirPath}/`;
 
     var dirGraphics = getGraphics(dirOptions);
     Object.assign(graphics, dirGraphics);
@@ -165,29 +165,29 @@ function getExamples(options) {
 }
 
 export function renderReadme(options) {
-  var content = fs.readFileSync("./build/README.md", "utf8");
-  var template = fs.readFileSync("./post-templates/readme.html", "utf-8");
+  var content = fs.readFileSync('./build/README.md', 'utf8');
+  var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
   var contentHTML = marked(content);
-  var html = template.replace("|CONTENT|", getLRScript(options) + contentHTML);
+  var html = template.replace('|CONTENT|', getLRScript(options) + contentHTML);
   return html;
 }
 
 export function renderGraphicsReadme(options) {
-  var content = fs.readFileSync("./build/templates/charts/README.md", "utf8");
-  var template = fs.readFileSync("./post-templates/readme.html", "utf-8");
+  var content = fs.readFileSync('./build/templates/charts/README.md', 'utf8');
+  var template = fs.readFileSync('./post-templates/readme.html', 'utf-8');
   var contentHTML = marked(content);
-  var html = template.replace("|CONTENT|", getLRScript(options) + contentHTML);
+  var html = template.replace('|CONTENT|', getLRScript(options) + contentHTML);
   return html;
 }
 
 function getIncludes(options) {
-  const dirPath = options.examples ? "/examples" : "";
+  const dirPath = options.examples ? '/examples' : '';
   return [
     getLRScript(options),
     `<link rel='stylesheet' href='/fonts.css'>`,
     `<link rel='stylesheet' href='${dirPath}/graphic.css'>`,
     `<script src='${dirPath}/graphic.js'></script>\n`,
-  ].join("\n");
+  ].join('\n');
 }
 
 function getLRScript(options) {

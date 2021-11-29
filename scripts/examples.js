@@ -1,17 +1,17 @@
-import concat from "gulp-concat";
-import del from "del";
-import flatmap from "gulp-flatmap";
-import gulp from "gulp";
-import header from "gulp-header";
-import livereload from "gulp-livereload";
-import mergeStream from "merge-stream";
-import { onError } from "gulp-notify";
-import replace from "gulp-replace";
-import sass from "gulp-dart-sass";
-import webpackStream from "webpack-stream";
+import concat from 'gulp-concat';
+import del from 'del';
+import flatmap from 'gulp-flatmap';
+import gulp from 'gulp';
+import header from 'gulp-header';
+import livereload from 'gulp-livereload';
+import mergeStream from 'merge-stream';
+import { onError } from 'gulp-notify';
+import replace from 'gulp-replace';
+import sass from 'gulp-dart-sass';
+import webpackStream from 'webpack-stream';
 
-import { getExternalData, renderGraphicHTML } from "./externaldata.js";
-import webpackConfig from "../webpack.config.js";
+import { getExternalData, renderGraphicHTML } from './externaldata.js';
+import webpackConfig from '../webpack.config.js';
 
 const { src, dest, series, parallel } = gulp;
 
@@ -32,10 +32,10 @@ function addSlugToPaths(exampleSlug) {
 }
 
 function exampleHtml() {
-  return src("examples/*/*.html")
+  return src('examples/*/*.html')
     .pipe(getExternalData({ examples: true }))
     .pipe(renderGraphicHTML({ examples: true }))
-    .pipe(dest("build-examples"))
+    .pipe(dest('build-examples'))
     .pipe(
       flatmap(function (stream, file) {
         // Replace asset paths to use subfolders that correspond to slug for the given example
@@ -48,7 +48,7 @@ function exampleHtml() {
           .pipe(addSlugToPaths(exampleSlug))
           .pipe(
             header(
-              "<!-- Find this example at examples/${ relative } -->",
+              '<!-- Find this example at examples/${ relative } -->',
               pathData
             )
           )
@@ -59,7 +59,7 @@ function exampleHtml() {
 }
 
 function exampleStyles() {
-  return src("examples/*/graphic.scss")
+  return src('examples/*/graphic.scss')
     .pipe(
       flatmap(function (stream, file) {
         // Replace asset paths to use subfolders that correspond to slug for the given example
@@ -68,46 +68,46 @@ function exampleStyles() {
         return src(file.path)
           .pipe(
             sass({
-              includePaths: ["src/", "templates/"],
-            }).on("error", onError("SASS <%= error.formatted %>"))
+              includePaths: ['src/', 'templates/'],
+            }).on('error', onError('SASS <%= error.formatted %>'))
           )
           .pipe(addSlugToPaths(exampleSlug));
       })
     )
-    .pipe(concat("graphic.css"))
-    .pipe(dest("build-examples"))
+    .pipe(concat('graphic.css'))
+    .pipe(dest('build-examples'))
     .pipe(livereload());
 }
 
 function exampleScripts() {
   // Compile the vendor js
-  var libJs = src("examples/*/lib/*.js");
+  var libJs = src('examples/*/lib/*.js');
 
-  var graphicJs = src("examples/*/graphic.js").pipe(
+  var graphicJs = src('examples/*/graphic.js').pipe(
     flatmap(function (stream, file) {
       // Replace asset paths to use subfolders that correspond to slug for the given example
       var exampleSlug = getSlugFromExamples(file);
 
       return src(file.path)
-        .pipe(webpackStream(webpackConfig("development")))
+        .pipe(webpackStream(webpackConfig('development')))
         .pipe(addSlugToPaths(exampleSlug));
     })
   );
 
   return mergeStream(libJs, graphicJs)
-    .pipe(concat("graphic.js"))
-    .pipe(dest("build-examples"))
+    .pipe(concat('graphic.js'))
+    .pipe(dest('build-examples'))
     .pipe(livereload());
 }
 
 function exampleAssets() {
-  return src("examples/*/assets/**", { base: "examples" })
-    .pipe(dest("build-examples"))
+  return src('examples/*/assets/**', { base: 'examples' })
+    .pipe(dest('build-examples'))
     .pipe(livereload());
 }
 
 function exampleClean() {
-  return del("build-examples/**");
+  return del('build-examples/**');
 }
 
 const exampleBuild = series(

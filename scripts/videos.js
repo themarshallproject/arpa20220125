@@ -1,16 +1,16 @@
-import * as credentials from "./credentials.js";
-import fs from "fs";
-import urljoin from "url-join";
-import axios from "axios";
-import { readJsonSync } from "./utils.js";
+import * as credentials from './credentials.js';
+import fs from 'fs';
+import urljoin from 'url-join';
+import axios from 'axios';
+import { readJsonSync } from './utils.js';
 
-const config = readJsonSync("./config.json");
+const config = readJsonSync('./config.json');
 
-const MANIFEST_LOCATION = "./video-manifest.json";
+const MANIFEST_LOCATION = './video-manifest.json';
 
 function getVideoUrls() {
   const results = [];
-  fs.readdirSync("./dist/assets").forEach((file) => {
+  fs.readdirSync('./dist/assets').forEach((file) => {
     if (!file.match(/.mp4$/)) {
       return;
     }
@@ -20,12 +20,12 @@ function getVideoUrls() {
 }
 
 function getCDNUrl(filename) {
-  return urljoin(config.cdn, config.slug, "assets", filename);
+  return urljoin(config.cdn, config.slug, 'assets', filename);
 }
 
 function getTranscodingParams(url) {
   return {
-    playback_policy: "public",
+    playback_policy: 'public',
     per_title_encode: true, // https://docs.mux.com/docs/per-title-encoding
     input: url,
   };
@@ -44,7 +44,7 @@ function getManifest() {
     try {
       manifest = JSON.parse(manifestText);
     } catch (e) {
-      console.log("Error parsing video-manifest.json.");
+      console.log('Error parsing video-manifest.json.');
     }
   }
 
@@ -61,7 +61,7 @@ function transcodeAll(creds) {
   let alreadyExistingCount = 0;
 
   if (videoUrls.length == 0) {
-    console.log("No uploaded videos found.");
+    console.log('No uploaded videos found.');
     return;
   }
 
@@ -75,12 +75,12 @@ function transcodeAll(creds) {
     } else {
       return axios
         .post(
-          "https://api.mux.com/video/v1/assets",
+          'https://api.mux.com/video/v1/assets',
           getTranscodingParams(url),
           {
             auth: {
-              username: creds["gfx-mux-access"],
-              password: creds["gfx-mux-secret"],
+              username: creds['gfx-mux-access'],
+              password: creds['gfx-mux-secret'],
             },
           }
         )
@@ -101,7 +101,7 @@ function transcodeAll(creds) {
     console.log(
       "Successfully uploaded videos to Mux, they are now transcoding. This shouldn't take too long. If it fails, the video won't work. You can check for errors here:"
     );
-    console.log("\nhttps://dashboard.mux.com/activity/events");
+    console.log('\nhttps://dashboard.mux.com/activity/events');
   }
 
   return Promise.all(promises).then((outputs) => {
@@ -131,6 +131,6 @@ export function transcodeUploadedVideos() {
   return getCredentials()
     .then(transcodeAll)
     .then((output) => {
-      console.log("\n\n", JSON.stringify(output, null, 2), "\n\n");
+      console.log('\n\n', JSON.stringify(output, null, 2), '\n\n');
     });
 }

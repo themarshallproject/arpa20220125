@@ -1,5 +1,5 @@
 // native
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 
 /**
  * @param {string} path

@@ -1,18 +1,18 @@
-import fs from "fs";
-import gulp from "gulp";
-import jeditor from "gulp-json-editor";
-import transform from "gulp-transform";
-import rename from "gulp-rename";
-import { readJsonSync } from "./utils.js";
+import fs from 'fs';
+import gulp from 'gulp';
+import jeditor from 'gulp-json-editor';
+import transform from 'gulp-transform';
+import rename from 'gulp-rename';
+import { readJsonSync } from './utils.js';
 
-const config = readJsonSync("./config.json");
+const config = readJsonSync('./config.json');
 
 export function embedLoaderHtml(cb) {
   return gulp
-    .src("src/*.html")
-    .pipe(transform("utf-8", renderEmbed))
-    .pipe(rename({ prefix: "embed-" }))
-    .pipe(gulp.dest("build/embed-loaders"));
+    .src('src/*.html')
+    .pipe(transform('utf-8', renderEmbed))
+    .pipe(rename({ prefix: 'embed-' }))
+    .pipe(gulp.dest('build/embed-loaders'));
 }
 
 function renderEmbed(contents, file) {
@@ -29,13 +29,13 @@ function renderEmbed(contents, file) {
 }
 
 export function getEmbedLoaders(options) {
-  const dirPath = "./dist/embed-loaders/";
-  const files = fs.readdirSync(dirPath, "utf-8");
+  const dirPath = './dist/embed-loaders/';
+  const files = fs.readdirSync(dirPath, 'utf-8');
   const loaders = {};
 
   files.forEach(function (filename) {
-    const key = filename.replace(/embed-(.+).html/, "$1");
-    loaders[key] = fs.readFileSync(dirPath + filename, "utf-8");
+    const key = filename.replace(/embed-(.+).html/, '$1');
+    loaders[key] = fs.readFileSync(dirPath + filename, 'utf-8');
   });
 
   return loaders;
@@ -44,16 +44,16 @@ export function getEmbedLoaders(options) {
 export function setEmbedConfigFlag(done) {
   if (!config.generate_external_embeds) {
     console.log(
-      "Setting config.generate_external_embeds to true. Deploying from now on will include graphic embed code."
+      'Setting config.generate_external_embeds to true. Deploying from now on will include graphic embed code.'
     );
     return gulp
-      .src("./config.json")
+      .src('./config.json')
       .pipe(
         jeditor({
           generate_external_embeds: true,
         })
       )
-      .pipe(gulp.dest("./"));
+      .pipe(gulp.dest('./'));
   }
   done();
 }

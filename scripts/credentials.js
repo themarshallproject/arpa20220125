@@ -1,63 +1,63 @@
-import keychain from "keychain";
-import { createInterface } from "readline";
-import log, { error as _error } from "fancy-log";
-import { google } from "googleapis";
-import { platform } from "os";
-import { readFileSync, writeFileSync } from "fs";
+import keychain from 'keychain';
+import { createInterface } from 'readline';
+import log, { error as _error } from 'fancy-log';
+import { google } from 'googleapis';
+import { platform } from 'os';
+import { readFileSync, writeFileSync } from 'fs';
 
 const ENDRUN = {
-  key: "gfx-endrun",
-  name: "EndRun API key",
-  hint: "You can get your API key at https://www.themarshallproject.org/admin/api_keys. They expire after 30 days.",
+  key: 'gfx-endrun',
+  name: 'EndRun API key',
+  hint: 'You can get your API key at https://www.themarshallproject.org/admin/api_keys. They expire after 30 days.',
 };
 const ENDRUN_LOCAL = {
-  key: "gfx-endrun-local",
-  name: "Local or staging EndRun API key",
-  hint: "For use with non-default EndRun hosts, which can be specified in config.json. You can get your API key on the specified EndRun host.",
+  key: 'gfx-endrun-local',
+  name: 'Local or staging EndRun API key',
+  hint: 'For use with non-default EndRun hosts, which can be specified in config.json. You can get your API key on the specified EndRun host.',
 };
 const AWS_SECRET = {
-  key: "gfx-aws-secret",
-  name: "AWS Secret Token",
+  key: 'gfx-aws-secret',
+  name: 'AWS Secret Token',
 };
 const AWS_ACCESS = {
-  key: "gfx-aws-access",
-  name: "AWS Access token",
+  key: 'gfx-aws-access',
+  name: 'AWS Access token',
 };
 const GITHUB = {
-  key: "gfx-github",
-  name: "Github personal access token",
+  key: 'gfx-github',
+  name: 'Github personal access token',
   hint: 'You can get a personal access token at https://github.com/settings/tokens. Make sure it has at least "repo" scope.',
 };
 const GOOGLE_CLIENT = {
-  key: "gfx-google-client-secret",
-  name: "client_secret.json for google apis",
+  key: 'gfx-google-client-secret',
+  name: 'client_secret.json for google apis',
   hint: "You can retrieve this at https://console.cloud.google.com/apis/credentials?organizationId=132720938840&project=gfx-rig-1531502584775. Download the client_secret.json file for the OAuth 2 app. Copy the text of the downloaded JSON file here. (And then delete the file so it's not lying around!)",
 };
 const GOOGLE_TOKEN = {
-  key: "gfx-google-token",
-  name: "OAuth2 bearer token for google apis",
-  scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+  key: 'gfx-google-token',
+  name: 'OAuth2 bearer token for google apis',
+  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
 };
 const MUX_SECRET = {
-  key: "gfx-mux-secret",
-  name: "Mux Secret Token",
+  key: 'gfx-mux-secret',
+  name: 'Mux Secret Token',
 };
 const MUX_ACCESS = {
-  key: "gfx-mux-access",
-  name: "Mux Access token",
+  key: 'gfx-mux-access',
+  name: 'Mux Access token',
 };
 const REQUIRED_CREDS = [ENDRUN, AWS_SECRET, AWS_ACCESS, GITHUB];
 
 // In MacOS we use the system-wide keychain to store credentials. On
 // other platforms we just use a plain JSON file.
 function readCredentialsFile() {
-  const fileLocation = process.env.CREDENTIALS_PATH || "./.credentials.json";
+  const fileLocation = process.env.CREDENTIALS_PATH || './.credentials.json';
   let credentialsContents;
   let credentialsObject = {};
   try {
     credentialsContents = readFileSync(fileLocation);
   } catch (error) {
-    _error("Could not load credentials file, may not exist", error);
+    _error('Could not load credentials file, may not exist', error);
   }
   if (credentialsContents) {
     credentialsObject = JSON.parse(credentialsContents);
@@ -66,12 +66,12 @@ function readCredentialsFile() {
 }
 
 function writeCredentialsFile(credentials) {
-  const fileLocation = process.env.CREDENTIALS_PATH || "./.credentials.json";
+  const fileLocation = process.env.CREDENTIALS_PATH || './.credentials.json';
   writeFileSync(fileLocation, JSON.stringify(credentials));
 }
 
 function setPassword(options, callback) {
-  if (platform() === "darwin") {
+  if (platform() === 'darwin') {
     keychain.setPassword(options, callback);
   } else {
     const credentials = readCredentialsFile();
@@ -82,7 +82,7 @@ function setPassword(options, callback) {
 }
 
 function getPassword(options, callback) {
-  if (platform() === "darwin") {
+  if (platform() === 'darwin') {
     keychain.getPassword(options, callback);
   } else {
     const credentials = readCredentialsFile();
@@ -91,7 +91,7 @@ function getPassword(options, callback) {
 }
 
 function deletePassword(options, callback) {
-  if (platform() === "darwin") {
+  if (platform() === 'darwin') {
     keychain.deletePassword(options, callback);
   } else {
     options.password = null;
@@ -101,8 +101,8 @@ function deletePassword(options, callback) {
 
 function ensureCredential(service, cb) {
   var key = service.key;
-  getPassword({ account: "gfx", service: key }, function (err, secret) {
-    if (!secret || (err && err.code === "PasswordNotFound")) {
+  getPassword({ account: 'gfx', service: key }, function (err, secret) {
+    if (!secret || (err && err.code === 'PasswordNotFound')) {
       return resetServicePassword(service, cb);
     }
 
@@ -123,18 +123,18 @@ function resetServicePassword(service, cb) {
   });
 
   if (service.hint) {
-    log("\n\n\t" + service.hint + "\n\n");
+    log('\n\n\t' + service.hint + '\n\n');
   }
 
   rl.question(`Enter your ${service.name}: `, (answer) => {
-    setPassword({ account: "gfx", service: service.key, password: answer }, cb);
+    setPassword({ account: 'gfx', service: service.key, password: answer }, cb);
     rl.close();
   });
 }
 
 export function clearServicePasswords(cb) {
   REQUIRED_CREDS.forEach(function (service) {
-    deletePassword({ account: "gfx", service: service.key });
+    deletePassword({ account: 'gfx', service: service.key });
   });
   cb && cb();
 }
@@ -170,7 +170,7 @@ function getRequestedCredentials(requestedKeys, cb) {
   }
   requestedKeys.forEach(function (service) {
     getPassword(
-      { account: "gfx", service: service.key },
+      { account: 'gfx', service: service.key },
       function (err, password) {
         checkDone(service.key, password);
       }
@@ -226,7 +226,7 @@ export function resetGoogleClient(done) {
 }
 
 export function resetGoogleToken(done) {
-  deletePassword({ account: "gfx", service: GOOGLE_TOKEN.key });
+  deletePassword({ account: 'gfx', service: GOOGLE_TOKEN.key });
   getGoogleClient(function () {
     done();
   });
@@ -239,7 +239,7 @@ export function resetGoogleToken(done) {
 export function getGoogleClient(done) {
   ensureCredential(GOOGLE_CLIENT, function () {
     getPassword(
-      { account: "gfx", service: GOOGLE_CLIENT.key },
+      { account: 'gfx', service: GOOGLE_CLIENT.key },
       function (err, secret) {
         authorize(JSON.parse(secret), done);
       }
@@ -263,9 +263,9 @@ function authorize(credentials, callback) {
 
   // Check if we have previously stored a token.
   getPassword(
-    { account: "gfx", service: GOOGLE_TOKEN.key },
+    { account: 'gfx', service: GOOGLE_TOKEN.key },
     function (err, secret) {
-      if (secret === "" || (err && err.code === "PasswordNotFound")) {
+      if (secret === '' || (err && err.code === 'PasswordNotFound')) {
         return getNewToken(oAuth2Client, callback);
       }
       oAuth2Client.setCredentials(JSON.parse(secret));
@@ -282,21 +282,21 @@ function authorize(credentials, callback) {
  */
 function getNewToken(oAuth2Client, callback) {
   const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: "offline",
+    access_type: 'offline',
     scope: GOOGLE_TOKEN.scopes,
   });
-  console.log("Authorize this app by visiting this url:", authUrl);
+  console.log('Authorize this app by visiting this url:', authUrl);
   const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-  rl.question("Enter the code from that page here: ", (code) => {
+  rl.question('Enter the code from that page here: ', (code) => {
     rl.close();
     oAuth2Client.getToken(code, (err, token) => {
       if (err) return callback(err);
       oAuth2Client.setCredentials(token);
       setPassword({
-        account: "gfx",
+        account: 'gfx',
         service: GOOGLE_TOKEN.key,
         password: JSON.stringify(token),
       });

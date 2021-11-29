@@ -1,13 +1,13 @@
-import { readFileSync } from "fs";
-import { warn, error as _error } from "fancy-log";
-import { extname, basename } from "path";
-import glob from "glob";
-import csvParse from "csv-parse/lib/sync.js";
-import nunjucksRender from "gulp-nunjucks-render";
-import data from "gulp-data";
-import { onError } from "gulp-notify";
-import marked from "marked";
-import d3 from "d3";
+import { readFileSync } from 'fs';
+import { warn, error as _error } from 'fancy-log';
+import { extname, basename } from 'path';
+import glob from 'glob';
+import csvParse from 'csv-parse/lib/sync.js';
+import nunjucksRender from 'gulp-nunjucks-render';
+import data from 'gulp-data';
+import { onError } from 'gulp-notify';
+import marked from 'marked';
+import d3 from 'd3';
 
 const { format } = d3;
 
@@ -22,8 +22,8 @@ export function getExternalData(options) {
   var fullData = {};
   var dataPaths =
     options && options.examples
-      ? glob.sync("./examples/*/template-files/*.@(json|csv)")
-      : glob.sync("./src/template-files/*.@(json|csv)");
+      ? glob.sync('./examples/*/template-files/*.@(json|csv)')
+      : glob.sync('./src/template-files/*.@(json|csv)');
 
   for (let i in dataPaths) {
     var extName = extname(dataPaths[i]);
@@ -37,15 +37,15 @@ export function getExternalData(options) {
     }
 
     try {
-      if (extName == ".csv") {
+      if (extName == '.csv') {
         pathData = convertCSVtoJSON(fileContents);
-      } else if (extName == ".json") {
+      } else if (extName == '.json') {
         pathData = JSON.parse(fileContents);
       } else {
         warn(
-          "WARNING Skipping file",
+          'WARNING Skipping file',
           dataPaths[i],
-          "because it is neither CSV or JSON."
+          'because it is neither CSV or JSON.'
         );
       }
     } catch (e) {
@@ -67,7 +67,7 @@ function convertCSVtoJSON(fileContents) {
     relax_column_count: true,
   });
 
-  if (basicParse[0][0] == "key") {
+  if (basicParse[0][0] == 'key') {
     if (basicParse[0].length == 2) {
       // If there are only two columns, return an object of
       // key-value pairs
@@ -80,7 +80,7 @@ function convertCSVtoJSON(fileContents) {
       let keyedData = {};
 
       for (var i = 0; i < parsedFile.length; i++) {
-        keyedData[parsedFile[i]["key"]] = parsedFile[i];
+        keyedData[parsedFile[i]['key']] = parsedFile[i];
       }
 
       formattedData = keyedData;
@@ -96,20 +96,20 @@ function convertCSVtoJSON(fileContents) {
 
 export function renderGraphicHTML(options) {
   var path =
-    options && options.examples ? glob.sync("./examples/!(lib)/") : "src/";
+    options && options.examples ? glob.sync('./examples/!(lib)/') : 'src/';
 
   return nunjucksRender({
     path: path,
     manageEnv: manageNunjucksEnvironment,
-  }).on("error", onError("Nunjucks <%= error %>"));
+  }).on('error', onError('Nunjucks <%= error %>'));
 }
 
 function manageNunjucksEnvironment(environment) {
-  environment.addFilter("md", function (text) {
+  environment.addFilter('md', function (text) {
     return marked(text);
   });
 
-  environment.addFilter("format", function (text, formatString) {
+  environment.addFilter('format', function (text, formatString) {
     return format(formatString)(text);
   });
 }

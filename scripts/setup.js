@@ -2,32 +2,32 @@ import {
   ensureUpdatesRemote,
   createAndSetRepository,
   setupDefaultLabels,
-} from "./github.js";
+} from './github.js';
 
-import { createInterface } from "readline";
-import moment from "moment";
-import { writeFileSync, existsSync, copyFileSync } from "fs";
-import { basename } from "path";
-import minimist from "minimist";
-import { readJsonSync } from "./utils.js";
+import { createInterface } from 'readline';
+import moment from 'moment';
+import { writeFileSync, existsSync, copyFileSync } from 'fs';
+import { basename } from 'path';
+import minimist from 'minimist';
+import { readJsonSync } from './utils.js';
 
 var argv = minimist(process.argv.slice(2));
 
-const config = readJsonSync("./config.json");
+const config = readJsonSync('./config.json');
 const { slug: _slug, type } = config;
 
 export function setup(done) {
   // If the slug isn't equal to the default, assume the project has already been setup.
 
-  if (!argv.force && _slug !== "cecinestpasuneslug") {
+  if (!argv.force && _slug !== 'cecinestpasuneslug') {
     console.log(
-      "\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n"
+      '\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n'
     );
     return ensureUpdatesRemote(done);
   }
 
   function cleanup() {
-    console.log("All setup!");
+    console.log('All setup!');
     done();
   }
 
@@ -35,9 +35,9 @@ export function setup(done) {
     console.log(`Using slug: ${slug}`);
     _slug = slug;
     getType(function () {
-      writeFileSync("config.json", JSON.stringify(config, null, 2));
+      writeFileSync('config.json', JSON.stringify(config, null, 2));
 
-      if (type == "header") {
+      if (type == 'header') {
         handleHeaderTemplateFiles(() => handleMatchingRepo(cleanup));
       } else {
         handleMatchingRepo(cleanup);
@@ -48,7 +48,7 @@ export function setup(done) {
 
 function handleMatchingRepo(cb) {
   getBooleanInput(
-    "Do you want to create a matching Github repo?",
+    'Do you want to create a matching Github repo?',
     function (repo) {
       if (repo) {
         createAndSetRepository(() => {
@@ -62,8 +62,8 @@ function handleMatchingRepo(cb) {
 }
 
 function handleHeaderTemplateFiles(cb) {
-  const readPathMustache = "./post-templates/_dynamic-header.mustache";
-  const writePathMustache = "./src/header.mustache";
+  const readPathMustache = './post-templates/_dynamic-header.mustache';
+  const writePathMustache = './src/header.mustache';
 
   if (existsSync(writePathMustache)) {
     getBooleanInput(
@@ -73,7 +73,7 @@ function handleHeaderTemplateFiles(cb) {
           copyFileSync(readPathMustache, writePathMustache);
           console.log(`Template copied to ${writePathMustache}`);
         } else {
-          console.log("Did not copy template.");
+          console.log('Did not copy template.');
         }
 
         cb();
@@ -88,25 +88,25 @@ function handleHeaderTemplateFiles(cb) {
 
 function getType(cb) {
   getInputFromValues(
-    "\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?",
-    ["c", "b", "f", "h"],
+    '\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?',
+    ['c', 'b', 'f', 'h'],
     function (response) {
       switch (response) {
-        case "c":
-          local_template = "commentary";
-          type = "graphic";
+        case 'c':
+          local_template = 'commentary';
+          type = 'graphic';
           break;
-        case "b":
-          local_template = "post";
-          type = "graphic";
+        case 'b':
+          local_template = 'post';
+          type = 'graphic';
           break;
-        case "f":
-          local_template = "freeform";
-          type = "post";
+        case 'f':
+          local_template = 'freeform';
+          type = 'post';
           break;
-        case "h":
-          local_template = "freeform-header";
-          type = "header";
+        case 'h':
+          local_template = 'freeform-header';
+          type = 'header';
           break;
         default:
           break;
@@ -118,7 +118,7 @@ function getType(cb) {
 
 export function resetType(done) {
   getType(function () {
-    writeFileSync("config.json", JSON.stringify(config, null, 2));
+    writeFileSync('config.json', JSON.stringify(config, null, 2));
     done();
   });
 }
@@ -126,16 +126,16 @@ export function resetType(done) {
 function getSlug(cb) {
   function validator(value) {
     if (/[^\w-]/.test(value)) {
-      return "Slugs can contain only letters, numbers, dashes, and underscores.";
+      return 'Slugs can contain only letters, numbers, dashes, and underscores.';
     }
   }
 
   var currentDir = basename(process.cwd());
 
   getInput(
-    "Enter a slug, (you can leave off the date) (leave blank for: " +
+    'Enter a slug, (you can leave off the date) (leave blank for: ' +
       currentDir +
-      ")",
+      ')',
     validator,
     function (slug) {
       if (slug.trim().length === 0) {
@@ -144,9 +144,9 @@ function getSlug(cb) {
 
       slug = slug.toLowerCase().trim();
 
-      getBooleanInput("Do you want to append the date", function (date) {
+      getBooleanInput('Do you want to append the date', function (date) {
         if (date) {
-          slug += moment().format("YYYYMMDD");
+          slug += moment().format('YYYYMMDD');
         }
         cb(slug);
       });
@@ -182,7 +182,7 @@ function getInputFromValues(prompt, allowedValues, cb) {
 }
 
 function getBooleanInput(prompt, cb) {
-  getInputFromValues(prompt + " [y/n]", ["y", "n"], function (answer) {
-    cb(answer === "y");
+  getInputFromValues(prompt + ' [y/n]', ['y', 'n'], function (answer) {
+    cb(answer === 'y');
   });
 }
