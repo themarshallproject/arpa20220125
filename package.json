@@ -16,7 +16,6 @@
     "@polka/send-type": "^0.5.2",
     "axios": "^0.18.0",
     "babel-loader": "^8.2.2",
-    "csv-parse": "^4.4.6",
     "d3": "^5.9.2",
     "date-fns": "^2.26.0",
     "del": "^4.0.0",

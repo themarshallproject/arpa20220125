@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { warn, error as _error } from 'fancy-log';
 import { extname, basename } from 'path';
 import glob from 'glob';
-import csvParse from 'csv-parse/lib/sync.js';
+import { csvParse } from 'd3-dsv';
 import nunjucksRender from 'gulp-nunjucks-render';
 import data from 'gulp-data';
 import { onError } from 'gulp-notify';
@@ -61,29 +61,24 @@ export function getExternalData(options) {
 function convertCSVtoJSON(fileContents) {
   // Convert CSV file contents to JSON, with two output options
   let formattedData = {};
-  let basicParse = csvParse(fileContents, { relax_column_count: true });
-  let parsedFile = csvParse(fileContents, {
-    columns: true,
-    relax_column_count: true,
-  });
+  const parsedFile = csvParse(fileContents.toString().trim());
+  const columns = parsedFile.columns;
 
-  if (basicParse[0][0] == 'key') {
-    if (basicParse[0].length == 2) {
+  if (columns[0] === 'key') {
+    if (columns.length === 2) {
       // If there are only two columns, return an object of
       // key-value pairs
-      for (var i = 1; i < basicParse.length; i++) {
-        formattedData[basicParse[i][0]] = basicParse[i][1];
+      for (const row of parsedFile) {
+        formattedData[row[columns[0]]] = row[columns[1]];
       }
     } else {
       // If columns begin with 'key', return an object with each
       // data object accessible by key
       let keyedData = {};
 
-      for (var i = 0; i < parsedFile.length; i++) {
-        keyedData[parsedFile[i]['key']] = parsedFile[i];
+      for (const row of parsedFile) {
+        keyedData[row['key']] = row;
       }
-
-      formattedData = keyedData;
     }
   } else {
     // If not keyed, then return an array of objects
