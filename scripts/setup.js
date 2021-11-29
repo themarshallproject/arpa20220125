@@ -4,7 +4,7 @@ import { basename } from 'path';
 import { createInterface } from 'readline';
 
 // packages
-import moment from 'moment';
+import { lightFormat } from 'date-fns';
 import mri from 'mri';
 
 // local
@@ -150,7 +150,7 @@ function getSlug(cb) {
 
       getBooleanInput('Do you want to append the date', function (date) {
         if (date) {
-          slug += moment().format('YYYYMMDD');
+          slug += lightFormat(new Date(), 'yyyyMMdd');
         }
         cb(slug);
       });
