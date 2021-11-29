@@ -11,12 +11,7 @@ function setup(done) {
 
   if (!argv.force && config.slug !== 'cecinestpasuneslug') {
     console.log("\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n")
-    return github.ensureUpdatesRemote(done);
-  }
-
-  function cleanup() {
-    console.log('All setup!')
-    done();
+    return done('Setup cancelled.');
   }
 
   getSlug(function(slug) {
@@ -24,12 +19,7 @@ function setup(done) {
     config.slug = slug;
     getType(function() {
       fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-
-      if (config.type == 'header') {
-        handleHeaderTemplateFiles(() => handleMatchingRepo(cleanup))
-      } else {
-        handleMatchingRepo(cleanup);
-      }
+      done();
     });
   });
 }
@@ -49,6 +39,11 @@ function handleMatchingRepo(cb) {
 
 
 function handleHeaderTemplateFiles(cb) {
+  if (config.type !== 'header') {
+    console.log('skipping header setup.')
+    return cb();
+  }
+
   const readPathMustache = './post-templates/_dynamic-header.mustache';
   const writePathMustache = './src/header.mustache';
 
@@ -170,6 +165,8 @@ function getBooleanInput(prompt, cb) {
 
 
 module.exports = {
-  setup: setup,
-  resetType: resetType
+  handleHeaderTemplateFiles,
+  handleMatchingRepo,
+  resetType,
+  setup,
 };
