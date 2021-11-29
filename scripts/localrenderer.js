@@ -58,7 +58,7 @@ export function renderGraphics(options) {
       if (i < graphicKeys.length - 1) {
         // If we have multiple graphics and it's not the last graphic in the
         // list, we want to add some lorem ipsum to space them out.
-        graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
+        var graphicHTML = multiTemplate.replace('|CONTENT|', graphics[key]);
         content += graphicHTML;
       } else {
         content += graphics[key];

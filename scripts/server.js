@@ -1,47 +1,68 @@
-import express from 'express';
-import fs from 'fs';
+// packages
+import polka from 'polka';
+import send from '@polka/send-type';
+import sirv from 'sirv';
+
+// local
+import { getLocalConfig } from './config.js';
 import * as renderer from './localrenderer.js';
 
-export default function server(options) {
-  var app = express();
-  app.use(express.static('build'));
-  app.use('/examples', express.static('build-examples'));
-  app.use(express.static('post-templates'));
+const htmlContentType = {
+  'Content-Type': 'text/html',
+};
 
-  var config;
-  config = JSON.parse(fs.readFileSync('./config.json'), 'utf-8');
+export default function server(options) {
+  var app = polka();
+  app.use(sirv('build', { dev: true }));
+  app.use('/examples', sirv('build-examples', { dev: true }));
+  app.use(sirv('post-templates', { dev: true }));
+
+  var config = getLocalConfig();
   console.log('Config:', config);
 
   const lrPort = options.lrPort || 35729;
 
-  app.get('/', function (req, res) {
-    res.send(renderer.renderTemplate({ lrPort: lrPort }));
+  app.get('/', function (_, res) {
+    send(res, 200, renderer.renderTemplate({ lrPort: lrPort }), {
+      'Content-Type': 'text/html',
+    });
   });
 
-  app.get('/examples/', function (req, res) {
-    res.send(
+  app.get('/examples/', function (_, res) {
+    send(
+      res,
+      200,
       renderer.renderTemplate({
         lrPort: lrPort,
         examples: true,
-      })
+      }),
+      htmlContentType
     );
   });
 
-  app.get('/embeds/', function (req, res) {
-    res.send(
+  app.get('/embeds/', function (_, res) {
+    send(
+      res,
+      200,
       renderer.renderTemplate({
         lrPort: lrPort,
         template: 'embeds',
-      })
+      }),
+      htmlContentType
     );
   });
 
-  app.get('/readme/', function (req, res) {
-    res.send(renderer.renderReadme({ lrPort: lrPort }));
+  app.get('/readme/', function (_, res) {
+    send(res, 200, renderer.renderReadme({ lrPort: lrPort }), htmlContentType);
   });
 
-  app.get('/templates/charts/readme/', function (req, res) {
-    res.send(renderer.renderGraphicsReadme({ lrPort: lrPort }));
+  app.get('/templates/charts/readme/', function (_, res) {
+    send(
+      res,
+      200,
+      renderer.renderGraphicsReadme({ lrPort: lrPort }),
+      htmlContentType
+    );
   });
 
   const port = options.port || 3000;
