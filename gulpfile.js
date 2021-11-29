@@ -380,7 +380,7 @@ gulp.task('credentials:google_client', credentials.resetGoogleClient);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
-gulp.task('dependabot:disable', setup.updateDependabotSettings);
+gulp.task('dependabot:disable', github.updateDependabotSettings);
 
 // Rig updates management
 gulp.task('repo:create', github.createAndSetRepository);

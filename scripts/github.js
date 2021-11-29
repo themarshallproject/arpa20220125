@@ -175,7 +175,7 @@ function updateDependabotSettings(cb) {
   const parsedConfig = yaml.parse(dependabotConfigFile.toString());
   parsedConfig.updates.forEach((ecosystem) => {
     log(
-      `Setitng dependabot package ecosystem ${ecosystem["package-ecosystem"]} to production dependencies only`
+      `Setting dependabot package ecosystem ${ecosystem["package-ecosystem"]} to production dependencies only`
     );
     // Only allow updates to the production dependencies (none, by default)
     ecosystem.allow = [{ 'dependency-type': 'production' }];
