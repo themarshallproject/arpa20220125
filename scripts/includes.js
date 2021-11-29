@@ -29,22 +29,19 @@ function stylesheetIncludeText(options={}) {
 }
 
 
-function javascriptIncludeText(options={}) {
+function javascriptIncludeText() {
   var scripts;
   var filename = 'graphic.js';
   var filepath = './build/' + filename;
   var size = fs.statSync(filepath).size;
   log('Handling js file graphic.js ' + size + 'b minified');
 
-  if (options.forceAsync || size > config.inline_threshold) {
-    log('Large JS file found, will load asynchronously');
-    scripts = '<script src="/' + filename + '" type="text/javascript"></script>';
-  } else if (size === 0) {
+  if (size > 0) {
+    log('JS found, adding script tag');
+    scripts = `<script src="/${filename}" defer></script>`;
+  } else {
     log('Empty JS file found, omitting');
     scripts = '';
-  } else {
-    log('Small JS file found, inlining');
-    scripts = '<script type="text/javascript">' + fs.readFileSync(filepath) + '</script>';
   }
 
   return scripts + '\n';
