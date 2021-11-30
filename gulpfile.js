@@ -51,18 +51,24 @@ import {
   setEmbedConfigFlag,
 } from './scripts/external-embeds.js';
 import {
-  ensureRepoCleanAndPushed,
   createAndSetRepository,
-  setupDefaultLabels,
+  ensureRepoCleanAndPushed,
   ensureUpdatesRemote,
   pullUpdates,
+  setupDefaultLabels,
+  updateDependabotSettings,
 } from './scripts/github.js';
 import {
   stylesheetIncludeText,
   javascriptIncludeText,
 } from './scripts/includes.js';
 import server from './scripts/server.js';
-import { setup as _setup, resetType } from './scripts/setup.js';
+import {
+  handleHeaderTemplateFiles,
+  handleMatchingRepo,
+  setup,
+  resetType,
+} from './scripts/setup.js';
 import { downloadData } from './scripts/sheets.js';
 import { transcodeUploadedVideos } from './scripts/videos.js';
 import { deploy, deployData } from './scripts/s3.js';
@@ -146,10 +152,11 @@ function mustache() {
 }
 
 function productionMustache() {
-  return src('src/*.mustache')
+  return gulp
+    .src('src/*.mustache')
     .pipe(prepend(stylesheetIncludeText()))
-    .pipe(prepend(javascriptIncludeText({ forceAsync: true })))
-    .pipe(dest('build'))
+    .pipe(prepend(javascriptIncludeText()))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -368,7 +375,17 @@ var defaultTask = series(
 );
 
 // Primary interface
-task('setup', series(_setup, defaultTask));
+task(
+  'setup',
+  series(
+    setup,
+    handleHeaderTemplateFiles,
+    handleMatchingRepo,
+    ensureUpdatesRemote,
+    updateDependabotSettings,
+    defaultTask
+  )
+);
 task('default', defaultTask);
 task(
   'deploy',
@@ -413,7 +430,8 @@ task('credentials:google', resetGoogleToken);
 task('credentials:google_client', resetGoogleClient);
 
 // Configuration management
-task('reset:type', resetType);
+gulp.task('reset:type', resetType);
+gulp.task('dependabot:disable', updateDependabotSettings);
 
 // Rig updates management
 task('repo:create', createAndSetRepository);

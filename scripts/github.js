@@ -1,9 +1,11 @@
 // native
+import fs from 'fs';
 import child_process from 'child_process';
 
 // packages
 import log from 'fancy-log';
 import { Octokit } from '@octokit/rest';
+import yaml from 'yaml';
 
 // native
 import * as credentials from './credentials.js';
@@ -207,6 +209,22 @@ export function ensureRepoCleanAndPushed(done) {
   }
 
   done();
+}
+
+export function updateDependabotSettings(cb) {
+  const configLocation = './.github/dependabot.yml';
+  const dependabotConfigFile = fs.readFileSync(configLocation);
+  const parsedConfig = yaml.parse(dependabotConfigFile.toString());
+  parsedConfig.updates.forEach((ecosystem) => {
+    log(
+      `Setting dependabot package ecosystem ${ecosystem['package-ecosystem']} to production dependencies only`
+    );
+    // Only allow updates to the production dependencies (none, by default)
+    ecosystem.allow = [{ 'dependency-type': 'production' }];
+  });
+  const updatedConfigFile = yaml.stringify(parsedConfig);
+  fs.writeFileSync(configLocation, updatedConfigFile);
+  cb();
 }
 
 export function getRemoteUrl() {

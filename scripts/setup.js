@@ -9,11 +9,7 @@ import mri from 'mri';
 
 // local
 import { getLocalConfig } from './config.js';
-import {
-  ensureUpdatesRemote,
-  createAndSetRepository,
-  setupDefaultLabels,
-} from './github.js';
+import { createAndSetRepository, setupDefaultLabels } from './github.js';
 
 var argv = mri(process.argv.slice(2));
 
@@ -23,34 +19,24 @@ const { slug: _slug, type } = config;
 export function setup(done) {
   // If the slug isn't equal to the default, assume the project has already been setup.
 
-  if (!argv.force && _slug !== 'cecinestpasuneslug') {
+  if (!argv.force && config.slug !== 'cecinestpasuneslug') {
     console.log(
       '\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n'
     );
-    return ensureUpdatesRemote(done);
-  }
-
-  function cleanup() {
-    console.log('All setup!');
-    done();
+    return done('Setup cancelled.');
   }
 
   getSlug(function (slug) {
     console.log(`Using slug: ${slug}`);
-    _slug = slug;
+    config.slug = slug;
     getType(function () {
       writeFileSync('config.json', JSON.stringify(config, null, 2));
-
-      if (type == 'header') {
-        handleHeaderTemplateFiles(() => handleMatchingRepo(cleanup));
-      } else {
-        handleMatchingRepo(cleanup);
-      }
+      done();
     });
   });
 }
 
-function handleMatchingRepo(cb) {
+export function handleMatchingRepo(cb) {
   getBooleanInput(
     'Do you want to create a matching Github repo?',
     function (repo) {
@@ -65,7 +51,12 @@ function handleMatchingRepo(cb) {
   );
 }
 
-function handleHeaderTemplateFiles(cb) {
+export function handleHeaderTemplateFiles(cb) {
+  if (config.type !== 'header') {
+    console.log('skipping header setup.');
+    return cb();
+  }
+
   const readPathMustache = './post-templates/_dynamic-header.mustache';
   const writePathMustache = './src/header.mustache';
 
@@ -91,6 +82,9 @@ function handleHeaderTemplateFiles(cb) {
 }
 
 function getType(cb) {
+  var local_template;
+  var type;
+
   getInputFromValues(
     '\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?',
     ['c', 'b', 'f', 'h'],
