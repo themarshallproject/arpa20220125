@@ -3,7 +3,6 @@ import { writeFileSync, readdirSync } from 'fs';
 import { basename, extname } from 'path';
 
 // packages
-import del from 'del';
 import firstOpenPort from 'first-open-port';
 import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
@@ -22,6 +21,7 @@ import sort from 'gulp-sort';
 import uglify from 'gulp-uglify';
 import mergeStream from 'merge-stream';
 import open from 'open';
+import { premove } from 'premove';
 import urljoin from 'url-join';
 import webpackStream from 'webpack-stream';
 
@@ -335,7 +335,7 @@ function watch() {
 }
 
 function clean() {
-  return del(['dist/**', 'build/**']);
+  return Promise.all([premove('./dist'), premove('./build')]);
 }
 
 function revision() {

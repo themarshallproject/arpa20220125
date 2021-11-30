@@ -1,5 +1,4 @@
 // packages
-import del from 'del';
 import gulp from 'gulp';
 import concat from 'gulp-concat';
 import sass from 'gulp-dart-sass';
@@ -9,6 +8,7 @@ import livereload from 'gulp-livereload';
 import { onError } from 'gulp-notify';
 import replace from 'gulp-replace';
 import mergeStream from 'merge-stream';
+import { premove } from 'premove';
 import webpackStream from 'webpack-stream';
 
 // local
@@ -109,7 +109,7 @@ function exampleAssets() {
 }
 
 function exampleClean() {
-  return del('build-examples/**');
+  return premove('./build-examples');
 }
 
 const exampleBuild = series(
