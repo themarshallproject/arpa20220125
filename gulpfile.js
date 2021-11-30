@@ -152,11 +152,10 @@ function mustache() {
 }
 
 function productionMustache() {
-  return gulp
-    .src('src/*.mustache')
+  return src('src/*.mustache')
     .pipe(prepend(stylesheetIncludeText()))
     .pipe(prepend(javascriptIncludeText()))
-    .pipe(gulp.dest('build'))
+    .pipe(dest('build'))
     .pipe(livereload());
 }
 
@@ -430,8 +429,8 @@ task('credentials:google', resetGoogleToken);
 task('credentials:google_client', resetGoogleClient);
 
 // Configuration management
-gulp.task('reset:type', resetType);
-gulp.task('dependabot:disable', updateDependabotSettings);
+task('reset:type', resetType);
+task('dependabot:disable', updateDependabotSettings);
 
 // Rig updates management
 task('repo:create', createAndSetRepository);
