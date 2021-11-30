@@ -21,7 +21,6 @@ import sort from 'gulp-sort';
 import uglify from 'gulp-uglify';
 import mergeStream from 'merge-stream';
 import open from 'open';
-import { premove } from 'premove';
 import urljoin from 'url-join';
 import webpackStream from 'webpack-stream';
 
@@ -73,6 +72,7 @@ import { downloadData } from './scripts/sheets.js';
 import { transcodeUploadedVideos } from './scripts/videos.js';
 import { deploy, deployData } from './scripts/s3.js';
 import { getLocalConfig } from './scripts/config.js';
+import { cleanDir } from './scripts/utils.js';
 
 const { src, dest, series, parallel, watch: _watch, task } = gulp;
 
@@ -341,7 +341,7 @@ function watch() {
 }
 
 function clean() {
-  return Promise.all([premove('./dist'), premove('./build')]);
+  return Promise.all([cleanDir('./dist'), cleanDir('./build')]);
 }
 
 function revision() {

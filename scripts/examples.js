@@ -8,11 +8,11 @@ import livereload from 'gulp-livereload';
 import { onError } from 'gulp-notify';
 import replace from 'gulp-replace';
 import mergeStream from 'merge-stream';
-import { premove } from 'premove';
 import webpackStream from 'webpack-stream';
 
 // local
 import { getExternalData, renderGraphicHTML } from './externaldata.js';
+import { cleanDir } from './utils.js';
 import webpackConfig from '../webpack.config.js';
 
 const { src, dest, series, parallel } = gulp;
@@ -109,7 +109,7 @@ function exampleAssets() {
 }
 
 function exampleClean() {
-  return premove('./build-examples');
+  return cleanDir('./build-examples');
 }
 
 const exampleBuild = series(
