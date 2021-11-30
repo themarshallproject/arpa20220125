@@ -21,7 +21,7 @@ import revAll from 'gulp-rev-all';
 import sort from 'gulp-sort';
 import uglify from 'gulp-uglify';
 import mergeStream from 'merge-stream';
-import opn from 'opn';
+import open from 'open';
 import urljoin from 'url-join';
 import webpackStream from 'webpack-stream';
 
@@ -92,7 +92,7 @@ function startServer() {
 }
 
 function openBrowser(done) {
-  opn('http://localhost:' + serverPort);
+  open('http://localhost:' + serverPort);
   done();
 }
 
