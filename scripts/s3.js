@@ -1,3 +1,6 @@
+// native
+import { createRequire } from 'module';
+
 // packages
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
@@ -8,6 +11,7 @@ import log from 'fancy-log';
 import * as credentials from './credentials.js';
 import { getLocalConfig } from './config.js';
 
+const require = createRequire(import.meta.url);
 const config = getLocalConfig();
 
 export function deploy(done) {

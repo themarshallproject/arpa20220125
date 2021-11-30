@@ -9,6 +9,7 @@ import yaml from 'yaml';
 
 // native
 import * as credentials from './credentials.js';
+import { getLocalConfig } from './config.js';
 
 export function createRepository(name, cb) {
   credentials.ensureCredentials(function (creds) {
@@ -45,7 +46,7 @@ export function createRepository(name, cb) {
 }
 
 export function createAndSetRepository(done) {
-  var config = require('./config.json');
+  var config = getLocalConfig();
   createRepository(config.slug, function (repo) {
     log('Repo successfully created at ' + repo.html_url);
     log('Setting new repo to origin remote');
@@ -60,7 +61,7 @@ export function createAndSetRepository(done) {
 
 export function setupDefaultLabels(done) {
   log('Customizing repo issue labels...');
-  const { slug } = require('./config.json');
+  const { slug } = getLocalConfig();
 
   const labelsToRemove = [
     'bug',
