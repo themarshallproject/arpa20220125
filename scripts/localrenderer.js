@@ -142,7 +142,7 @@ export function getGraphics(options) {
     }
 
     if (key && isProduction) {
-      var htmlFile = readJsonSync('../dist/rev-manifest.json')[filename];
+      var htmlFile = readJsonSync('./dist/rev-manifest.json')[filename];
       graphics[key] = fs.readFileSync('./dist/' + htmlFile, 'utf-8');
     } else if (key) {
       graphics[key] = fs.readFileSync(dirPath + filename, 'utf-8');
