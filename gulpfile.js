@@ -26,58 +26,24 @@ import webpackStream from 'webpack-stream';
 
 // local
 import webpackConfig from './webpack.config.js';
-import {
-  ensureCredentialsTask,
-  clearServicePasswords,
-  resetEndrunKey,
-  resetEndrunLocalKey,
-  resetAWSKeys,
-  resetGithubKey,
-  resetGoogleToken,
-  resetGoogleClient,
-} from './scripts/credentials.js';
-import { getPostData, endrunDeploy } from './scripts/endrun.js';
-import {
-  styles as _styles,
-  scripts as _scripts,
-  html as _html,
-  assets as _assets,
-  build,
-} from './scripts/examples.js';
-import { getExternalData, renderGraphicHTML } from './scripts/externaldata.js';
-import {
-  embedLoaderHtml,
-  setEmbedConfigFlag,
-} from './scripts/external-embeds.js';
-import {
-  createAndSetRepository,
-  ensureRepoCleanAndPushed,
-  ensureUpdatesRemote,
-  pullUpdates,
-  setupDefaultLabels,
-  updateDependabotSettings,
-} from './scripts/github.js';
-import {
-  stylesheetIncludeText,
-  javascriptIncludeText,
-} from './scripts/includes.js';
+import * as credentials from './scripts/credentials.js';
+import * as endrun from './scripts/endrun.js';
+import * as examples from './scripts/examples.js';
+import * as externaldata from './scripts/externaldata.js';
+import * as externalEmbeds from './scripts/external-embeds.js';
+import * as github from './scripts/github.js';
+import * as includes from './scripts/includes.js';
 import server from './scripts/server.js';
-import {
-  handleHeaderTemplateFiles,
-  handleMatchingRepo,
-  setup,
-  resetType,
-} from './scripts/setup.js';
-import { downloadData } from './scripts/sheets.js';
-import { transcodeUploadedVideos } from './scripts/videos.js';
-import { deploy, deployData } from './scripts/s3.js';
+import * as setup from './scripts/setup.js';
+import * as sheets from './scripts/sheets.js';
+import * as videos from './scripts/videos.js';
+import * as s3 from './scripts/s3.js';
+
+// utils
 import { getLocalConfig } from './scripts/config.js';
 import { cleanDir } from './scripts/utils.js';
 
-const { src, dest, series, parallel, watch: _watch, task } = gulp;
-
-var serverPort, lrPort;
-var multiple_graphics;
+var serverPort, lrPort, multiple_graphics;
 
 const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
   getLocalConfig();
@@ -103,18 +69,20 @@ function openBrowser(done) {
 }
 
 function styles() {
-  return src('src/graphic.scss')
+  return gulp
+    .src('src/graphic.scss')
     .pipe(
       sass({
         includePaths: ['templates/'],
       }).on('error', onError('SASS <%= error.formatted %>'))
     )
-    .pipe(dest('build'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
 function productionStyles() {
-  return src('src/graphic.scss')
+  return gulp
+    .src('src/graphic.scss')
     .pipe(
       sass({
         outputStyle: 'compressed',
@@ -126,44 +94,48 @@ function productionStyles() {
         cascade: false,
       })
     )
-    .pipe(dest('build'));
+    .pipe(gulp.dest('build'));
 }
 
 function graphicsReadme() {
-  return src('templates/charts/README.md')
+  return gulp
+    .src('templates/charts/README.md')
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
-    .pipe(dest('templates/charts'))
-    .pipe(dest('build/templates/charts'))
+    .pipe(gulp.dest('templates/charts'))
+    .pipe(gulp.dest('build/templates/charts'))
     .pipe(livereload());
 }
 
 function readme() {
-  return src('README.md')
+  return gulp
+    .src('README.md')
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
-    .pipe(dest('.'))
-    .pipe(dest('build'))
+    .pipe(gulp.dest('.'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
 function mustache() {
-  return src('src/*.mustache').pipe(dest('build')).pipe(livereload());
+  return gulp.src('src/*.mustache').pipe(gulp.dest('build')).pipe(livereload());
 }
 
 function productionMustache() {
-  return src('src/*.mustache')
-    .pipe(prepend(stylesheetIncludeText()))
-    .pipe(prepend(javascriptIncludeText()))
-    .pipe(dest('build'))
+  return gulp
+    .src('src/*.mustache')
+    .pipe(prepend(includes.stylesheetIncludeText()))
+    .pipe(prepend(includes.javascriptIncludeText()))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
 function html() {
-  return src('src/*.html')
-    .pipe(getExternalData())
-    .pipe(renderGraphicHTML())
-    .pipe(dest('build'))
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -171,16 +143,17 @@ function productionHtml() {
   if (multiple_graphics) {
     writeFileSync(
       './build/includes.html',
-      stylesheetIncludeText() + javascriptIncludeText()
+      includes.stylesheetIncludeText() + includes.javascriptIncludeText()
     );
   }
-  return src('src/*.html')
-    .pipe(getExternalData())
-    .pipe(renderGraphicHTML())
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
     .pipe(gulpIf(local_markdown, markdown()))
-    .pipe(gulpIf(singleOrHeader, prepend(stylesheetIncludeText())))
-    .pipe(gulpIf(singleOrHeader, append(javascriptIncludeText())))
-    .pipe(dest('build'))
+    .pipe(gulpIf(singleOrHeader, prepend(includes.stylesheetIncludeText())))
+    .pipe(gulpIf(singleOrHeader, append(includes.javascriptIncludeText())))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
@@ -195,11 +168,12 @@ function singleOrHeader(file) {
 }
 
 function embedGraphicHtml() {
-  return src('src/*.html')
-    .pipe(getExternalData())
-    .pipe(renderGraphicHTML())
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
     .pipe(gulpIf(local_markdown, markdown()))
-    .pipe(dest('build/embed-contents'));
+    .pipe(gulp.dest('build/embed-contents'));
 }
 
 function checkGraphicsCount(done) {
@@ -231,22 +205,23 @@ function jsFileComparator(file1, file2) {
 function scripts() {
   if (use_es6) {
     // Compile the vendor js
-    var libJs = src('src/lib/*.js');
+    var libJs = gulp.src('src/lib/*.js');
 
-    var graphicJs = src('src/graphic.js').pipe(
-      webpackStream(webpackConfig('development'))
-    );
+    var graphicJs = gulp
+      .src('src/graphic.js')
+      .pipe(webpackStream(webpackConfig('development')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-      .pipe(dest('build'))
+      .pipe(gulp.dest('build'))
       .pipe(livereload());
   } else {
-    return src('src/*.js')
+    return gulp
+      .src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-      .pipe(dest('build'))
+      .pipe(gulp.dest('build'))
       .pipe(livereload());
   }
 }
@@ -254,38 +229,40 @@ function scripts() {
 function productionScripts() {
   if (use_es6) {
     // Compile the vendor js
-    var libJs = src('src/lib/*.js');
+    var libJs = gulp.src('src/lib/*.js');
 
-    var graphicJs = src('src/graphic.js').pipe(
-      webpackStream(webpackConfig('production'))
-    );
+    var graphicJs = gulp
+      .src('src/graphic.js')
+      .pipe(webpackStream(webpackConfig('production')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-      .pipe(dest('build'));
+      .pipe(gulp.dest('build'));
   } else {
-    return src('src/*.js')
+    return gulp
+      .src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
       .pipe(uglify())
-      .pipe(dest('build'));
+      .pipe(gulp.dest('build'));
   }
 }
 
 function assets() {
-  return src('src/assets/**', { base: 'src' })
+  return gulp
+    .src('src/assets/**', { base: 'src' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
-    .pipe(dest('build'))
+    .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
-const buildDev = series(
+const buildDev = gulp.series(
   clean,
-  parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme)
+  gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme)
 );
 
-const buildProduction = series(
+const buildProduction = gulp.series(
   clean,
   productionStyles,
   productionScripts,
@@ -295,7 +272,10 @@ const buildProduction = series(
   productionHtml
 );
 
-const buildEmbed = series(embedGraphicHtml, embedLoaderHtml);
+const buildEmbed = gulp.series(
+  embedGraphicHtml,
+  externalEmbeds.embedLoaderHtml
+);
 
 function buildEmbedIfFlagged() {
   function skipEmbed(cb) {
@@ -310,34 +290,37 @@ function buildEmbedIfFlagged() {
 }
 
 function watch() {
-  _watch(['README.md'], readme);
-  _watch(['templates/charts/README.md'], graphicsReadme);
-  _watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
-  _watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
-  _watch(['src/assets/**'], assets);
+  gulp.watch(['README.md'], readme);
+  gulp.watch(['templates/charts/README.md'], graphicsReadme);
+  gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
+  gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
+  gulp.watch(['src/assets/**'], assets);
 
   // Triggers a full refresh (html doesn't actually need to be recompiled)
-  _watch(['post-templates/**'], html);
-  _watch(['post-templates/custom-header-data.json'], mustache);
+  gulp.watch(['post-templates/**'], html);
+  gulp.watch(['post-templates/custom-header-data.json'], mustache);
 
   // Examples
-  _watch(
+  gulp.watch(
     [
       'examples/*.scss',
       'examples/*/*.scss',
       'templates/charts/stylesheets/*.scss',
     ],
-    _styles
+    examples.styles
   );
-  _watch(
+  gulp.watch(
     ['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'],
-    _scripts
+    examples.scripts
   );
-  _watch(['examples/*/*.html', 'examples/*/template-files/*'], _html);
-  _watch(['examples/*/assets/**'], _assets);
+  gulp.watch(
+    ['examples/*/*.html', 'examples/*/template-files/*'],
+    examples.html
+  );
+  gulp.watch(['examples/*/assets/**'], examples.assets);
 
-  _watch(['src/*.mustache'], mustache);
-  return _watch(['src/*.html', 'src/template-files'], html);
+  gulp.watch(['src/*.mustache'], mustache);
+  return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
 function clean() {
@@ -345,7 +328,8 @@ function clean() {
 }
 
 function revision() {
-  return src('build/**', { base: 'build' })
+  return gulp
+    .src('build/**', { base: 'build' })
     .pipe(
       revAll.revision({
         transformPath: (rev, source, file) => {
@@ -358,82 +342,88 @@ function revision() {
         includeFilesInManifest: ['.html', '.mustache', '.js', '.css'],
       })
     )
-    .pipe(dest('dist'))
+    .pipe(gulp.dest('dist'))
     .pipe(revAll.manifestFile())
-    .pipe(dest('dist'));
+    .pipe(gulp.dest('dist'));
 }
 
-var defaultTask = series(
+var defaultTask = gulp.series(
   clean,
   startServer,
-  getPostData,
+  endrun.getPostData,
   buildDev,
-  build,
+  examples.build,
   openBrowser,
   watch
 );
 
 // Primary interface
-task(
+gulp.task(
   'setup',
-  series(
-    setup,
-    handleHeaderTemplateFiles,
-    handleMatchingRepo,
-    ensureUpdatesRemote,
-    updateDependabotSettings,
+  gulp.series(
+    setup.setup,
+    setup.handleHeaderTemplateFiles,
+    setup.handleMatchingRepo,
+    github.ensureUpdatesRemote,
+    github.updateDependabotSettings,
     defaultTask
   )
 );
-task('default', defaultTask);
-task(
+gulp.task('default', defaultTask);
+gulp.task(
   'deploy',
-  series(
-    ensureRepoCleanAndPushed,
+  gulp.series(
+    github.ensureRepoCleanAndPushed,
     buildProduction,
     buildEmbedIfFlagged(),
     revision,
-    deploy,
-    endrunDeploy,
+    s3.deploy,
+    endrun.endrunDeploy,
     buildDev
   )
 );
 
 // Asset tasks
-task('sass:production', productionStyles);
-task('scripts:production', productionScripts);
-task('html:production', productionHtml);
-task('clean', clean);
-task('build:production', buildProduction);
-task('build:embed', series(buildProduction, setEmbedConfigFlag, buildEmbed));
-task('revision', revision);
-task('sheets:download', downloadData);
-task('videos:transcode', transcodeUploadedVideos);
-task('posts:download', getPostData);
+gulp.task('sass:production', productionStyles);
+gulp.task('scripts:production', productionScripts);
+gulp.task('html:production', productionHtml);
+gulp.task('clean', clean);
+gulp.task('build:production', buildProduction);
+gulp.task(
+  'build:embed',
+  gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed)
+);
+gulp.task('revision', revision);
+gulp.task('sheets:download', sheets.downloadData);
+gulp.task('videos:transcode', videos.transcodeUploadedVideos);
+gulp.task('posts:download', endrun.getPostData);
 
 // Deployment
-task('deploy:endrun', endrunDeploy);
-task('deploy:s3', series(buildProduction, revision, deploy, buildDev));
+gulp.task('deploy:endrun', endrun.endrunDeploy);
+gulp.task(
+  'deploy:s3',
+  gulp.series(buildProduction, revision, s3.deploy, buildDev)
+);
 
-task('deploy:s3:raw', deploy);
-task('deploy:data', deployData);
+gulp.task('deploy:s3:raw', s3.deploy);
+gulp.task('deploy:data', s3.deployData);
 
 // Credential management
-task('credentials', ensureCredentialsTask);
-task('credentials:clear', clearServicePasswords);
-task('credentials:endrun', resetEndrunKey);
-task('credentials:endrun_local', resetEndrunLocalKey);
-task('credentials:aws', resetAWSKeys);
-task('credentials:github', resetGithubKey);
-task('credentials:google', resetGoogleToken);
-task('credentials:google_client', resetGoogleClient);
+gulp.task('credentials', credentials.ensureCredentialsTask);
+gulp.task('credentials:clear', credentials.clearServicePasswords);
+gulp.task('credentials:endrun', credentials.resetEndrunKey);
+gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
+gulp.task('credentials:aws', credentials.resetAWSKeys);
+gulp.task('credentials:github', credentials.resetGithubKey);
+gulp.task('credentials:google', credentials.resetGoogleToken);
+gulp.task('credentials:google_client', credentials.resetGoogleClient);
 
 // Configuration management
-task('reset:type', resetType);
-task('dependabot:disable', updateDependabotSettings);
+gulp.task('reset:type', setup.resetType);
+gulp.task('dependabot:disable', github.updateDependabotSettings);
 
 // Rig updates management
-task('repo:create', createAndSetRepository);
-task('repo:labels', setupDefaultLabels);
-task('remote:add', ensureUpdatesRemote);
-task('update', pullUpdates);
+gulp.task('repo:create', github.createAndSetRepository);
+gulp.task('repo:labels', github.setupDefaultLabels);
+gulp.task('remote:add', github.ensureUpdatesRemote);
+gulp.task('update', github.pullUpdates);
