@@ -1,55 +1,56 @@
-const github = require('./github.js');
-const config = require('../config.json');
-const readline = require('readline');
-const moment = require('moment');
-const fs = require('fs');
-const path = require('path');
-var argv = require('minimist')(process.argv.slice(2));
+// native
+import { writeFileSync, existsSync, copyFileSync } from 'fs';
+import { basename } from 'path';
+import { createInterface } from 'readline';
 
-function setup(done) {
+// packages
+import { lightFormat } from 'date-fns';
+import mri from 'mri';
+
+// local
+import { getLocalConfig } from './config.js';
+import { createAndSetRepository, setupDefaultLabels } from './github.js';
+
+var argv = mri(process.argv.slice(2));
+
+const config = getLocalConfig();
+const { slug: _slug, type } = config;
+
+export function setup(done) {
   // If the slug isn't equal to the default, assume the project has already been setup.
 
   if (!argv.force && config.slug !== 'cecinestpasuneslug') {
-    console.log("\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n")
-    return github.ensureUpdatesRemote(done);
+    console.log(
+      '\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n'
+    );
+    return done('Setup cancelled.');
   }
 
-  function cleanup() {
-    console.log('All setup!')
-    done();
-  }
-
-  getSlug(function(slug) {
-    console.log(`Using slug: ${slug}`)
+  getSlug(function (slug) {
+    console.log(`Using slug: ${slug}`);
     config.slug = slug;
-    getType(function() {
-      fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-
-      if (config.type == 'header') {
-        handleHeaderTemplateFiles(() => handleMatchingRepo(cleanup))
-      } else {
-        handleMatchingRepo(cleanup);
-      }
+    getType(function () {
+      writeFileSync('config.json', JSON.stringify(config, null, 2));
+      done();
     });
   });
 }
 
-
-function handleMatchingRepo(cb) {
+export function handleMatchingRepo(cb) {
   getBooleanInput(
-    "Do you want to create a matching Github repo?",
+    'Do you want to create a matching Github repo?',
     function (repo) {
       if (repo) {
-        github.createAndSetRepository(() => {
+        createAndSetRepository(() => {
           getBooleanInput(
-            "Do you want to automatically create GitHub issues for this project? This will give you a headstart on tracking what needs to be done.",
+            'Do you want to automatically create GitHub issues for this project? This will give you a headstart on tracking what needs to be done.',
             (yes) => {
               if (yes) {
-                github.setupDefaultLabels(() => {
-                  github.createDefaultIssues(cb);
+                setupDefaultLabels(() => {
+                  createDefaultIssues(cb);
                 });
               } else {
-                github.setupDefaultLabels(cb);
+                setupDefaultLabels(cb);
               }
             }
           );
@@ -61,101 +62,116 @@ function handleMatchingRepo(cb) {
   );
 }
 
+export function handleHeaderTemplateFiles(cb) {
+  if (config.type !== 'header') {
+    console.log('skipping header setup.');
+    return cb();
+  }
 
-function handleHeaderTemplateFiles(cb) {
   const readPathMustache = './post-templates/_dynamic-header.mustache';
   const writePathMustache = './src/header.mustache';
 
-  if (fs.existsSync(writePathMustache)) {
-    getBooleanInput(`Do you want to overwrite the existing ${ writePathMustache } file?`, (overwrite) => {
-      if (overwrite) {
-        fs.copyFileSync(readPathMustache, writePathMustache);
-        console.log(`Template copied to ${ writePathMustache }`)
-      } else {
-        console.log('Did not copy template.');
-      }
+  if (existsSync(writePathMustache)) {
+    getBooleanInput(
+      `Do you want to overwrite the existing ${writePathMustache} file?`,
+      (overwrite) => {
+        if (overwrite) {
+          copyFileSync(readPathMustache, writePathMustache);
+          console.log(`Template copied to ${writePathMustache}`);
+        } else {
+          console.log('Did not copy template.');
+        }
 
-      cb();
-    });
+        cb();
+      }
+    );
   } else {
-    fs.copyFileSync(readPathMustache, writePathMustache);
-    console.log(`Header template file copied to ${ writePathMustache }`)
+    copyFileSync(readPathMustache, writePathMustache);
+    console.log(`Header template file copied to ${writePathMustache}`);
     cb();
   }
 }
 
-
 function getType(cb) {
+  var local_template;
+  var type;
 
-  getInputFromValues('\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?', ['c', 'b', 'f', 'h'], function(response) {
-    switch(response) {
-      case 'c':
-        config.local_template = 'commentary';
-        config.type = 'graphic';
-        break;
-      case 'b':
-        config.local_template = 'post';
-        config.type = 'graphic';
-        break;
-      case 'f':
-        config.local_template = 'freeform';
-        config.type = 'post';
-        break;
-      case 'h':
-        config.local_template = 'freeform-header';
-        config.type = 'header';
-        break;
-      default:
-        break;
+  getInputFromValues(
+    '\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?',
+    ['c', 'b', 'f', 'h'],
+    function (response) {
+      switch (response) {
+        case 'c':
+          local_template = 'commentary';
+          type = 'graphic';
+          break;
+        case 'b':
+          local_template = 'post';
+          type = 'graphic';
+          break;
+        case 'f':
+          local_template = 'freeform';
+          type = 'post';
+          break;
+        case 'h':
+          local_template = 'freeform-header';
+          type = 'header';
+          break;
+        default:
+          break;
+      }
+      cb();
     }
-    cb();
-  });
+  );
 }
 
-
-function resetType(done) {
-  getType(function() {
-    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+export function resetType(done) {
+  getType(function () {
+    writeFileSync('config.json', JSON.stringify(config, null, 2));
     done();
   });
 }
 
-
 function getSlug(cb) {
   function validator(value) {
     if (/[^\w-]/.test(value)) {
-      return "Slugs can contain only letters, numbers, dashes, and underscores.";
+      return 'Slugs can contain only letters, numbers, dashes, and underscores.';
     }
   }
 
-  var currentDir = path.basename(process.cwd());
+  var currentDir = basename(process.cwd());
 
-  getInput("Enter a slug, (you can leave off the date) (leave blank for: " + currentDir + ")", validator, function(slug) {
-    if (slug.trim().length === 0) {
-      slug = currentDir;
-    }
-
-    slug = slug.toLowerCase().trim();
-
-    getBooleanInput("Do you want to append the date", function(date) {
-      if (date) {
-        slug += moment().format('YYYYMMDD');
+  getInput(
+    'Enter a slug, (you can leave off the date) (leave blank for: ' +
+      currentDir +
+      ')',
+    validator,
+    function (slug) {
+      if (slug.trim().length === 0) {
+        slug = currentDir;
       }
-      cb(slug);
-    });
-  });
+
+      slug = slug.toLowerCase().trim();
+
+      getBooleanInput('Do you want to append the date', function (date) {
+        if (date) {
+          slug += lightFormat(new Date(), 'yyyyMMdd');
+        }
+        cb(slug);
+      });
+    }
+  );
 }
 
-
 function getInput(prompt, validator, cb) {
-  const rl = readline.createInterface({
+  const rl = createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
-  rl.question(`${prompt}: ` , (answer) => {
+  rl.question(`${prompt}: `, (answer) => {
     rl.close();
-    answere = answer.trim();
+    answer = answer.trim();
     var error = validator(answer);
     if (error) {
       console.log(error);
@@ -164,7 +180,6 @@ function getInput(prompt, validator, cb) {
     cb(answer);
   });
 }
-
 
 function getInputFromValues(prompt, allowedValues, cb) {
   function validator(value) {
@@ -175,15 +190,8 @@ function getInputFromValues(prompt, allowedValues, cb) {
   getInput(prompt, validator, cb);
 }
 
-
 function getBooleanInput(prompt, cb) {
-  getInputFromValues(prompt + ' [y/n]', ['y', 'n'], function(answer) {
+  getInputFromValues(prompt + ' [y/n]', ['y', 'n'], function (answer) {
     cb(answer === 'y');
   });
 }
-
-
-module.exports = {
-  setup: setup,
-  resetType: resetType
-};

@@ -1,14 +1,19 @@
-const path = require('path');
+// native
+import path from 'path';
+import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
+
+const require = createRequire(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const babelPreset = {
   loader: 'babel-loader',
   options: {
-    presets: ['@babel/preset-env']
-  }
+    presets: ['@babel/preset-env'],
+  },
 };
 
-
-function getConfig(env) {
+export default function getConfig(env) {
   const config = {
     output: {
       path: __dirname + '/build',
@@ -21,17 +26,14 @@ function getConfig(env) {
       },
       extensions: ['.mjs', '.js', '.svelte'],
       mainFields: ['svelte', 'browser', 'module', 'main'],
-      modules: [
-        path.resolve(__dirname, 'templates'),
-        'node_modules'
-      ],
+      modules: [path.resolve(__dirname, 'templates'), 'node_modules'],
     },
     module: {
       rules: [
         // transpile js
         {
           test: /\.js$/,
-          use: babelPreset
+          use: babelPreset,
         },
         // transpile js svelte helpers
         {
@@ -48,33 +50,30 @@ function getConfig(env) {
               options: {
                 hotReload: false,
                 compilerOptions: {
-                  dev: env === 'development' ? true : false
-                }
-              }
-            }
-          ]
+                  dev: env === 'development' ? true : false,
+                },
+              },
+            },
+          ],
         },
         {
           // required to prevent errors from Svelte on Webpack 5+
           test: /node_modules\/svelte\/.*\.mjs$/,
           resolve: {
-            fullySpecified: false
-          }
-        }
-      ]
+            fullySpecified: false,
+          },
+        },
+      ],
     },
     mode: env,
-    devtool: env === 'production' ? false : 'inline-source-map'
-  }
+    devtool: env === 'production' ? false : 'inline-source-map',
+  };
 
   if (env === 'production') {
     config.optimization = {
-      minimize: true
-    }
+      minimize: true,
+    };
   }
 
   return config;
 }
-
-
-module.exports = getConfig;

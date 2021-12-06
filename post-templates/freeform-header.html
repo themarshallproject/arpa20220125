@@ -256,7 +256,7 @@ window.TMPDisableErrorTracking = true;
 <div class="lights-out"></div>
 
 <script>
-$(window).load(function() {
+$(window).on('load', function() {
   window.requestAnimationFrame(function() {
     $.getScript("https://assets.documentcloud.org/note_embed/note_embed.js");
     $.getScript("https://platform.twitter.com/widgets.js");
@@ -265,7 +265,6 @@ $(window).load(function() {
 });
 </script>
 
-<script type="text/javascript" src="https://dw9zmd5y2p1va.cloudfront.net/current/assets/app.js"></script>
 <script type="text/javascript" src="https://dw9zmd5y2p1va.cloudfront.net/current/packs/runtime.js"></script>
 <script type="text/javascript" src="https://dw9zmd5y2p1va.cloudfront.net/current/packs/app.js"></script>
 
