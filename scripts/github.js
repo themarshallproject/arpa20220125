@@ -7,7 +7,7 @@ import log from 'fancy-log';
 import { Octokit } from '@octokit/rest';
 import yaml from 'yaml';
 
-// native
+// local
 import * as credentials from './credentials.js';
 import { getLocalConfig } from './config.js';
 
