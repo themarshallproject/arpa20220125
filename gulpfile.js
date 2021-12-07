@@ -1,98 +1,105 @@
-var RevAll = require('gulp-rev-all');
-var autoprefixer = require('gulp-autoprefixer');
-var webpackStream = require('webpack-stream');
-var changedInPlace = require('gulp-changed-in-place');
-var checkFileSize = require('gulp-check-filesize');
-var concat = require('gulp-concat');
-var del = require('del');
-var firstOpenPort = require('first-open-port');
-var fs = require('fs');
-var gulp = require('gulp');
-var gulpIf = require('gulp-if');
-var insert = require('gulp-insert');
-var livereload = require('gulp-livereload');
-var log = require('fancy-log');
-var markdown = require('gulp-markdown');
-var mergeStream = require('merge-stream');
-var notify = require('gulp-notify');
-var opn = require('opn');
-var path = require('path');
-var request = require('request');
-var sass = require('gulp-dart-sass');
-var sort = require('gulp-sort');
-var sourcemaps = require('gulp-sourcemaps');
-var toc = require('gulp-markdown-toc');
-var uglify = require('gulp-uglify');
-var urljoin = require('url-join');
+// native
+import { writeFileSync, readdirSync } from 'fs';
+import { basename, extname } from 'path';
 
-var config = require('./config.json');
-var webpackConfig = require('./webpack.config.js');
-var credentials = require('./scripts/credentials.js');
-var endrun = require('./scripts/endrun.js');
-var examples = require('./scripts/examples.js');
-var externalData = require('./scripts/externaldata.js');
-var externalEmbeds = require('./scripts/external-embeds.js');
-var getGraphics = require('./scripts/localrenderer.js').getGraphics;
-var github = require('./scripts/github.js');
-var includes = require('./scripts/includes.js');
-var server = require('./scripts/server.js');
-var setup = require('./scripts/setup.js');
-var sheets = require('./scripts/sheets.js');
-var videos = require('./scripts/videos.js');
-var s3 = require('./scripts/s3.js');
+// packages
+import firstOpenPort from 'first-open-port';
+import gulp from 'gulp';
+import autoprefixer from 'gulp-autoprefixer';
+import changedInPlace from 'gulp-changed-in-place';
+import checkFileSize from 'gulp-check-filesize';
+import concat from 'gulp-concat';
+import sass from 'gulp-dart-sass';
+import gulpIf from 'gulp-if';
+import { prepend, append } from 'gulp-insert';
+import livereload, { listen } from 'gulp-livereload';
+import markdown from 'gulp-markdown';
+import toc from 'gulp-markdown-toc';
+import { onError } from 'gulp-notify';
+import revAll from 'gulp-rev-all';
+import sort from 'gulp-sort';
+import uglify from 'gulp-uglify';
+import mergeStream from 'merge-stream';
+import open from 'open';
+import urljoin from 'url-join';
+import webpackStream from 'webpack-stream';
 
-var serverPort, lrPort;
-var multiple_graphics;
+// local
+import webpackConfig from './webpack.config.js';
+import * as credentials from './scripts/credentials.js';
+import * as endrun from './scripts/endrun.js';
+import * as examples from './scripts/examples.js';
+import * as externaldata from './scripts/externaldata.js';
+import * as externalEmbeds from './scripts/external-embeds.js';
+import * as github from './scripts/github.js';
+import * as includes from './scripts/includes.js';
+import server from './scripts/server.js';
+import * as setup from './scripts/setup.js';
+import * as sheets from './scripts/sheets.js';
+import * as videos from './scripts/videos.js';
+import * as s3 from './scripts/s3.js';
+
+// utils
+import { getLocalConfig } from './scripts/config.js';
+import { cleanDir } from './scripts/utils.js';
+
+var serverPort, lrPort, multiple_graphics;
+
+const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
+  getLocalConfig();
 
 function startServer() {
-  return firstOpenPort(3000).then(function(port) {
-    serverPort = port;
-    return firstOpenPort(35729);
-  }).then(function(port) {
-    lrPort = port;
-  }).then(function() {
-    var app = server({ port: serverPort, lrPort: lrPort });
-    livereload.listen({ port: lrPort });
-  });
+  return firstOpenPort(3000)
+    .then(function (port) {
+      serverPort = port;
+      return firstOpenPort(35729);
+    })
+    .then(function (port) {
+      lrPort = port;
+    })
+    .then(function () {
+      server({ port: serverPort, lrPort: lrPort });
+      listen({ port: lrPort });
+    });
 }
 
-
 function openBrowser(done) {
-  opn('http://localhost:' + serverPort);
+  open('http://localhost:' + serverPort);
   done();
 }
 
-
 function styles() {
-  return gulp.src('src/graphic.scss')
-    .pipe(sass({
-      includePaths: [
-        'templates/'
-      ]
-    })
-      .on('error', notify.onError("SASS <%= error.formatted %>")))
+  return gulp
+    .src('src/graphic.scss')
+    .pipe(
+      sass({
+        includePaths: ['templates/'],
+      }).on('error', onError('SASS <%= error.formatted %>'))
+    )
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
-
 function productionStyles() {
-  return gulp.src('src/graphic.scss')
-    .pipe(sass({
-      outputStyle: 'compressed',
-      includePaths: [
-        'templates/'
-      ]
-    }).on('error', sass.logError))
-    .pipe(autoprefixer({
-      cascade: false
-    }))
+  return gulp
+    .src('src/graphic.scss')
+    .pipe(
+      sass({
+        outputStyle: 'compressed',
+        includePaths: ['templates/'],
+      }).on('error', sass.logError)
+    )
+    .pipe(
+      autoprefixer({
+        cascade: false,
+      })
+    )
     .pipe(gulp.dest('build'));
 }
 
-
 function graphicsReadme() {
-  return gulp.src('templates/charts/README.md')
+  return gulp
+    .src('templates/charts/README.md')
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
     .pipe(gulp.dest('templates/charts'))
@@ -100,9 +107,9 @@ function graphicsReadme() {
     .pipe(livereload());
 }
 
-
 function readme() {
-  return gulp.src('README.md')
+  return gulp
+    .src('README.md')
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
     .pipe(gulp.dest('.'))
@@ -110,54 +117,48 @@ function readme() {
     .pipe(livereload());
 }
 
-
 function mustache() {
-  return gulp.src('src/*.mustache')
-    .pipe(gulp.dest('build'))
-    .pipe(livereload());
+  return gulp.src('src/*.mustache').pipe(gulp.dest('build')).pipe(livereload());
 }
-
 
 function productionMustache() {
-  return gulp.src('src/*.mustache')
-    .pipe(insert.prepend(includes.stylesheetIncludeText()))
-    .pipe(insert.prepend(includes.javascriptIncludeText()))
+  return gulp
+    .src('src/*.mustache')
+    .pipe(prepend(includes.stylesheetIncludeText()))
+    .pipe(prepend(includes.javascriptIncludeText()))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
-
 
 function html() {
-  return gulp.src('src/*.html')
-    .pipe(externalData.getExternalData())
-    .pipe(externalData.renderGraphicHTML())
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
-
 
 function productionHtml() {
   if (multiple_graphics) {
-    fs.writeFileSync('./build/includes.html',
-      includes.stylesheetIncludeText() + includes.javascriptIncludeText())
+    writeFileSync(
+      './build/includes.html',
+      includes.stylesheetIncludeText() + includes.javascriptIncludeText()
+    );
   }
-  return gulp.src('src/*.html')
-    .pipe(externalData.getExternalData())
-    .pipe(externalData.renderGraphicHTML())
-    .pipe(gulpIf(config.local_markdown, markdown()))
-    .pipe(
-      gulpIf(singleOrHeader,
-        insert.prepend(includes.stylesheetIncludeText())))
-    .pipe(
-      gulpIf(singleOrHeader,
-        insert.append(includes.javascriptIncludeText())))
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
+    .pipe(gulpIf(local_markdown, markdown()))
+    .pipe(gulpIf(singleOrHeader, prepend(includes.stylesheetIncludeText())))
+    .pipe(gulpIf(singleOrHeader, append(includes.javascriptIncludeText())))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
-
 function singleOrHeader(file) {
-  if (path.basename(file.path, path.extname(file.path)) == 'header') {
+  if (basename(file.path, extname(file.path)) == 'header') {
     return true;
   }
   if (!multiple_graphics) {
@@ -166,21 +167,20 @@ function singleOrHeader(file) {
   return false;
 }
 
-
 function embedGraphicHtml() {
-  return gulp.src('src/*.html')
-    .pipe(externalData.getExternalData())
-    .pipe(externalData.renderGraphicHTML())
-    .pipe(gulpIf(config.local_markdown, markdown()))
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
+    .pipe(gulpIf(local_markdown, markdown()))
     .pipe(gulp.dest('build/embed-contents'));
 }
 
-
 function checkGraphicsCount(done) {
-  const files = fs.readdirSync('./src/', 'utf-8');
+  const files = readdirSync('./src/', 'utf-8');
   let fileCount = 0;
 
-  files.forEach(function(filename) {
+  files.forEach(function (filename) {
     if (filename.match(/[^_].*\.html$/) || filename == 'header.mustache') {
       fileCount++;
     }
@@ -190,10 +190,9 @@ function checkGraphicsCount(done) {
   done();
 }
 
-
 function jsFileComparator(file1, file2) {
-  var name1 = path.basename(file1.path);
-  var name2 = path.basename(file2.path);
+  var name1 = basename(file1.path);
+  var name2 = basename(file2.path);
   if (name1 === 'graphic.js') {
     return 1;
   } else if (name2 === 'graphic.js') {
@@ -203,13 +202,13 @@ function jsFileComparator(file1, file2) {
   return 0;
 }
 
-
 function scripts() {
-  if (config.use_es6) {
+  if (use_es6) {
     // Compile the vendor js
     var libJs = gulp.src('src/lib/*.js');
 
-    var graphicJs = gulp.src('src/graphic.js')
+    var graphicJs = gulp
+      .src('src/graphic.js')
       .pipe(webpackStream(webpackConfig('development')));
 
     return mergeStream(libJs, graphicJs)
@@ -218,7 +217,8 @@ function scripts() {
       .pipe(gulp.dest('build'))
       .pipe(livereload());
   } else {
-    return gulp.src('src/*.js')
+    return gulp
+      .src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
       .pipe(gulp.dest('build'))
@@ -226,21 +226,22 @@ function scripts() {
   }
 }
 
-
 function productionScripts() {
-  if (config.use_es6) {
+  if (use_es6) {
     // Compile the vendor js
     var libJs = gulp.src('src/lib/*.js');
 
-    var graphicJs = gulp.src('src/graphic.js')
+    var graphicJs = gulp
+      .src('src/graphic.js')
       .pipe(webpackStream(webpackConfig('production')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-      .pipe(gulp.dest('build'))
+      .pipe(gulp.dest('build'));
   } else {
-    return gulp.src('src/*.js')
+    return gulp
+      .src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
       .pipe(uglify())
@@ -248,31 +249,45 @@ function productionScripts() {
   }
 }
 
-
 function assets() {
-  return gulp.src('src/assets/**', { base: 'src' })
+  return gulp
+    .src('src/assets/**', { base: 'src' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
+const buildDev = gulp.series(
+  clean,
+  gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme)
+);
 
-const buildDev = gulp.series(clean, gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme));
+const buildProduction = gulp.series(
+  clean,
+  productionStyles,
+  productionScripts,
+  assets,
+  checkGraphicsCount,
+  productionMustache,
+  productionHtml
+);
 
-const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, checkGraphicsCount, productionMustache, productionHtml);
-
-const buildEmbed = gulp.series(embedGraphicHtml, externalEmbeds.embedLoaderHtml);
+const buildEmbed = gulp.series(
+  embedGraphicHtml,
+  externalEmbeds.embedLoaderHtml
+);
 
 function buildEmbedIfFlagged() {
-  function skipEmbed(cb) { cb(); }
+  function skipEmbed(cb) {
+    cb();
+  }
 
-  if (config.generate_external_embeds) {
+  if (generate_external_embeds) {
     return buildEmbed;
   } else {
     return skipEmbed;
   }
 }
-
 
 function watch() {
   gulp.watch(['README.md'], readme);
@@ -286,40 +301,61 @@ function watch() {
   gulp.watch(['post-templates/custom-header-data.json'], mustache);
 
   // Examples
-  gulp.watch(['examples/*.scss', 'examples/*/*.scss', 'templates/charts/stylesheets/*.scss'], examples.styles);
-  gulp.watch(['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'], examples.scripts);
-  gulp.watch(['examples/*/*.html', 'examples/*/template-files/*'], examples.html);
+  gulp.watch(
+    [
+      'examples/*.scss',
+      'examples/*/*.scss',
+      'templates/charts/stylesheets/*.scss',
+    ],
+    examples.styles
+  );
+  gulp.watch(
+    ['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'],
+    examples.scripts
+  );
+  gulp.watch(
+    ['examples/*/*.html', 'examples/*/template-files/*'],
+    examples.html
+  );
   gulp.watch(['examples/*/assets/**'], examples.assets);
 
   gulp.watch(['src/*.mustache'], mustache);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
-
 function clean() {
-  return del(['dist/**', 'build/**']);
+  return Promise.all([cleanDir('./dist'), cleanDir('./build')]);
 }
 
-
 function revision() {
-  return gulp.src('build/**', { base: 'build' })
-    .pipe(RevAll.revision({
-      transformPath: (rev, source, file) => {
-        return urljoin(config.cdn, config.slug, rev);
-      },
-      dontGlobal: [/.*\/embed-loaders\/*/],
-      // If you want an unversioned file. Careful deploying with this, the
-      // cache times are long.
-      // dontRenameFile: [/.*.csv/],
-      includeFilesInManifest: ['.html', '.mustache', '.js', '.css']
-    }))
+  return gulp
+    .src('build/**', { base: 'build' })
+    .pipe(
+      revAll.revision({
+        transformPath: (rev, source, file) => {
+          return urljoin(cdn, slug, rev);
+        },
+        dontGlobal: [/.*\/embed-loaders\/*/],
+        // If you want an unversioned file. Careful deploying with this, the
+        // cache times are long.
+        // dontRenameFile: [/.*.csv/],
+        includeFilesInManifest: ['.html', '.mustache', '.js', '.css'],
+      })
+    )
     .pipe(gulp.dest('dist'))
-    .pipe(RevAll.manifestFile())
+    .pipe(revAll.manifestFile())
     .pipe(gulp.dest('dist'));
 }
 
-
-var defaultTask = gulp.series(clean, startServer, endrun.getPostData, buildDev, examples.build, openBrowser, watch);
+var defaultTask = gulp.series(
+  clean,
+  startServer,
+  endrun.getPostData,
+  buildDev,
+  examples.build,
+  openBrowser,
+  watch
+);
 
 // Primary interface
 gulp.task(
@@ -334,15 +370,18 @@ gulp.task(
   )
 );
 gulp.task('default', defaultTask);
-gulp.task('deploy', gulp.series(
-  github.ensureRepoCleanAndPushed,
-  buildProduction,
-  buildEmbedIfFlagged(),
-  revision,
-  s3.deploy,
-  endrun.endrunDeploy,
-  buildDev
-));
+gulp.task(
+  'deploy',
+  gulp.series(
+    github.ensureRepoCleanAndPushed,
+    buildProduction,
+    buildEmbedIfFlagged(),
+    revision,
+    s3.deploy,
+    endrun.endrunDeploy,
+    buildDev
+  )
+);
 
 // Asset tasks
 gulp.task('sass:production', productionStyles);
@@ -350,20 +389,21 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
-gulp.task('build:embed', gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed));
+gulp.task(
+  'build:embed',
+  gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed)
+);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
-gulp.task('videos:transcode', videos.transcodeUploadedVideos)
-gulp.task('posts:download', endrun.getPostData)
+gulp.task('videos:transcode', videos.transcodeUploadedVideos);
+gulp.task('posts:download', endrun.getPostData);
 
 // Deployment
 gulp.task('deploy:endrun', endrun.endrunDeploy);
-gulp.task('deploy:s3', gulp.series(
-  buildProduction,
-  revision,
-  s3.deploy,
-  buildDev
-));
+gulp.task(
+  'deploy:s3',
+  gulp.series(buildProduction, revision, s3.deploy, buildDev)
+);
 
 gulp.task('deploy:s3:raw', s3.deploy);
 gulp.task('deploy:data', s3.deployData);

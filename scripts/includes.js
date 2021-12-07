@@ -1,10 +1,15 @@
-var fs = require('fs');
-const log = require('fancy-log');
+// native
+import fs from 'fs';
 
-var config = require('../config.json');
+// packages
+import log from 'fancy-log';
 
+// local
+import { getLocalConfig } from './config.js';
 
-function stylesheetIncludeText(options={}) {
+const config = getLocalConfig();
+
+export function stylesheetIncludeText(options = {}) {
   var stylesheets;
   var filename = 'graphic.css';
   var filepath = './build/' + filename;
@@ -12,7 +17,7 @@ function stylesheetIncludeText(options={}) {
   log('Handling css file ', filename, size + 'b minified');
 
   if (config.type === 'header') {
-    log('Inlining CSS for freeform header')
+    log('Inlining CSS for freeform header');
     stylesheets = '<style>' + fs.readFileSync(filepath) + '</style>';
   } else if (options.forceAsync || size > config.inline_threshold) {
     log('Large CSS file found, will load asynchronously');
@@ -28,8 +33,7 @@ function stylesheetIncludeText(options={}) {
   return stylesheets + '\n';
 }
 
-
-function javascriptIncludeText() {
+export function javascriptIncludeText() {
   var scripts;
   var filename = 'graphic.js';
   var filepath = './build/' + filename;
@@ -45,10 +49,4 @@ function javascriptIncludeText() {
   }
 
   return scripts + '\n';
-}
-
-
-module.exports = {
-  stylesheetIncludeText,
-  javascriptIncludeText,
 }
