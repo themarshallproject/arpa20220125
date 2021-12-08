@@ -2,7 +2,7 @@
 import fs from 'fs';
 
 // packages
-import marked from 'marked';
+import { marked } from 'marked';
 import Mustache from 'mustache';
 
 // local
