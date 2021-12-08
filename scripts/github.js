@@ -10,6 +10,7 @@ import yaml from 'yaml';
 // local
 import * as credentials from './credentials.js';
 import { getLocalConfig } from './config.js';
+import { readJsonSync } from './utils.js';
 
 export function createRepository(name, cb) {
   credentials.ensureCredentials(function (creds) {
@@ -46,7 +47,7 @@ export function createRepository(name, cb) {
 }
 
 function createAndSetRepository(done) {
-  var config = require('../config.json');
+  var config = getLocalConfig();
   createRepository(config.slug, function (repo) {
     log('Repo successfully created at ' + repo.html_url);
     log('Setting new repo to origin remote');
@@ -61,7 +62,7 @@ function createAndSetRepository(done) {
 
 function setupDefaultLabels(done) {
   log('Removing default labels');
-  var config = require('../config.json');
+  var config = getLocalConfig();
 
   credentials.ensureCredentials(function (creds) {
     const repoConfig = {
@@ -304,8 +305,8 @@ export function updateDependabotSettings(cb) {
 }
 
 export function createDefaultIssues(done) {
-  const { slug } = require('../config.json');
-  const issues = require('./issues.json');
+  const { slug } = getLocalConfig();
+  const issues = readJsonSync('./scripts/issues.json');
 
   credentials.ensureCredentials(async (creds) => {
     const client = new Octokit({
