@@ -3,7 +3,7 @@ import fs from 'fs';
 
 // packages
 import { csvFormatRows } from 'd3-dsv';
-import { google } from 'googleapis';
+import google from '@googleapis/sheets';
 
 // local
 import * as credentials from './credentials.js';
