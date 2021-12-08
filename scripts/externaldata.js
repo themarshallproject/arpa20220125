@@ -10,7 +10,7 @@ import glob from 'glob';
 import data from 'gulp-data';
 import { onError } from 'gulp-notify';
 import nunjucksRender from 'gulp-nunjucks-render';
-import marked from 'marked';
+import { marked } from 'marked';
 
 function printDataFilenameError(baseFilename, dataFilePath) {
   const dataError = new Error(
