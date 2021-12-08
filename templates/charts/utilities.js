@@ -65,3 +65,16 @@ export function wrapText(text, width, lineHeight=1.1) {
     }
   });
 }
+
+export function abbrevMonth(text) {
+  return text == "January" ? "Jan."
+    : text == "February" ? "Feb."
+    : text == "March" ? "Mar."
+    : text == "April" ? "Apr."
+    : text == "August" ? "Aug."
+    : text == "September" ? "Sept."
+    : text == "October" ? "Oct."
+    : text == "November" ? "Nov."
+    : text == "December" ? "Dec."
+    : text
+}

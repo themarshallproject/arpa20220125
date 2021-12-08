@@ -1,0 +1,133 @@
+@import "palette";
+@import "charts/stylesheets/graphic-with-axes.scss";
+@import "charts/stylesheets/graphic-labels.scss";
+
+// SINGLE SET OF BARS OR LINES WITH HIGHLIGHT
+.fs-line-chart {
+  .line-chart-path {
+    fill: none;
+    stroke-width: 2px;
+    // This does not look good :(
+    shape-rendering: geometricPrecision;
+  }
+
+  path {
+    &.violent_per_100k {
+      stroke: $fill-green;
+    }
+
+    &.property_crime_per_100k {
+      stroke: $fill-green;
+    }
+  }
+}
+
+// SMALL MULTIPLES, TWO-ACROSS
+.fs-chart-one-container {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 740px) {
+    flex-wrap: wrap;
+  }
+
+  .x {
+    line {
+      stroke-width: 1px;
+    }
+
+    .tick {
+      text {
+        display: none;
+      }
+    }
+
+    .tick:nth-child(10n+2) {
+      text {
+        display: block;
+      }
+    }
+  }
+}
+
+.fs-chart-one {
+  width: 49%;
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .line-subhed {
+    @include acumin;
+    font-weight: 600;
+    margin-left: 45px;
+    margin-top: 5px;
+    font-size: 14px;
+    position: absolute;
+    line-height: 1.3em;
+
+    @media screen and (max-width: 600px) {
+      font-size: 12px;
+      margin-left: 45px;
+    }
+  }
+}
+
+.fs-one-annotation {
+  stroke: $light-gray;
+  stroke-width: 1.5px;
+}
+
+.fs-chart-two-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .tooltip-circle {
+    display: none;
+  }
+}
+
+// SMALL MULTIPLES, FOUR-ACROSS
+.fs-chart-two {
+  width: 25%;
+
+  @media screen and (max-width: 740px) {
+    width: 49%;
+    margin-bottom: 10px;
+
+    .y {
+      .tick:nth-child(even) {
+        display: none;
+      }
+    }
+  }
+
+  .line-subhed {
+    @include acumin;
+    font-weight: 600;
+    margin-left: 35px;
+    margin-top: 5px;
+    font-size: 14px;
+    position: absolute;
+    color: $dark-gray;
+
+    @media screen and (max-width: 600px) {
+      font-size: 12px;
+      margin-left: 34px;
+    }
+  }
+
+
+  // SMALL MULTIPLES
+  path {
+    &.murder_per_100k, &.aggravated_assault_per_100k, &.robbery_per_100k {
+      stroke: $fill-purple;
+    }
+
+    &.rape_per_100k {
+      stroke: $fill-purple;
+    }
+  }
+}

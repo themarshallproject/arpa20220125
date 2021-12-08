@@ -1,95 +1,105 @@
-var RevAll = require('gulp-rev-all');
-var autoprefixer = require('gulp-autoprefixer');
-var babel = require('gulp-babel');
-var babelify = require('babelify');
-var bro = require('gulp-bro');
-var changedInPlace = require('gulp-changed-in-place');
-var checkFileSize = require('gulp-check-filesize');
-var concat = require('gulp-concat');
-var del = require('del');
-var firstOpenPort = require('first-open-port');
-var fs = require('fs');
-var gulp = require('gulp');
-var gulpIf = require('gulp-if');
-var gzip = require('gulp-gzip');
-var insert = require('gulp-insert');
-var livereload = require('gulp-livereload');
-var log = require('fancy-log');
-var markdown = require('gulp-markdown');
-var mergeStream = require('merge-stream');
-var notify = require('gulp-notify');
-var opn = require('opn');
-var path = require('path');
-var request = require('request');
-var sass = require('gulp-sass');
-var sort = require('gulp-sort');
-var sourcemaps = require('gulp-sourcemaps');
-var toc = require('gulp-markdown-toc');
-var uglify = require('gulp-uglify');
-var urljoin = require('url-join');
+// native
+import { writeFileSync, readdirSync } from 'fs';
+import { basename, extname } from 'path';
 
-var config = require('./config.json');
-var credentials = require('./scripts/credentials.js');
-var externalData = require('./scripts/externaldata.js');
-var getGraphics = require('./scripts/localrenderer.js').getGraphics;
-var github = require('./scripts/github.js');
-var includes = require('./scripts/includes.js');
-var server = require('./scripts/server.js');
-var setup = require('./scripts/setup.js');
-var sheets = require('./scripts/sheets.js');
-var videos = require('./scripts/videos.js');
+// packages
+import firstOpenPort from 'first-open-port';
+import gulp from 'gulp';
+import autoprefixer from 'gulp-autoprefixer';
+import changedInPlace from 'gulp-changed-in-place';
+import checkFileSize from 'gulp-check-filesize';
+import concat from 'gulp-concat';
+import sass from 'gulp-dart-sass';
+import gulpIf from 'gulp-if';
+import { prepend, append } from 'gulp-insert';
+import livereload, { listen } from 'gulp-livereload';
+import markdown from 'gulp-markdown';
+import toc from 'gulp-markdown-toc';
+import { onError } from 'gulp-notify';
+import revAll from 'gulp-rev-all';
+import sort from 'gulp-sort';
+import uglify from 'gulp-uglify';
+import mergeStream from 'merge-stream';
+import open from 'open';
+import urljoin from 'url-join';
+import webpackStream from 'webpack-stream';
 
-var serverPort, lrPort;
+// local
+import webpackConfig from './webpack.config.js';
+import * as credentials from './scripts/credentials.js';
+import * as endrun from './scripts/endrun.js';
+import * as examples from './scripts/examples.js';
+import * as externaldata from './scripts/externaldata.js';
+import * as externalEmbeds from './scripts/external-embeds.js';
+import * as github from './scripts/github.js';
+import * as includes from './scripts/includes.js';
+import server from './scripts/server.js';
+import * as setup from './scripts/setup.js';
+import * as sheets from './scripts/sheets.js';
+import * as videos from './scripts/videos.js';
+import * as s3 from './scripts/s3.js';
+
+// utils
+import { getLocalConfig } from './scripts/config.js';
+import { cleanDir } from './scripts/utils.js';
+
+var serverPort, lrPort, multiple_graphics;
+
+const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
+  getLocalConfig();
 
 function startServer() {
-  return firstOpenPort(3000).then(function(port) {
-    serverPort = port;
-    return firstOpenPort(35729);
-  }).then(function(port) {
-    lrPort = port;
-  }).then(function() {
-    var app = server({ port: serverPort, lrPort: lrPort });
-    livereload.listen({ port: lrPort });
-  });
+  return firstOpenPort(3000)
+    .then(function (port) {
+      serverPort = port;
+      return firstOpenPort(35729);
+    })
+    .then(function (port) {
+      lrPort = port;
+    })
+    .then(function () {
+      server({ port: serverPort, lrPort: lrPort });
+      listen({ port: lrPort });
+    });
 }
 
-
 function openBrowser(done) {
-  opn('http://localhost:' + serverPort);
+  open('http://localhost:' + serverPort);
   done();
 }
 
-
 function styles() {
-  return gulp.src('src/graphic.scss')
-    .pipe(sass({
-      includePaths: [
-        'templates/'
-      ]
-    })
-      .on('error', notify.onError("SASS <%= error.formatted %>")))
+  return gulp
+    .src('src/graphic.scss')
+    .pipe(
+      sass({
+        includePaths: ['templates/'],
+      }).on('error', onError('SASS <%= error.formatted %>'))
+    )
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
-
 function productionStyles() {
-  return gulp.src('src/graphic.scss')
-    .pipe(sass({
-      outputStyle: 'compressed',
-      includePaths: [
-        'templates/'
-      ]
-    }).on('error', sass.logError))
-    .pipe(autoprefixer({
-      cascade: false
-    }))
+  return gulp
+    .src('src/graphic.scss')
+    .pipe(
+      sass({
+        outputStyle: 'compressed',
+        includePaths: ['templates/'],
+      }).on('error', sass.logError)
+    )
+    .pipe(
+      autoprefixer({
+        cascade: false,
+      })
+    )
     .pipe(gulp.dest('build'));
 }
 
-
 function graphicsReadme() {
-  return gulp.src('templates/charts/README.md')
+  return gulp
+    .src('templates/charts/README.md')
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
     .pipe(gulp.dest('templates/charts'))
@@ -97,9 +107,9 @@ function graphicsReadme() {
     .pipe(livereload());
 }
 
-
 function readme() {
-  return gulp.src('README.md')
+  return gulp
+    .src('README.md')
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(toc())
     .pipe(gulp.dest('.'))
@@ -107,50 +117,82 @@ function readme() {
     .pipe(livereload());
 }
 
+function mustache() {
+  return gulp.src('src/*.mustache').pipe(gulp.dest('build')).pipe(livereload());
+}
+
+function productionMustache() {
+  return gulp
+    .src('src/*.mustache')
+    .pipe(prepend(includes.stylesheetIncludeText()))
+    .pipe(prepend(includes.javascriptIncludeText()))
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
+}
 
 function html() {
-  return gulp.src('src/*.html')
-    .pipe(externalData.getExternalData())
-    .pipe(externalData.renderGraphicHTML())
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
-
 
 function productionHtml() {
-  if (config.multiple_graphics) {
-    fs.writeFileSync('./build/includes.html',
-      includes.stylesheetIncludeText() + includes.javascriptIncludeText())
+  if (multiple_graphics) {
+    writeFileSync(
+      './build/includes.html',
+      includes.stylesheetIncludeText() + includes.javascriptIncludeText()
+    );
   }
-  return gulp.src('src/*.html')
-    .pipe(externalData.getExternalData())
-    .pipe(externalData.renderGraphicHTML())
-    .pipe(gulpIf(config.local_markdown, markdown()))
-    .pipe(
-      gulpIf(singleOrHeader,
-        insert.prepend(includes.stylesheetIncludeText())))
-    .pipe(
-      gulpIf(singleOrHeader,
-        insert.append(includes.javascriptIncludeText())))
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
+    .pipe(gulpIf(local_markdown, markdown()))
+    .pipe(gulpIf(singleOrHeader, prepend(includes.stylesheetIncludeText())))
+    .pipe(gulpIf(singleOrHeader, append(includes.javascriptIncludeText())))
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
-
 function singleOrHeader(file) {
-  if (!config.multiple_graphics) {
+  if (basename(file.path, extname(file.path)) == 'header') {
     return true;
   }
-  if (path.basename(file.path) === 'header.html') {
+  if (!multiple_graphics) {
     return true;
   }
   return false;
 }
 
+function embedGraphicHtml() {
+  return gulp
+    .src('src/*.html')
+    .pipe(externaldata.getExternalData())
+    .pipe(externaldata.renderGraphicHTML())
+    .pipe(gulpIf(local_markdown, markdown()))
+    .pipe(gulp.dest('build/embed-contents'));
+}
+
+function checkGraphicsCount(done) {
+  const files = readdirSync('./src/', 'utf-8');
+  let fileCount = 0;
+
+  files.forEach(function (filename) {
+    if (filename.match(/[^_].*\.html$/) || filename == 'header.mustache') {
+      fileCount++;
+    }
+  });
+
+  multiple_graphics = fileCount > 1;
+  done();
+}
 
 function jsFileComparator(file1, file2) {
-  var name1 = path.basename(file1.path);
-  var name2 = path.basename(file2.path);
+  var name1 = basename(file1.path);
+  var name2 = basename(file2.path);
   if (name1 === 'graphic.js') {
     return 1;
   } else if (name2 === 'graphic.js') {
@@ -160,21 +202,14 @@ function jsFileComparator(file1, file2) {
   return 0;
 }
 
-
 function scripts() {
-  if (config.use_es6) {
+  if (use_es6) {
     // Compile the vendor js
     var libJs = gulp.src('src/lib/*.js');
 
-    var graphicJs = gulp.src('src/graphic.js')
-      .pipe(bro({
-        paths: [
-          '../templates'
-        ],
-        transform: [
-          babelify.configure({ presets: ['@babel/preset-env'] })
-        ]
-      }));
+    var graphicJs = gulp
+      .src('src/graphic.js')
+      .pipe(webpackStream(webpackConfig('development')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
@@ -182,7 +217,8 @@ function scripts() {
       .pipe(gulp.dest('build'))
       .pipe(livereload());
   } else {
-    return gulp.src('src/*.js')
+    return gulp
+      .src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
       .pipe(gulp.dest('build'))
@@ -190,29 +226,22 @@ function scripts() {
   }
 }
 
-
 function productionScripts() {
-  if (config.use_es6) {
+  if (use_es6) {
     // Compile the vendor js
     var libJs = gulp.src('src/lib/*.js');
 
-    var graphicJs = gulp.src('src/graphic.js')
-      .pipe(bro({
-        paths: [
-          '../templates'
-        ],
-        transform: [
-          babelify.configure({ presets: ['@babel/preset-env'] })
-        ]
-      }));
+    var graphicJs = gulp
+      .src('src/graphic.js')
+      .pipe(webpackStream(webpackConfig('production')));
 
     return mergeStream(libJs, graphicJs)
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest('build'))
+      .pipe(gulp.dest('build'));
   } else {
-    return gulp.src('src/*.js')
+    return gulp
+      .src('src/*.js')
       .pipe(sort(jsFileComparator))
       .pipe(concat('graphic.js'))
       .pipe(uglify())
@@ -220,19 +249,45 @@ function productionScripts() {
   }
 }
 
-
 function assets() {
-  return gulp.src('src/assets/**', { base: 'src' })
+  return gulp
+    .src('src/assets/**', { base: 'src' })
     .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
 
+const buildDev = gulp.series(
+  clean,
+  gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme)
+);
 
-const buildDev = gulp.series(clean, gulp.parallel(html, styles, scripts, assets, readme, graphicsReadme));
+const buildProduction = gulp.series(
+  clean,
+  productionStyles,
+  productionScripts,
+  assets,
+  checkGraphicsCount,
+  productionMustache,
+  productionHtml
+);
 
-const buildProduction = gulp.series(clean, productionStyles, productionScripts, assets, productionHtml);
+const buildEmbed = gulp.series(
+  embedGraphicHtml,
+  externalEmbeds.embedLoaderHtml
+);
 
+function buildEmbedIfFlagged() {
+  function skipEmbed(cb) {
+    cb();
+  }
+
+  if (generate_external_embeds) {
+    return buildEmbed;
+  } else {
+    return skipEmbed;
+  }
+}
 
 function watch() {
   gulp.watch(['README.md'], readme);
@@ -240,121 +295,93 @@ function watch() {
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
   gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
+
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
+  gulp.watch(['post-templates/custom-header-data.json'], mustache);
+
+  // Examples
+  gulp.watch(
+    [
+      'examples/*.scss',
+      'examples/*/*.scss',
+      'templates/charts/stylesheets/*.scss',
+    ],
+    examples.styles
+  );
+  gulp.watch(
+    ['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'],
+    examples.scripts
+  );
+  gulp.watch(
+    ['examples/*/*.html', 'examples/*/template-files/*'],
+    examples.html
+  );
+  gulp.watch(['examples/*/assets/**'], examples.assets);
+
+  gulp.watch(['src/*.mustache'], mustache);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
 }
 
-
 function clean() {
-  return del(['dist/**', 'build/**']);
+  return Promise.all([cleanDir('./dist'), cleanDir('./build')]);
 }
 
-
 function revision() {
-  return gulp.src('build/**')
-    .pipe(RevAll.revision({
-      transformPath: (rev, source, file) => {
-        return urljoin(config.cdn, config.slug, rev);
-      },
-      includeFilesInManifest: ['.html', '.js', '.css']
-    }))
+  return gulp
+    .src('build/**', { base: 'build' })
+    .pipe(
+      revAll.revision({
+        transformPath: (rev, source, file) => {
+          return urljoin(cdn, slug, rev);
+        },
+        dontGlobal: [/.*\/embed-loaders\/*/],
+        // If you want an unversioned file. Careful deploying with this, the
+        // cache times are long.
+        // dontRenameFile: [/.*.csv/],
+        includeFilesInManifest: ['.html', '.mustache', '.js', '.css'],
+      })
+    )
     .pipe(gulp.dest('dist'))
-    .pipe(RevAll.manifestFile())
+    .pipe(revAll.manifestFile())
     .pipe(gulp.dest('dist'));
 }
 
+var defaultTask = gulp.series(
+  clean,
+  startServer,
+  endrun.getPostData,
+  buildDev,
+  examples.build,
+  openBrowser,
+  watch
+);
 
-function endrunDeploy(done, host) {
-  credentials.ensureCredentials(function(creds) {
-    host = host || config.endrun_host;
-    var endpoint = "/admin/api/v2/deploy-gfx";
-    var body = {
-      token: creds['gfx-endrun'],
-      type: config.type,
-      slug: config.slug,
-      repo: github.getRemoteUrl()
-    }
-
-    if (config.multiple_graphics) {
-      body['contents'] = getGraphics({ isProduction: true });
-    } else {
-      var htmlFile = require('./dist/rev-manifest.json')['graphic.html'];
-      body['html'] = fs.readFileSync(path.join('dist', htmlFile)).toString();
-    }
-
-    request.post({
-      url: host + endpoint,
-      json: true,
-      body: body
-    }, function(error, response, body) {
-      if (error) {
-        log.error(error);
-      }
-
-      if (response.statusCode === 403) {
-        log('Your API key is invalid! You can get a new one at https://themarshallproject.org/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:endrun\n\n');
-      }
-
-      if (response && response.statusCode !== 200) {
-        log.error(response.statusCode + ': ' + body.error);
-        done(body.error);
-      }
-
-      log(body)
-
-      done();
-    });
-  });
-}
-
-
-function S3Deploy(done) {
-  credentials.ensureCredentials(function(creds) {
-    var s3 = require('gulp-s3-upload')({
-      accessKeyId: creds['gfx-aws-access'],
-      secretAccessKey: creds['gfx-aws-secret']
-    });
-    gulp.src('dist/**', { base: 'dist' })
-      .pipe(
-        gulpIf(
-          (file) => { return !file.path.match(/\.mp4$/) },
-          gzip({ append: false })))
-      .pipe(s3({
-        bucket: config.bucket,
-        ACL: 'public-read',
-        CacheControl: 'max-age=2592000', // One month
-        keyTransform: function(filename) {
-          var key = config.slug + '/' + filename;
-          console.log(config.cdn + '/' + key);
-          return key;
-        },
-        maps: {
-          ContentEncoding: (keyname) => {
-            if (keyname.match(/\.mp4$/)) {
-              console.log('Skipping gzip for mp4');
-              return null;
-            }
-            return 'gzip';
-          }
-        }
-      })).on('end', done);
-  });
-}
-
-var defaultTask = gulp.series(clean, startServer, buildDev, openBrowser, watch);
-
-// Public interface
-gulp.task('setup', gulp.series(setup.setup, defaultTask));
+// Primary interface
+gulp.task(
+  'setup',
+  gulp.series(
+    setup.setup,
+    setup.handleHeaderTemplateFiles,
+    setup.handleMatchingRepo,
+    github.ensureUpdatesRemote,
+    github.updateDependabotSettings,
+    defaultTask
+  )
+);
 gulp.task('default', defaultTask);
-gulp.task('deploy', gulp.series(
-  github.ensureRepoCleanAndPushed,
-  buildProduction,
-  revision,
-  S3Deploy,
-  endrunDeploy,
-  buildDev
-));
+gulp.task(
+  'deploy',
+  gulp.series(
+    github.ensureRepoCleanAndPushed,
+    buildProduction,
+    buildEmbedIfFlagged(),
+    revision,
+    s3.deploy,
+    endrun.endrunDeploy,
+    buildDev
+  )
+);
 
 // Asset tasks
 gulp.task('sass:production', productionStyles);
@@ -362,27 +389,42 @@ gulp.task('scripts:production', productionScripts);
 gulp.task('html:production', productionHtml);
 gulp.task('clean', clean);
 gulp.task('build:production', buildProduction);
+gulp.task(
+  'build:embed',
+  gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed)
+);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
-gulp.task('videos:transcode', videos.transcodeUploadedVideos)
+gulp.task('videos:transcode', videos.transcodeUploadedVideos);
+gulp.task('posts:download', endrun.getPostData);
 
 // Deployment
-gulp.task('deploy:endrun', endrunDeploy);
-gulp.task('deploy:s3', S3Deploy);
+gulp.task('deploy:endrun', endrun.endrunDeploy);
+gulp.task(
+  'deploy:s3',
+  gulp.series(buildProduction, revision, s3.deploy, buildDev)
+);
+
+gulp.task('deploy:s3:raw', s3.deploy);
+gulp.task('deploy:data', s3.deployData);
 
 // Credential management
 gulp.task('credentials', credentials.ensureCredentialsTask);
 gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
+gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 gulp.task('credentials:github', credentials.resetGithubKey);
-gulp.task('credentials:google', credentials.resetGoogleKeys);
+gulp.task('credentials:google', credentials.resetGoogleToken);
+gulp.task('credentials:google_client', credentials.resetGoogleClient);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
+gulp.task('dependabot:disable', github.updateDependabotSettings);
 
 // Rig updates management
 gulp.task('repo:create', github.createAndSetRepository);
 gulp.task('repo:labels', github.setupDefaultLabels);
+gulp.task('repo:issues', github.createDefaultIssues);
 gulp.task('remote:add', github.ensureUpdatesRemote);
 gulp.task('update', github.pullUpdates);

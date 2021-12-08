@@ -1,35 +1,76 @@
-var express = require('express');
-var fs = require('fs');
-var renderer = require('./localrenderer.js');
+// packages
+import polka from 'polka';
+import send from '@polka/send-type';
+import sirv from 'sirv';
 
-module.exports = function(options) {
-  var app = express();
-  app.use(express.static('build'));
-  app.use(express.static('post-templates'));
+// local
+import { getLocalConfig } from './config.js';
+import * as renderer from './localrenderer.js';
 
-  var config;
-  config = JSON.parse(fs.readFileSync('./config.json'), 'utf-8');
+const htmlContentType = {
+  'Content-Type': 'text/html',
+};
+
+export default function server(options) {
+  var app = polka();
+  app.use(sirv('build', { dev: true }));
+  app.use('/examples', sirv('build-examples', { dev: true }));
+  app.use(sirv('post-templates', { dev: true }));
+
+  var config = getLocalConfig();
   console.log('Config:', config);
 
-  var lrPort = options.lrPort || 35729;
+  const lrPort = options.lrPort || 35729;
 
-  app.get('/', function(req, res) {
-    res.send(renderer.renderTemplate({ lrPort: lrPort }));
+  app.get('/', function (_, res) {
+    send(res, 200, renderer.renderTemplate({ lrPort: lrPort }), {
+      'Content-Type': 'text/html',
+    });
   });
 
-  app.get('/readme/', function(req, res) {
-    res.send(renderer.renderReadme({ lrPort: lrPort }))
+  app.get('/examples/', function (_, res) {
+    send(
+      res,
+      200,
+      renderer.renderTemplate({
+        lrPort: lrPort,
+        examples: true,
+      }),
+      htmlContentType
+    );
   });
 
-  app.get('/templates/charts/readme/', function(req, res) {
-    res.send(renderer.renderGraphicsReadme({ lrPort: lrPort }))
+  app.get('/embeds/', function (_, res) {
+    send(
+      res,
+      200,
+      renderer.renderTemplate({
+        lrPort: lrPort,
+        template: 'embeds',
+      }),
+      htmlContentType
+    );
   });
 
-  port = options.port || 3000;
+  app.get('/readme/', function (_, res) {
+    send(res, 200, renderer.renderReadme({ lrPort: lrPort }), htmlContentType);
+  });
+
+  app.get('/templates/charts/readme/', function (_, res) {
+    send(
+      res,
+      200,
+      renderer.renderGraphicsReadme({ lrPort: lrPort }),
+      htmlContentType
+    );
+  });
+
+  const port = options.port || 3000;
 
   app.listen(port);
 
-  console.log('Express server listening on port ' + port + ', livereload on ' + lrPort);
+  console.log(
+    'Dev server listening on port ' + port + ', livereload on ' + lrPort
+  );
   return app;
-};
-
+}

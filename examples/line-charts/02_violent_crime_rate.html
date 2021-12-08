@@ -1,0 +1,47 @@
+<div class="g-tmp-chart-container fs-line-chart">
+  <div class="fs-graphic-copy">
+    <p class="graphic-head">
+      Violent Crimes per 100,000 People
+    </p>
+    <p class="graphic-deck">
+      The FBI tracks four categories as violent crimes: murder, rape, robbery and assault. Since 2016, the rates for all those offenses have decreased, except rape. Last year, the rate for rapes rose to 42.6 per 100,000 people.
+    </p>
+  </div>
+
+  <div class="fs-chart-two-container">
+    <div id="murder-rate" class="fs-chart-two">
+      <span class="line-subhed">
+        Murder Rate
+      </span>
+    </div>
+
+    <div id="rape-rate" class="fs-chart-two">
+      <span class="line-subhed">
+        Rape Rate
+      </span>
+    </div>
+
+    <div id="robbery-rate" class="fs-chart-two">
+      <span class="line-subhed">
+        Robbery Rate
+      </span>
+    </div>
+
+    <div id="assault-rate" class="fs-chart-two">
+      <span class="line-subhed">
+        Assault Rate
+      </span>
+    </div>
+  </div>
+
+  <div class="graphic-source">
+    Source:
+      <span>
+        <a href="https://ucr.fbi.gov/crime-in-the-u.s/2018/crime-in-the-u.s.-2018">
+          Uniform Crime Reporting program
+        </a>
+      </span>
+  </div>
+</div>
+
+<script type="text/javascript">var VIOLENTCRIMEDATA = {{ data["02_violent_crime_rate"]|dump|safe }};</script>

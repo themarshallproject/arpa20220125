@@ -2,5 +2,11 @@ node_modules/
 .sass-cache/
 dist/
 build/
+build-examples/
+embed-loaders/
 asset_manifest.json
 .DS_Store
+.credentials.json
+secrets/
+analysis/source_data
+.Rhistory

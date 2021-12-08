@@ -4,10 +4,14 @@
   "local_template": "post",
   "type": "graphic",
   "bucket": "tmp-production-story-assets",
+  "data_bucket": "tmp-gfx-public-data",
   "cdn": "https://d63kb4t2ifcex.cloudfront.net",
   "inline_threshold": 4000,
+  "gfx_version": "2.1.0",
   "endrun_host": "https://www.themarshallproject.org",
   "use_es6": true,
   "multiple_graphics": false,
+  "generate_external_embeds": false,
+  "embed_loader_version": "0.1.15",
   "spreadsheet_id": ""
 }
