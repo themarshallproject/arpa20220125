@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from 'fs';
 
 // packages
 import log, { error as _error } from 'fancy-log';
-import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
 import keychain from 'keychain';
 import { createInterface } from 'readline';
 
@@ -258,7 +258,7 @@ export function getGoogleClient(done) {
  */
 function authorize(credentials, callback) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
+  const oAuth2Client = new OAuth2Client(
     client_id,
     client_secret,
     redirect_uris[0]
@@ -280,7 +280,7 @@ function authorize(credentials, callback) {
 /**
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+ * @param {OAuth2Client} oAuth2Client The OAuth2 client to get token for.
  * @param {getEventsCallback} callback The callback for the authorized client.
  */
 function getNewToken(oAuth2Client, callback) {
