@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as utilities from './utilities.js';
+import { addCommas, isNullOrUndefined } from './utilities.js';
 import VerticalBarChart from './bar-chart-vertical.js';
 
 /* * * * *
@@ -36,7 +36,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
       marginLeft: 60,
-      xAxisTickFormat: (d) => { return utilities.addCommas(d) },
+      xAxisTickFormat: (d) => { return addCommas(d) },
       yAxisTickFormat: (d) => { return d },
     });
 
@@ -63,9 +63,15 @@ export default class HorizontalBarChart extends VerticalBarChart {
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
     const yDomain = this.data.map((d) => { return d[this.config.bandKey] })
+
     // Get max/min values for x axis, defaulting to the specified values if present
-    let xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
-    let xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let xMin = isNullOrUndefined(this.config.roundedXMin)
+      ? d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedXMin;
+
+    let xMax = isNullOrUndefined(this.config.roundedXMax)
+      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedXMax;
 
     // For bar charts, always include a zero baseline
     xMin = xMin > 0 ? 0 : xMin;

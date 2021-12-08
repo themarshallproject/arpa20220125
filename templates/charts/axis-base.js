@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as utilities from './utilities.js';
+import { addCommas, isNullOrUndefined } from './utilities.js';
 import ChartBase from './chart-base.js';
 
 /* * * * *
@@ -37,8 +37,8 @@ export default class ChartWithAxes extends ChartBase {
       marginBottom: 20,
       xDataFormat: (d) => { return +d },
       yDataFormat: (d) => { return +d },
-      xAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      yAxisTickFormat: (d) => { return utilities.addCommas(d) },
+      xAxisTickFormat: (d) => { return addCommas(d) },
+      yAxisTickFormat: (d) => { return addCommas(d) },
       xAxisTicks: null,
       yAxisTicks: null,
       xAxisTickArguments: null,
@@ -80,10 +80,21 @@ export default class ChartWithAxes extends ChartBase {
   // array for each domain by default, but in an extended version of the class, this
   // function could be rewritten to return domains in different formats.
   getScaleExtents() {
-    const xMin = this.config.roundedXMin || d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
-    const xMax = this.config.roundedXMax || d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) });
-    const yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
-    const yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) });
+    const xMin = isNullOrUndefined(this.config.roundedXMin)
+      ? d3.min(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) })
+      : this.config.roundedXMin;
+
+    const xMax = isNullOrUndefined(this.config.roundedXMax)
+      ? d3.max(this.data, (d)=> { return this.config.xDataFormat(d[this.config.xKey]) })
+      : this.config.roundedXMax;
+
+    const yMin = isNullOrUndefined(this.config.roundedYMin)
+      ? d3.min(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) })
+      : this.config.roundedYMin;
+
+    const yMax = isNullOrUndefined(this.config.roundedYMax)
+      ? d3.max(this.data, (d)=> { return this.config.yDataFormat(d[this.config.yKey]) })
+      : this.config.roundedYMax;
 
     return {
       xDomain: [xMin, xMax],

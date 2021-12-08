@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as utilities from './utilities.js';
+import { addCommas, isNullOrUndefined, slugify } from './utilities.js';
 import ChartWithAxes from './axis-base.js';
 
 /* * * * *
@@ -38,8 +38,8 @@ export default class VerticalBarChart extends ChartWithAxes {
       bandDataFormat: (d) => { return d },
       valueDataFormat: (d) => { return +d },
       xAxisTickFormat: (d) => { return d },
-      yAxisTickFormat: (d) => { return utilities.addCommas(d) },
-      labelFormat: (d) => { return utilities.addCommas(d) }
+      yAxisTickFormat: (d) => { return addCommas(d) },
+      labelFormat: (d) => { return addCommas(d) }
     });
 
     // Then set the basic defaults
@@ -80,9 +80,15 @@ export default class VerticalBarChart extends ChartWithAxes {
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
     const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
+
     // Get max/min values for y axis, defaulting to the specified values if present
-    let yMax = this.config.roundedYMax || d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
-    let yMin = this.config.roundedYMin || d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) });
+    let yMin = isNullOrUndefined(this.config.roundedYMin)
+      ? d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedYMin;
+
+    let yMax = isNullOrUndefined(this.config.roundedYMax)
+      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      : this.config.roundedYMax;
 
     // For bar charts, always include a zero baseline
     yMin = yMin > 0 ? 0 : yMin;
@@ -103,7 +109,7 @@ export default class VerticalBarChart extends ChartWithAxes {
         .enter()
       .append('rect')
         .attr('class', (d) => {
-          return `bar-rect bar-${ utilities.slugify(d[this.config.bandKey]) }`;
+          return `bar-rect bar-${ slugify(d[this.config.bandKey]) }`;
         })
   }
 
@@ -116,7 +122,7 @@ export default class VerticalBarChart extends ChartWithAxes {
         .enter()
       .append('text')
         .attr('class', (d) => {
-          return `data-label data-label-${ utilities.slugify(d[this.config.bandKey]) }`;
+          return `data-label data-label-${ slugify(d[this.config.bandKey]) }`;
         })
         .text((d) => {
           return this.config.labelFormat(d[this.config.valueKey]);
