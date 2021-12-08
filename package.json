@@ -62,7 +62,7 @@
     "premove": "^3.0.1",
     "prettier": "^2.5.1",
     "request": "^2.88.2",
-    "sirv": "^1.0.18",
+    "sirv": "^1.0.19",
     "svelte": "^3.44.2",
     "svelte-loader": "^3.1.2",
     "url-join": "^4.0.0",
