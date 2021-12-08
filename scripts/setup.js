@@ -42,7 +42,18 @@ export function handleMatchingRepo(cb) {
     function (repo) {
       if (repo) {
         createAndSetRepository(() => {
-          setupDefaultLabels(cb);
+          getBooleanInput(
+            'Do you want to automatically create GitHub issues for this project? This will give you a headstart on tracking what needs to be done.',
+            (yes) => {
+              if (yes) {
+                setupDefaultLabels(() => {
+                  createDefaultIssues(cb);
+                });
+              } else {
+                setupDefaultLabels(cb);
+              }
+            }
+          );
         });
       } else {
         cb();
