@@ -7,7 +7,6 @@ import firstOpenPort from 'first-open-port';
 import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
 import changedInPlace from 'gulp-changed-in-place';
-import checkFileSize from 'gulp-check-filesize';
 import concat from 'gulp-concat';
 import sass from 'gulp-dart-sass';
 import gulpIf from 'gulp-if';
@@ -38,6 +37,9 @@ import * as setup from './scripts/setup.js';
 import * as sheets from './scripts/sheets.js';
 import * as videos from './scripts/videos.js';
 import * as s3 from './scripts/s3.js';
+
+// plugins
+import gulpFileSize from './scripts/gulp-plugins/file-size.js';
 
 // utils
 import { getLocalConfig } from './scripts/config.js';
@@ -252,7 +254,7 @@ function productionScripts() {
 function assets() {
   return gulp
     .src('src/assets/**', { base: 'src' })
-    .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
+    .pipe(gulpFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
