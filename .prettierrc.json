@@ -1,17 +1,1 @@
-{
-  "arrowParens": "always",
-  "bracketSameLine": false,
-  "bracketSpacing": true,
-  "embeddedLanguageFormatting": "auto",
-  "endOfLine": "lf",
-  "htmlWhitespaceSensitivity": "css",
-  "jsxSingleQuote": false,
-  "printWidth": 80,
-  "proseWrap": "preserve",
-  "quoteProps": "consistent",
-  "semi": true,
-  "singleQuote": true,
-  "tabWidth": 2,
-  "trailingComma": "es5",
-  "useTabs": false
-}
+"@themarshallproject/prettier-config"
