@@ -17,7 +17,7 @@ pre-commit:
     prettier:
       glob: '*.{js,ts,css,scss}'
       include: 'examples|post-templates|scripts|templates|gulpfile.js'
-      run: prettier --write --list-different {staged_files} | xargs git add
+      run: prettier --write --list-different {staged_files} | xargs git add --verbose
 #     rubocop:
 #       tags: backend style
 #       glob: "*.rb"
