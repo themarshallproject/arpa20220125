@@ -15,9 +15,9 @@ pre-commit:
   parallel: true
   commands:
     prettier:
-      glob: '*.{js,ts}'
-      include: 'scripts|gulpfile.js'
-      run: prettier --write {staged_files} && git add
+      glob: '*.{js,ts,css,scss}'
+      include: 'examples|post-templates|scripts|templates|gulpfile.js'
+      run: prettier --write {staged_files} && git add {staged_files}
 #     rubocop:
 #       tags: backend style
 #       glob: "*.rb"
