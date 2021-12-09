@@ -9,7 +9,11 @@ import mri from 'mri';
 
 // local
 import { getLocalConfig } from './config.js';
-import { createAndSetRepository, setupDefaultLabels } from './github.js';
+import {
+  createAndSetRepository,
+  createDefaultIssues,
+  setupDefaultLabels,
+} from './github.js';
 
 var argv = mri(process.argv.slice(2));
 
