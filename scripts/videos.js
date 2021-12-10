@@ -1,8 +1,8 @@
 // native
 import fs from 'fs';
+import path from 'path';
 
 // packages
-import urljoin from 'url-join';
 import axios from 'axios';
 
 // local
@@ -25,7 +25,7 @@ function getVideoUrls() {
 }
 
 function getCDNUrl(filename) {
-  return urljoin(config.cdn, config.slug, 'assets', filename);
+  return new URL(path.join(config.slug, 'assets', filename), config.cdn).href;
 }
 
 function getTranscodingParams(url) {
