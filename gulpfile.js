@@ -7,20 +7,20 @@ import firstOpenPort from 'first-open-port';
 import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
 import changedInPlace from 'gulp-changed-in-place';
-import checkFileSize from 'gulp-check-filesize';
 import concat from 'gulp-concat';
-import sass from 'gulp-dart-sass';
+import gulpSass from 'gulp-sass';
 import gulpIf from 'gulp-if';
 import { prepend, append } from 'gulp-insert';
 import livereload, { listen } from 'gulp-livereload';
 import markdown from 'gulp-markdown';
 import toc from 'gulp-markdown-toc';
-import { onError } from 'gulp-notify';
 import revAll from 'gulp-rev-all';
 import sort from 'gulp-sort';
+import sourcemaps from 'gulp-sourcemaps';
 import uglify from 'gulp-uglify';
 import mergeStream from 'merge-stream';
 import open from 'open';
+import dartSass from 'sass';
 import urljoin from 'url-join';
 import webpackStream from 'webpack-stream';
 
@@ -39,6 +39,9 @@ import * as sheets from './scripts/sheets.js';
 import * as videos from './scripts/videos.js';
 import * as s3 from './scripts/s3.js';
 
+// plugins
+import gulpFileSize from './scripts/gulp-plugins/file-size.js';
+
 // utils
 import { getLocalConfig } from './scripts/config.js';
 import { cleanDir } from './scripts/utils.js';
@@ -47,6 +50,9 @@ var serverPort, lrPort, multiple_graphics;
 
 const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
   getLocalConfig();
+
+// Pass dart sass to gulp-sass
+const sass = gulpSass(dartSass);
 
 function startServer() {
   return firstOpenPort(3000)
@@ -71,11 +77,15 @@ function openBrowser(done) {
 function styles() {
   return gulp
     .src('src/graphic.scss')
+    .pipe(sourcemaps.init())
     .pipe(
-      sass({
-        includePaths: ['templates/'],
-      }).on('error', onError('SASS <%= error.formatted %>'))
+      sass
+        .sync({
+          includePaths: ['templates/'],
+        })
+        .on('error', sass.logError)
     )
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -83,17 +93,21 @@ function styles() {
 function productionStyles() {
   return gulp
     .src('src/graphic.scss')
+    .pipe(sourcemaps.init())
     .pipe(
-      sass({
-        outputStyle: 'compressed',
-        includePaths: ['templates/'],
-      }).on('error', sass.logError)
+      sass
+        .sync({
+          outputStyle: 'compressed',
+          includePaths: ['templates/'],
+        })
+        .on('error', sass.logError)
     )
     .pipe(
       autoprefixer({
         cascade: false,
       })
     )
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'));
 }
 
@@ -252,7 +266,7 @@ function productionScripts() {
 function assets() {
   return gulp
     .src('src/assets/**', { base: 'src' })
-    .pipe(checkFileSize({ fileSizeLimit: 512000 })) // 500kb
+    .pipe(gulpFileSize({ fileSizeLimit: 512000 })) // 500kb
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }

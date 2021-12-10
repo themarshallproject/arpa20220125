@@ -1,13 +1,13 @@
 // packages
 import gulp from 'gulp';
 import concat from 'gulp-concat';
-import sass from 'gulp-dart-sass';
+import gulpSass from 'gulp-sass';
 import flatmap from 'gulp-flatmap';
 import header from 'gulp-header';
 import livereload from 'gulp-livereload';
-import { onError } from 'gulp-notify';
 import replace from 'gulp-replace';
 import mergeStream from 'merge-stream';
+import dartSass from 'sass';
 import webpackStream from 'webpack-stream';
 
 // local
@@ -16,6 +16,7 @@ import { cleanDir } from './utils.js';
 import webpackConfig from '../webpack.config.js';
 
 const { src, dest, series, parallel } = gulp;
+const sass = gulpSass(dartSass);
 
 // Retrieve an example's slug from its path within /examples/
 function getSlugFromExamples(file) {
@@ -69,9 +70,11 @@ function exampleStyles() {
 
         return src(file.path)
           .pipe(
-            sass({
-              includePaths: ['src/', 'templates/'],
-            }).on('error', onError('SASS <%= error.formatted %>'))
+            sass
+              .sync({
+                includePaths: ['src/', 'templates/'],
+              })
+              .on('error', sass.logError)
           )
           .pipe(addSlugToPaths(exampleSlug));
       })

@@ -4,8 +4,10 @@ import fs from 'fs';
 // packages
 import gulp from 'gulp';
 import jeditor from 'gulp-json-editor';
-import transform from 'gulp-transform';
 import rename from 'gulp-rename';
+
+// plugins
+import gulpTransform from './gulp-plugins/transform.js';
 
 // local
 import { getLocalConfig } from './config.js';
@@ -15,12 +17,12 @@ const config = getLocalConfig();
 export function embedLoaderHtml(cb) {
   return gulp
     .src('src/*.html')
-    .pipe(transform('utf-8', renderEmbed))
+    .pipe(gulpTransform(renderEmbed))
     .pipe(rename({ prefix: 'embed-' }))
     .pipe(gulp.dest('build/embed-loaders'));
 }
 
-function renderEmbed(contents, file) {
+function renderEmbed(_, file) {
   const embedId = `g-tmp-embed-${config.slug}-${file.stem}`;
   return `<div id="${embedId}" data-tmp-slug="${config.slug}"></div>
 <script type="text/javascript" src="${config.cdn}/tmp-gfx-embed-loader/loader-${config.embed_loader_version}.js"></script>
