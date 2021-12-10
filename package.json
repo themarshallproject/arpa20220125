@@ -62,7 +62,7 @@
     "mustache": "^4.2.0",
     "open": "^8.4.0",
     "polka": "^0.5.2",
-    "premove": "^3.0.1",
+    "premove": "^4.0.0",
     "prettier": "^2.5.1",
     "request": "^2.88.2",
     "sirv": "^1.0.19",
