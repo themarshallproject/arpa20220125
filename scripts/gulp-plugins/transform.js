@@ -2,6 +2,10 @@
 import { Buffer } from 'buffer';
 import { Transform } from 'stream';
 
+/**
+ * @param {(contents: Buffer, file: import('vinyl')) => string} fn
+ * @returns {Transform}
+ */
 export default function gulpTransform(fn) {
   return new Transform({
     objectMode: true,

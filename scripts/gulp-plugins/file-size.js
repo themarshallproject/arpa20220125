@@ -8,10 +8,9 @@ import log from 'fancy-log';
 import prettyBytes from 'pretty-bytes';
 
 /**
- *
- * @param {object} params
+ * @param {Object} params
  * @param {number} params.fileSizeLimit
- * @returns {import('gulp')}
+ * @returns {Transform}
  */
 export default function gulpFileSize({ fileSizeLimit }) {
   const formattedFileSizeLimit = prettyBytes(fileSizeLimit);
