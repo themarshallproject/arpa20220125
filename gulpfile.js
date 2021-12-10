@@ -3,7 +3,7 @@ import { writeFileSync, readdirSync } from 'fs';
 import { basename, extname } from 'path';
 
 // packages
-import firstOpenPort from 'first-open-port';
+import getPort from 'get-port';
 import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
 import changedInPlace from 'gulp-changed-in-place';
@@ -46,7 +46,7 @@ import gulpFileSize from './scripts/gulp-plugins/file-size.js';
 import { getLocalConfig } from './scripts/config.js';
 import { cleanDir } from './scripts/utils.js';
 
-var serverPort, lrPort, multiple_graphics;
+var serverPort, multiple_graphics;
 
 const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
   getLocalConfig();
@@ -54,24 +54,17 @@ const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
 // Pass dart sass to gulp-sass
 const sass = gulpSass(dartSass);
 
-function startServer() {
-  return firstOpenPort(3000)
-    .then(function (port) {
-      serverPort = port;
-      return firstOpenPort(35729);
-    })
-    .then(function (port) {
-      lrPort = port;
-    })
-    .then(function () {
-      server({ port: serverPort, lrPort: lrPort });
-      listen({ port: lrPort });
-    });
+async function startServer() {
+  const port = await getPort({ port: 3000 });
+  const lrPort = await getPort({ port: 35729 });
+
+  server({ port, lrPort });
+  listen({ port: lrPort });
+  serverPort = port;
 }
 
-function openBrowser(done) {
-  open('http://localhost:' + serverPort);
-  done();
+function openBrowser() {
+  return open('http://localhost:' + serverPort);
 }
 
 function styles() {
