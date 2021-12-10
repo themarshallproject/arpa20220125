@@ -8,18 +8,19 @@ import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
 import changedInPlace from 'gulp-changed-in-place';
 import concat from 'gulp-concat';
-import sass from 'gulp-dart-sass';
+import gulpSass from 'gulp-sass';
 import gulpIf from 'gulp-if';
 import { prepend, append } from 'gulp-insert';
 import livereload, { listen } from 'gulp-livereload';
 import markdown from 'gulp-markdown';
 import toc from 'gulp-markdown-toc';
-import { onError } from 'gulp-notify';
 import revAll from 'gulp-rev-all';
 import sort from 'gulp-sort';
+import sourcemaps from 'gulp-sourcemaps';
 import uglify from 'gulp-uglify';
 import mergeStream from 'merge-stream';
 import open from 'open';
+import dartSass from 'sass';
 import urljoin from 'url-join';
 import webpackStream from 'webpack-stream';
 
@@ -50,6 +51,9 @@ var serverPort, lrPort, multiple_graphics;
 const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
   getLocalConfig();
 
+// Pass dart sass to gulp-sass
+const sass = gulpSass(dartSass);
+
 function startServer() {
   return firstOpenPort(3000)
     .then(function (port) {
@@ -73,11 +77,15 @@ function openBrowser(done) {
 function styles() {
   return gulp
     .src('src/graphic.scss')
+    .pipe(sourcemaps.init())
     .pipe(
-      sass({
-        includePaths: ['templates/'],
-      }).on('error', onError('SASS <%= error.formatted %>'))
+      sass
+        .sync({
+          includePaths: ['templates/'],
+        })
+        .on('error', sass.logError)
     )
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('build'))
     .pipe(livereload());
 }
@@ -85,17 +93,21 @@ function styles() {
 function productionStyles() {
   return gulp
     .src('src/graphic.scss')
+    .pipe(sourcemaps.init())
     .pipe(
-      sass({
-        outputStyle: 'compressed',
-        includePaths: ['templates/'],
-      }).on('error', sass.logError)
+      sass
+        .sync({
+          outputStyle: 'compressed',
+          includePaths: ['templates/'],
+        })
+        .on('error', sass.logError)
     )
     .pipe(
       autoprefixer({
         cascade: false,
       })
     )
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'));
 }
 
