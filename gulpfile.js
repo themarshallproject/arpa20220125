@@ -1,6 +1,6 @@
 // native
 import { writeFileSync, readdirSync } from 'fs';
-import { basename, extname } from 'path';
+import { basename, extname, join } from 'path';
 
 // packages
 import getPort from 'get-port';
@@ -21,7 +21,6 @@ import uglify from 'gulp-uglify';
 import mergeStream from 'merge-stream';
 import open from 'open';
 import dartSass from 'sass';
-import urljoin from 'url-join';
 import webpackStream from 'webpack-stream';
 
 // local
@@ -340,7 +339,7 @@ function revision() {
     .pipe(
       revAll.revision({
         transformPath: (rev, source, file) => {
-          return urljoin(cdn, slug, rev);
+          return new URL(join(slug, rev), cdn).href;
         },
         dontGlobal: [/.*\/embed-loaders\/*/],
         // If you want an unversioned file. Careful deploying with this, the
