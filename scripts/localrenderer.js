@@ -192,7 +192,7 @@ function getIncludes(options) {
     getLRScript(options),
     `<link rel='stylesheet' href='/fonts.css'>`,
     `<link rel='stylesheet' href='${dirPath}/graphic.css'>`,
-    `<script src='${dirPath}/graphic.js'></script>\n`,
+    `<script src='${dirPath}/graphic.js' defer></script>\n`,
   ].join('\n');
 }
 
