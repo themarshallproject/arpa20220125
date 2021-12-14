@@ -8,7 +8,6 @@ import * as d3 from 'd3';
  * is meant to be extended into all sorts of wacky, beautiful charts.
  * * * * */
 export default class ChartBase {
-
   // Constructor: Sets the most basic class properties and fills in config defaults.
   // Listens for resize.
   constructor(config) {
@@ -28,12 +27,10 @@ export default class ChartBase {
     this.initChart();
   }
 
-
   // Check if any required keys are missing from the config.
   checkConfigKeys(config) {
     this.ensureRequired(config, ['containerId']);
   }
-
 
   // Return error message for each required key missing from config.
   ensureRequired(object, requiredKeys) {
@@ -46,10 +43,11 @@ export default class ChartBase {
     });
 
     if (errors.length > 0) {
-      console.error(`Error calling ${this.constructor.name}:\n${errors.join('\n')}`);
+      console.error(
+        `Error calling ${this.constructor.name}:\n${errors.join('\n')}`
+      );
     }
   }
-
 
   // Fill in default values for undefined config options. This preserves any
   // already-defined config options, which means you can pass literally any
@@ -57,14 +55,13 @@ export default class ChartBase {
   setConfigDefaults(config) {
     this.config = _.defaults(config, {
       responsive: true,
-      aspectRatio: 4/3,
+      aspectRatio: 4 / 3,
       marginTop: 10,
       marginRight: 10,
       marginBottom: 10,
       marginLeft: 10,
     });
   }
-
 
   // Initialize the graphic and size it. We call this separately from the
   // constructor because this will differ from template to template.
@@ -73,7 +70,6 @@ export default class ChartBase {
     this.sizeBaseSVG();
   }
 
-
   // Add the SVG and a chart container to the page
   initBaseChart() {
     this.containerEl.classed('g-tmp-chart', true);
@@ -81,12 +77,10 @@ export default class ChartBase {
     this.chart = this.svg.append('g').attr('class', 'chart-g');
   }
 
-
   // Charts default to filling their container width
   getSVGWidth() {
     return this.$containerEl.width();
   }
-
 
   // Charts default to basing their height as a proportion of the chart width.
   getSVGHeight() {
@@ -98,7 +92,6 @@ export default class ChartBase {
 
     return svgWidth / aspectDivisor;
   }
-
 
   // Return a chartWidth/chartHeight that is useful in scale calculations, so
   // we don't have to worry about calculating around margins.
@@ -117,9 +110,8 @@ export default class ChartBase {
       marginRight: marginRight,
       marginBottom: marginBottom,
       marginLeft: marginLeft,
-    }
+    };
   }
-
 
   // Set the size of the SVG and offset the chart group by the top and left margins.
   sizeBaseSVG() {
@@ -127,21 +119,27 @@ export default class ChartBase {
 
     // The SVG should include margins in its width and height.
     this.svg
-      .attr('width', this.size.chartWidth + this.size.marginLeft + this.size.marginRight)
-      .attr('height', this.size.chartHeight + this.size.marginTop + this.size.marginBottom);
+      .attr(
+        'width',
+        this.size.chartWidth + this.size.marginLeft + this.size.marginRight
+      )
+      .attr(
+        'height',
+        this.size.chartHeight + this.size.marginTop + this.size.marginBottom
+      );
 
     // Offset the chart group by top and left margins.
-    this.chart
-      .attr('transform', `translate(${ this.size.marginLeft }, ${ this.size.marginTop })`);
+    this.chart.attr(
+      'transform',
+      `translate(${this.size.marginLeft}, ${this.size.marginTop})`
+    );
   }
-
 
   // Redraw the graphic, re-calculating the size and positions. This is called
   // on `tmp_resize` in the constructor.
   redrawChart() {
     this.sizeBaseSVG();
   }
-
 
   // Some config options might be a fixed value, some might be a function.
   // Here's a wrapper to get the value given the config option name only.
@@ -151,13 +149,11 @@ export default class ChartBase {
     const configOption = this.config[optionName];
     let configValue = configOption;
 
-    if (typeof(configOption) === 'function') {
+    if (typeof configOption === 'function') {
       const svgWidth = this.getSVGWidth();
       configValue = configOption.call(this, svgWidth, args);
     }
 
     return configValue;
   }
-
-
 }
