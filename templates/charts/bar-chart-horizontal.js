@@ -31,7 +31,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
   // sort of data through to your chart.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
-    const classConfig = _.defaults(config, {
+    const classDefaults = {
       marginLeft: 60,
       xAxisTickFormat: (d) => {
         return addCommas(d);
@@ -39,7 +39,8 @@ export default class HorizontalBarChart extends VerticalBarChart {
       yAxisTickFormat: (d) => {
         return d;
       },
-    });
+    };
+    const classConfig = Object.assign(classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);

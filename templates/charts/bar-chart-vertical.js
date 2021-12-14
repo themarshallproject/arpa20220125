@@ -29,7 +29,7 @@ export default class VerticalBarChart extends ChartWithAxes {
   // sort of data through to your chart.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
-    const classConfig = _.defaults(config, {
+    const classDefaults = {
       barPadding: 0.3,
       roundBarSize: false,
       bandDataFormat: (d) => {
@@ -47,7 +47,8 @@ export default class VerticalBarChart extends ChartWithAxes {
       labelFormat: (d) => {
         return addCommas(d);
       },
-    });
+    };
+    const classConfig = Object.assign(classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);

@@ -29,7 +29,7 @@ export default class ChartWithAxes extends ChartBase {
   // sort of data through to your chart.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
-    const classConfig = _.defaults(config, {
+    const classDefaults = {
       marginLeft: 20,
       marginBottom: 20,
       xDataFormat: (d) => {
@@ -50,7 +50,8 @@ export default class ChartWithAxes extends ChartBase {
       yAxisTickArguments: null,
       xAxisTickValues: null,
       yAxisTickValues: null,
-    });
+    };
+    const classConfig = Object.assign(classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);

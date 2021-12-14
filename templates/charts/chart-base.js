@@ -53,14 +53,15 @@ export default class ChartBase {
   // already-defined config options, which means you can pass literally any
   // sort of data through to your graphic.
   setConfigDefaults(config) {
-    this.config = _.defaults(config, {
+    const classDefaults = {
       responsive: true,
       aspectRatio: 4 / 3,
       marginTop: 10,
       marginRight: 10,
       marginBottom: 10,
       marginLeft: 10,
-    });
+    };
+    this.config = Object.assign(classDefaults, config);
   }
 
   // Initialize the graphic and size it. We call this separately from the
