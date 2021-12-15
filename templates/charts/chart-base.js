@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { throttle } from './utilities.js';
 
 /* * * * *
  * CHART BASE
@@ -19,9 +20,12 @@ export default class ChartBase {
     this.data = this.config.data;
 
     if (this.config.responsive) {
-      $(window).on('tmp_resize', () => {
-        this.redrawChart();
-      });
+      $(window).on(
+        'resize',
+        throttle(() => {
+          this.redrawChart();
+        }, 100)
+      );
     }
 
     this.initChart();
@@ -137,7 +141,7 @@ export default class ChartBase {
   }
 
   // Redraw the graphic, re-calculating the size and positions. This is called
-  // on `tmp_resize` in the constructor.
+  // on `window.resize` in the constructor.
   redrawChart() {
     this.sizeBaseSVG();
   }

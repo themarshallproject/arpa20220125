@@ -198,7 +198,7 @@ export default class ChartWithAxes extends ChartBase {
   }
 
   // Redraw the chart, re-calculating the size and positions. This is called
-  // on `tmp_resize` in the constructor.
+  // on `window.resize` in the parent constructor.
   redrawChart() {
     this.sizeAndPositionChart();
   }
