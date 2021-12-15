@@ -1,1 +1,176 @@
 @import "palette";
+@import "charts/stylesheets/graphic-with-axes.scss";
+@import "charts/stylesheets/graphic-labels.scss";
+
+.re-national {
+  .purple-text {
+    color: $text-purple;
+    font-weight: 400;
+  }
+
+  @media screen and (max-width: 740px) {
+    .re-graphic-source {
+      margin-top: 0px;
+    }
+  }
+}
+// SINGLE SET OF BARS OR LINES
+#re-national-chart {
+  .bar-rect {
+    fill: $fill-purple;
+  }
+
+  .data-label {
+    @media screen and (max-width: 740px) {
+      font-size: 11px;
+    }
+  }
+
+  .y {
+    display: none;
+  }
+}
+
+// SMALL MULTIPLE STACKED BARS
+.re-city {
+  .graphic-source {
+    margin-top: 5px;
+  }
+
+  .re-city-label {
+    @include acumin;
+    font-size: 15px;
+    font-weight: 600;
+    color: $dark-gray;
+    text-align: center;
+    margin-left: 30px;
+    margin-top: 5px;
+    position: absolute;
+
+    @media screen and (max-width: 740px) {
+      font-size: 12px;
+      margin-left: 25px;
+    }
+  }
+
+  .re-city-bar-chart {
+    width: 48%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 20px;
+    display: inline-block;
+
+    @media screen and (max-width: 740px) {
+      margin-bottom: 14px;
+    }
+
+    .y {
+      .tick:nth-child(odd) {
+        display: none;
+      }
+    }
+
+    .x {
+      .tick {
+        display: none;
+      }
+
+      .tick:nth-child(12n+2) {
+        display: block;
+      }
+    }
+
+    .grid {
+      //display: none;
+    }
+
+    .bar-rect-low {
+      fill: $scale-purple-2;
+    }
+
+    .bar-rect-high {
+      fill: $scale-purple-5;
+    }
+  }
+}
+
+// SIDEBAR BAR CHARTS
+.dd-sidebar-bars {
+  .tick {
+    text-anchor: end;
+    font-weight: 100;
+  }
+
+  .data-label {
+    font-weight: 100;
+    fill: $dark-gray;
+  }
+
+  #dd-chart-one {
+    .x .tick text {
+      text-anchor: middle;
+    }
+  }
+
+  #dd-chart-two {
+    .tick {
+      text {
+        fill: $dark-gray;
+        font-weight: 500;
+        text-anchor: start;
+      }
+    }
+
+    .x {
+      display: none;
+    }
+  }
+
+  .bar-rect {
+    fill: $dark-gray;
+  }
+
+  .bar-rect-nac {
+    fill: $dark-gray;
+  }
+
+  .bar-arraignment {
+    fill: $fill-purple;
+  }
+
+  .data-label-arraignment {
+    fill: $fill-purple;
+  }
+
+  .g-annotation {
+    line {
+      stroke: $fill-purple;
+      stroke-width: 1.5px;
+    }
+
+    text {
+      @include acumin;
+      fill: $fill-purple;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.4em;
+      font-weight: 100;
+      letter-spacing: -0.2px;
+    }
+  }
+}
+
+// ARROW STYLE
+#dd-graphic-arrow {
+  fill: none;
+  stroke: $fill-purple;
+  // I know we decided that lines in like charts should be 2px
+  // But perhaps for annotations, 1.5px looks better?
+  stroke-width: 1.5px;
+  shape-rendering: auto;
+  stroke-linejoin: round;
+
+  path {
+    shape-rendering: auto;
+  }
+}
