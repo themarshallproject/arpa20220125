@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { throttle } from './utilities.js';
+import throttle from 'underscore/modules/throttle.js';
 
 /* * * * *
  * CHART BASE
