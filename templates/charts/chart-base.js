@@ -14,13 +14,13 @@ export default class ChartBase {
   constructor(config) {
     this.checkConfigKeys(config);
 
-    this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
+    this.containerNode = this.containerEl.node();
     this.setConfigDefaults(config);
     this.data = this.config.data;
 
     if (this.config.responsive) {
-      $(window).on(
+      window.addEventListener(
         'resize',
         throttle(() => {
           this.redrawChart();
@@ -84,7 +84,15 @@ export default class ChartBase {
 
   // Charts default to filling their container width
   getSVGWidth() {
-    return this.$containerEl.width();
+    const containerWidth = this.containerNode.getBoundingClientRect().width;
+    const computedStyles = getComputedStyle(this.containerNode);
+    const paddingLeft = +computedStyles
+      .getPropertyValue('padding-left')
+      .slice(0, -2);
+    const paddingRight = +computedStyles
+      .getPropertyValue('padding-right')
+      .slice(0, -2);
+    return containerWidth - paddingLeft - paddingRight;
   }
 
   // Charts default to basing their height as a proportion of the chart width.
