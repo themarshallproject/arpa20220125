@@ -190,7 +190,7 @@ function getIncludes(options) {
   const dirPath = options.examples ? '/examples' : '';
   return [
     getLRScript(options),
-    `<link rel='stylesheet' href='/fonts.css'>`,
+    `<link rel='stylesheet' href='/post-templates/fonts.css'>`,
     `<link rel='stylesheet' href='${dirPath}/graphic.css'>`,
     `<script src='${dirPath}/graphic.js' defer></script>\n`,
   ].join('\n');
