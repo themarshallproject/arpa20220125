@@ -65,7 +65,7 @@
     "pretty-bytes": "^5.6.0",
     "request": "^2.88.2",
     "sass": "^1.45.2",
-    "sirv": "^1.0.19",
+    "sirv": "^2.0.0",
     "svelte": "^3.44.3",
     "svelte-loader": "^3.1.2",
     "webpack": "^5.65.0",
