@@ -95,12 +95,12 @@ export function handleHeaderTemplateFiles(cb) {
 }
 
 function getType(cb) {
-  const configUpdates = {};
-
   getInputFromValues(
     '\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?',
     ['c', 'b', 'f', 'h'],
     function (response) {
+      const configUpdates = {};
+
       switch (response) {
         case 'c':
           configUpdates.local_template = 'commentary';
