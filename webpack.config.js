@@ -57,6 +57,16 @@ export default function getConfig(env) {
           ],
         },
         {
+          test: /node_modules\/d3.*\/.*\.js$/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/transform-runtime'],
+            },
+          },
+        },
+        {
           // required to prevent errors from Svelte on Webpack 5+
           test: /node_modules\/svelte\/.*\.mjs$/,
           resolve: {

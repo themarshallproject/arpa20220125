@@ -1,9 +1,8 @@
 import NationalBarChart from './national-bar-chart.js';
+import { abbrevMonth } from 'charts/utilities.js';
 
-$(document).ready(() => {
-  // Single set of vertical bars
-  // initNationalBar();
-});
+// Single set of vertical bars
+initNationalBar();
 
 function initNationalBar() {
   var mobileBreak = 740;
@@ -24,7 +23,7 @@ function initNationalBar() {
     marginBottom: 30,
     marginTop: 15,
     xAxisTickFormat: (d, width) => {
-      return width < mobileBreak ? utilities.abbrevMonth(d) : d;
+      return width < mobileBreak ? abbrevMonth(d) : d;
     },
   });
 }
