@@ -1,5 +1,5 @@
 // native
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { extname, basename } from 'path';
 
 // packages
@@ -56,7 +56,13 @@ export function getExternalData(options) {
     fullData[baseFilename] = pathData;
   }
 
+  writeAssetJSON(fullData);
+
   return data({ data: fullData });
+}
+
+function writeAssetJSON(data) {
+  writeFileSync('./src/assets/data.json', JSON.stringify(data));
 }
 
 function convertCSVtoJSON(fileContents) {

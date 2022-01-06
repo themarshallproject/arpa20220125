@@ -3,16 +3,22 @@ import StackedBarChart from './stacked-bar.js';
 import CityStackedBar from './mpp_cities.js';
 import { abbrevMonth } from 'charts/utilities.js';
 
-// Single set of vertical bars
-initNationalBar();
-initCityBars();
+async function getChartData() {
+  const response = await fetch('/assets/data.json');
+  return response.json();
+}
 
-function initNationalBar() {
+getChartData().then((data) => {
+  initNationalBar(data);
+  initCityBars(data);
+});
+
+function initNationalBar(data) {
   var mobileBreak = 740;
 
   const barNation = new NationalBarChart({
     containerId: 're-national-chart',
-    data: NATIONALDATA,
+    data: data['national_mpp'],
     aspectRatio: (width) => {
       return width < mobileBreak ? 2 / 1 : 3 / 1;
     },
@@ -31,8 +37,13 @@ function initNationalBar() {
   });
 }
 
-function initCityBars() {
+function initCityBars(data) {
   var mobileBreak = 250;
+
+  var ELPASODATA = data['el_paso_mpp'];
+  var HARLINGENDATA = data['harlingen_mpp'];
+  var SANANTONIODATA = data['san_antonio_mpp'];
+  var SANDIEGODATA = data['san_diego_mpp'];
 
   var chartList = [
     {
