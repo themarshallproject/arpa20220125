@@ -1,8 +1,11 @@
 import NationalBarChart from './national-bar-chart.js';
+import StackedBarChart from './stacked-bar.js';
+import CityStackedBar from './mpp_cities.js';
 import { abbrevMonth } from 'charts/utilities.js';
 
 // Single set of vertical bars
 initNationalBar();
+initCityBars();
 
 function initNationalBar() {
   var mobileBreak = 740;
@@ -26,4 +29,49 @@ function initNationalBar() {
       return width < mobileBreak ? abbrevMonth(d) : d;
     },
   });
+}
+
+function initCityBars() {
+  var mobileBreak = 250;
+
+  var chartList = [
+    {
+      container: 'san-diego-cali',
+      data: SANDIEGODATA,
+    },
+    {
+      container: 'san-antonio-texas',
+      data: SANANTONIODATA,
+    },
+    {
+      container: 'harlingen-texas',
+      data: HARLINGENDATA,
+    },
+    {
+      container: 'el-paso-texas',
+      data: ELPASODATA,
+    },
+  ];
+
+  for (const city in chartList) {
+    const value = chartList[city];
+    new CityStackedBar({
+      containerId: value['container'],
+      data: value['data'],
+      bandKey: 'month',
+      valueKeyLow: 'not_mpp',
+      valueKeyHigh: 'mpp',
+      marginLeft: 20,
+      marginRight: 0,
+      xAxisTickFormat: (d) => {
+        return d.replace('-', '. ');
+      },
+      yAxisTickFormat: (d) => {
+        return d > 0 ? `${d / 1000}k` : 0;
+      },
+      aspectRatio: (width) => {
+        return width < mobileBreak ? 7 / 6 : 9 / 6;
+      },
+    });
+  }
 }
