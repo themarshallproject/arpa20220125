@@ -16,6 +16,14 @@ export default class ChartBase {
 
     this.containerEl = d3.select(`#${config.containerId}`);
     this.containerNode = this.containerEl.node();
+
+    if (!this.containerNode) {
+      console.warn(
+        `Skipped creating chart: container #${config.containerId} not found on page`
+      );
+      return;
+    }
+
     this.setConfigDefaults(config);
     this.data = this.config.data;
 
