@@ -11,20 +11,17 @@ import ChartWithAxes from './axis-base.js';
  * bars, see the HorizontalBarChart class that extends this one.
  * * * * */
 export default class VerticalBarChart extends ChartWithAxes {
-
   constructor(config) {
     super(config);
 
     this.containerEl.classed('g-tmp-bar-chart-vertical', true);
   }
 
-
   // Check if any required keys are missing from the config.
   checkConfigKeys(config) {
     const requiredKeys = ['containerId', 'data', 'bandKey', 'valueKey'];
     this.ensureRequired(config, requiredKeys);
   }
-
 
   // Fill in default values for undefined config options. Some are already
   // defined in the ChartWithAxes class. This function preserves any
@@ -35,17 +32,26 @@ export default class VerticalBarChart extends ChartWithAxes {
     const classConfig = _.defaults(config, {
       barPadding: 0.3,
       roundBarSize: false,
-      bandDataFormat: (d) => { return d },
-      valueDataFormat: (d) => { return +d },
-      xAxisTickFormat: (d) => { return d },
-      yAxisTickFormat: (d) => { return addCommas(d) },
-      labelFormat: (d) => { return addCommas(d) }
+      bandDataFormat: (d) => {
+        return d;
+      },
+      valueDataFormat: (d) => {
+        return +d;
+      },
+      xAxisTickFormat: (d) => {
+        return d;
+      },
+      yAxisTickFormat: (d) => {
+        return addCommas(d);
+      },
+      labelFormat: (d) => {
+        return addCommas(d);
+      },
     });
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);
   }
-
 
   // Initialize the chart, set up scales and axis objects, add elements
   // to the DOM and size/position the SVG elements.
@@ -59,35 +65,39 @@ export default class VerticalBarChart extends ChartWithAxes {
     this.sizeAndPositionChart();
   }
 
-
   // Initialize scale properties on the class instance. Rather than the
   // default linearScale for the xScale, we are using a band scale where
   // the domain is set to each of the x values of the data.
   initScales() {
     const { xDomain, yDomain } = this.getScaleExtents();
 
-    this.xScale = d3.scaleBand()
+    this.xScale = d3
+      .scaleBand()
       .round(this.config.roundBarSize)
       .padding(this.config.barPadding)
       .domain(xDomain);
 
-    this.yScale = d3.scaleLinear()
-      .domain(yDomain);
+    this.yScale = d3.scaleLinear().domain(yDomain);
   }
-
 
   // Get the extent of x and y values for setting scale domain. The x domain
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
-    const xDomain = this.data.map((d) => { return d[this.config.bandKey] })
+    const xDomain = this.data.map((d) => {
+      return d[this.config.bandKey];
+    });
 
     // Get max/min values for y axis, defaulting to the specified values if present
     let yMin = isNullOrUndefined(this.config.roundedYMin)
-      ? d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      ? d3.min(this.data, (d) => {
+          return this.config.valueDataFormat(d[this.config.valueKey]);
+        })
       : this.config.roundedYMin;
 
     let yMax = isNullOrUndefined(this.config.roundedYMax)
-      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      ? d3.max(this.data, (d) => {
+          return this.config.valueDataFormat(d[this.config.valueKey]);
+        })
       : this.config.roundedYMax;
 
     // For bar charts, always include a zero baseline
@@ -96,39 +106,40 @@ export default class VerticalBarChart extends ChartWithAxes {
 
     return {
       xDomain: xDomain,
-      yDomain: [yMin, yMax]
-    }
+      yDomain: [yMin, yMax],
+    };
   }
-
 
   // Add SVG elements based on data to the chart.
   initDataElements() {
-    this.barRects = this.chart.append('g').attr('class', 'g-chart-bars')
+    this.barRects = this.chart
+      .append('g')
+      .attr('class', 'g-chart-bars')
       .selectAll('.bar-rect')
       .data(this.data)
-        .enter()
+      .enter()
       .append('rect')
-        .attr('class', (d) => {
-          return `bar-rect bar-${ slugify(d[this.config.bandKey]) }`;
-        })
+      .attr('class', (d) => {
+        return `bar-rect bar-${slugify(d[this.config.bandKey])}`;
+      });
   }
-
 
   // Add value labels to each of the bars.
   initLabels() {
-    this.barLabels = this.chart.append('g').attr('class', 'g-chart-labels')
+    this.barLabels = this.chart
+      .append('g')
+      .attr('class', 'g-chart-labels')
       .selectAll('.data-label')
       .data(this.data)
-        .enter()
+      .enter()
       .append('text')
-        .attr('class', (d) => {
-          return `data-label data-label-${ slugify(d[this.config.bandKey]) }`;
-        })
-        .text((d) => {
-          return this.config.labelFormat(d[this.config.valueKey]);
-        });
+      .attr('class', (d) => {
+        return `data-label data-label-${slugify(d[this.config.bandKey])}`;
+      })
+      .text((d) => {
+        return this.config.labelFormat(d[this.config.valueKey]);
+      });
   }
-
 
   // Update the size and positioning of any data-driven elements of the chart.
   updateDataElements() {
@@ -147,9 +158,8 @@ export default class VerticalBarChart extends ChartWithAxes {
       .attr('width', this.xScale.bandwidth())
       .attr('height', (d) => {
         return Math.abs(this.yScale(0) - this.yScale(d[this.config.valueKey]));
-      })
+      });
   }
-
 
   // This updates the positioning of the labels on our bars.
   updateLabels() {
@@ -157,40 +167,51 @@ export default class VerticalBarChart extends ChartWithAxes {
     this.barLabels
       .attr('x', (d) => {
         // Position in the horizontal center of the bar
-        return this.xScale(d[this.config.bandKey]) + (this.xScale.bandwidth() / 2);
+        return (
+          this.xScale(d[this.config.bandKey]) + this.xScale.bandwidth() / 2
+        );
       })
-      .attr('y', (d,i,labelArray) => {
+      .attr('y', (d, i, labelArray) => {
         const yValue = d[this.config.valueKey];
         const yPos = this.yScale(yValue);
-        const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+        const textSize = this.barLabels
+          .filter((bar_d, bar_i) => {
+            return bar_i == i;
+          })
           .node()
-            .getBoundingClientRect()
-              .height;
+          .getBoundingClientRect().height;
 
         // If there is no room for the label to run above the bar, place it just inside
         // the top of the bar.
         if (yPos < textSize - this.size.marginTop) {
-          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          d3.select(labelArray[i])
+            .classed('label-out', false)
+            .classed('label-in', true);
           return yPos + 5 + textSize;
-        } else if ( yPos > this.size.chartHeight - textSize) {
+        } else if (yPos > this.size.chartHeight - textSize) {
           // Or if the label is placed lower than the height of the chart itself, place it
           // just inside the bottom of the bar (for negative bars).
-          d3.select(labelArray[i]).classed('label-out', false).classed('label-in', true);
+          d3.select(labelArray[i])
+            .classed('label-out', false)
+            .classed('label-in', true);
           return yPos - 5;
         } else if (yValue >= 0) {
           // If the value is positive and doesn't exceed the bounds of the chart, place it
           // just above the top of the bar
-          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          d3.select(labelArray[i])
+            .classed('label-in', false)
+            .classed('label-out', true);
           return yPos - 5;
         } else {
           // If the value is negative and doesn't exceed the bounds of the chart, place it
           // just below the bottom of the bar.
-          d3.select(labelArray[i]).classed('label-in', false).classed('label-out', true);
+          d3.select(labelArray[i])
+            .classed('label-in', false)
+            .classed('label-out', true);
           return yPos + textSize;
         }
-      })
+      });
   }
-
 
   // Update the size and position of all DOM elements with the latest pixel values.
   sizeAndPositionChart() {

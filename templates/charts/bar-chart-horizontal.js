@@ -11,7 +11,6 @@ import VerticalBarChart from './bar-chart-vertical.js';
  * bars, see the VerticalBarChart class that this extends.
  * * * * */
 export default class HorizontalBarChart extends VerticalBarChart {
-
   constructor(config) {
     super(config);
 
@@ -20,13 +19,11 @@ export default class HorizontalBarChart extends VerticalBarChart {
     this.containerEl.classed('g-tmp-bar-chart-horizontal', true);
   }
 
-
   // Check if any required keys are missing from the config.
   checkConfigKeys(config) {
     const requiredKeys = ['containerId', 'data', 'bandKey', 'valueKey'];
     this.ensureRequired(config, requiredKeys);
   }
-
 
   // Fill in default values for undefined config options. Most are already
   // defined in the VerticalBarChart class. This function preserves any
@@ -36,41 +33,49 @@ export default class HorizontalBarChart extends VerticalBarChart {
     // Set defaults specific to this class first
     const classConfig = _.defaults(config, {
       marginLeft: 60,
-      xAxisTickFormat: (d) => { return addCommas(d) },
-      yAxisTickFormat: (d) => { return d },
+      xAxisTickFormat: (d) => {
+        return addCommas(d);
+      },
+      yAxisTickFormat: (d) => {
+        return d;
+      },
     });
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);
   }
 
-
   // Initialize scale properties on the class instance.
   initScales() {
     const { xDomain, yDomain } = this.getScaleExtents();
 
-    this.xScale = d3.scaleLinear()
-      .domain(xDomain);
+    this.xScale = d3.scaleLinear().domain(xDomain);
 
-    this.yScale = d3.scaleBand()
+    this.yScale = d3
+      .scaleBand()
       .round(this.config.roundBarSize)
       .padding(this.config.barPadding)
       .domain(yDomain);
   }
 
-
   // Get the extent of x and y values for setting scale domain. The y domain
   // is an array of band names (not *that* kind) because the data is categorical.
   getScaleExtents() {
-    const yDomain = this.data.map((d) => { return d[this.config.bandKey] })
+    const yDomain = this.data.map((d) => {
+      return d[this.config.bandKey];
+    });
 
     // Get max/min values for x axis, defaulting to the specified values if present
     let xMin = isNullOrUndefined(this.config.roundedXMin)
-      ? d3.min(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      ? d3.min(this.data, (d) => {
+          return this.config.valueDataFormat(d[this.config.valueKey]);
+        })
       : this.config.roundedXMin;
 
     let xMax = isNullOrUndefined(this.config.roundedXMax)
-      ? d3.max(this.data, (d)=> { return this.config.valueDataFormat(d[this.config.valueKey]) })
+      ? d3.max(this.data, (d) => {
+          return this.config.valueDataFormat(d[this.config.valueKey]);
+        })
       : this.config.roundedXMax;
 
     // For bar charts, always include a zero baseline
@@ -79,40 +84,31 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
     return {
       xDomain: [xMin, xMax],
-      yDomain: yDomain
-    }
+      yDomain: yDomain,
+    };
   }
-
 
   // Add axis methods to the class.
   initAxes() {
     super.initAxes();
 
-    this.xGrid = d3.axisBottom()
-      .scale(this.xScale)
-      .tickFormat('');
+    this.xGrid = d3.axisBottom().scale(this.xScale).tickFormat('');
   }
-
 
   // Add SVG groups where axes will be initialized.
   initAxisElements() {
-    this.xGridElement = this.chart.append('g')
-      .attr('class', 'x grid');
+    this.xGridElement = this.chart.append('g').attr('class', 'x grid');
 
-    this.xAxisElement = this.chart.append('g')
-      .attr('class', 'x axis');
+    this.xAxisElement = this.chart.append('g').attr('class', 'x axis');
 
-    this.yAxisElement = this.chart.append('g')
-      .attr('class', 'y axis');
+    this.yAxisElement = this.chart.append('g').attr('class', 'y axis');
   }
-
 
   // Set scale ranges to the latest pixel values.
   calculateScales() {
     this.xScale.range([0, this.size.chartWidth]);
     this.yScale.range([0, this.size.chartHeight]);
   }
-
 
   // Update the size and positioning of any data-driven elements of the chart.
   updateDataElements() {
@@ -131,9 +127,8 @@ export default class HorizontalBarChart extends VerticalBarChart {
       .attr('width', (d) => {
         return Math.abs(this.xScale(d[this.config.valueKey]) - this.xScale(0));
       })
-      .attr('height', this.yScale.bandwidth())
+      .attr('height', this.yScale.bandwidth());
   }
-
 
   // This updates the positioning of the labels on our bars.
   updateLabels() {
@@ -145,13 +140,15 @@ export default class HorizontalBarChart extends VerticalBarChart {
     // side edge of the bar.
     this.barLabels
       .attr('dy', labelDy)
-      .attr('x', (d,i,labelArray) => {
+      .attr('x', (d, i, labelArray) => {
         const xValue = d[this.config.valueKey];
         const xPos = this.xScale(xValue);
-        const textSize = this.barLabels.filter((bar_d,bar_i) => { return bar_i == i; })
+        const textSize = this.barLabels
+          .filter((bar_d, bar_i) => {
+            return bar_i == i;
+          })
           .node()
-            .getBoundingClientRect()
-              .width;
+          .getBoundingClientRect().width;
         const thisLabel = d3.select(labelArray[i]);
 
         if (xValue >= 0) {
@@ -183,10 +180,11 @@ export default class HorizontalBarChart extends VerticalBarChart {
         }
       })
       .attr('y', (d) => {
-        return this.yScale(d[this.config.bandKey]) + (this.yScale.bandwidth() / 2);
+        return (
+          this.yScale(d[this.config.bandKey]) + this.yScale.bandwidth() / 2
+        );
       });
   }
-
 
   // Update axis functions to use the evaluated output of each option.
   // Pass an object containing the chart width so options can be set
@@ -200,30 +198,24 @@ export default class HorizontalBarChart extends VerticalBarChart {
       .ticks(this.evaluateOption('xAxisTicks'));
   }
 
-
   updateAxisElements() {
     // This function does some translating of elements to get the axes in the
     // right places. Here we use chartHeight instead of chartWidth for those
     // translations.
-    this.yAxisElement
-      .call(this.yAxis);
+    this.yAxisElement.call(this.yAxis);
 
-    this.yAxisElement.select('.domain')
-      .attr('transform', `translate(${ this.xScale(0) }, 0)`);
+    this.yAxisElement
+      .select('.domain')
+      .attr('transform', `translate(${this.xScale(0)}, 0)`);
 
     // By default, we want the y axis labels on horizontal bar charts to be aligned
     // flush with the left edge of the graphic.
-    this.yAxisElement
-      .selectAll('text')
-      .attr('x', (0 - this.config.marginLeft));
+    this.yAxisElement.selectAll('text').attr('x', 0 - this.config.marginLeft);
 
     this.xAxisElement
-      .attr('transform', `translate(0, ${ this.size.chartHeight })`)
+      .attr('transform', `translate(0, ${this.size.chartHeight})`)
       .call(this.xAxis);
 
-    this.xGridElement
-      .call(this.xGrid
-        .tickSize(this.size.chartHeight, 0));
+    this.xGridElement.call(this.xGrid.tickSize(this.size.chartHeight, 0));
   }
-
 }
