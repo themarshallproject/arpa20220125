@@ -15,10 +15,8 @@ import {
   setupDefaultLabels,
 } from './github.js';
 
-var argv = mri(process.argv.slice(2));
-
+const argv = mri(process.argv.slice(2));
 const config = getLocalConfig();
-const { slug: _slug, type } = config;
 
 export function setup(done) {
   // If the slug isn't equal to the default, assume the project has already been setup.
@@ -97,41 +95,43 @@ export function handleHeaderTemplateFiles(cb) {
 }
 
 function getType(cb) {
-  var local_template;
-  var type;
-
   getInputFromValues(
     '\n\n\t[c]ommentary graphic\n\t[b]ase graphic\n\t[f]reeform post\n\tfreeform [h]ead\n\nWhat kind of project is this?',
     ['c', 'b', 'f', 'h'],
     function (response) {
+      const configUpdates = {};
+
       switch (response) {
         case 'c':
-          local_template = 'commentary';
-          type = 'graphic';
+          configUpdates.local_template = 'commentary';
+          configUpdates.type = 'graphic';
           break;
         case 'b':
-          local_template = 'post';
-          type = 'graphic';
+          configUpdates.local_template = 'post';
+          configUpdates.type = 'graphic';
           break;
         case 'f':
-          local_template = 'freeform';
-          type = 'post';
+          configUpdates.local_template = 'freeform';
+          configUpdates.type = 'post';
           break;
         case 'h':
-          local_template = 'freeform-header';
-          type = 'header';
+          configUpdates.local_template = 'freeform-header';
+          configUpdates.type = 'header';
           break;
         default:
           break;
       }
-      cb();
+      cb(configUpdates);
     }
   );
 }
 
 export function resetType(done) {
-  getType(function () {
-    writeFileSync('config.json', JSON.stringify(config, null, 2));
+  getType(function (configUpdates) {
+    writeFileSync(
+      'config.json',
+      JSON.stringify(Object.assign(config, configUpdates), null, 2)
+    );
     done();
   });
 }
