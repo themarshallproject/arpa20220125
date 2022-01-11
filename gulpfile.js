@@ -311,6 +311,7 @@ gulp.task(
   'setup',
   gulp.series(
     setup.setup,
+    setup.resetType,
     setup.handleHeaderTemplateFiles,
     setup.handleMatchingRepo,
     github.ensureUpdatesRemote,

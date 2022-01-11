@@ -1,5 +1,5 @@
 // native
-import { writeFileSync, existsSync, copyFileSync } from 'fs';
+import { existsSync, copyFileSync } from 'fs';
 import { basename } from 'path';
 import { createInterface } from 'readline';
 
@@ -8,7 +8,7 @@ import { lightFormat } from 'date-fns';
 import mri from 'mri';
 
 // local
-import { getLocalConfig } from './config.js';
+import { getLocalConfig, setLocalConfig } from './config.js';
 import {
   createAndSetRepository,
   createDefaultIssues,
@@ -30,11 +30,7 @@ export function setup(done) {
 
   getSlug(function (slug) {
     console.log(`Using slug: ${slug}`);
-    config.slug = slug;
-    getType(function () {
-      writeFileSync('config.json', JSON.stringify(config, null, 2));
-      done();
-    });
+    setLocalConfig({ slug });
   });
 }
 
@@ -128,10 +124,7 @@ function getType(cb) {
 
 export function resetType(done) {
   getType(function (configUpdates) {
-    writeFileSync(
-      'config.json',
-      JSON.stringify(Object.assign(config, configUpdates), null, 2)
-    );
+    setLocalConfig(configUpdates);
     done();
   });
 }
