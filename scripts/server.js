@@ -1,11 +1,15 @@
 // packages
+import { reload } from 'gulp-livereload';
 import polka from 'polka';
 import send from '@polka/send-type';
 import sirv from 'sirv';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 
 // local
 import { getLocalConfig } from './config.js';
 import * as renderer from './localrenderer.js';
+import getWebpackConfig from '../webpack.config.js';
 
 const htmlContentType = {
   'Content-Type': 'text/html',
@@ -21,6 +25,19 @@ export default function server(options) {
   console.log('Config:', config);
 
   const lrPort = options.lrPort || 35729;
+
+  const webpackConfig = getWebpackConfig('development');
+  const compiler = webpack(webpackConfig);
+
+  compiler.hooks.done.tap('done', () => {
+    reload();
+  });
+
+  app.use(
+    webpackDevMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+    })
+  );
 
   app.get('/', function (_, res) {
     send(res, 200, renderer.renderTemplate({ lrPort: lrPort }), {

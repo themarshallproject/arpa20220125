@@ -1,3 +1,7 @@
+// native
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 // packages
 import gulp from 'gulp';
 import concat from 'gulp-concat';
@@ -6,14 +10,15 @@ import flatmap from 'gulp-flatmap';
 import header from 'gulp-header';
 import livereload from 'gulp-livereload';
 import replace from 'gulp-replace';
-import mergeStream from 'merge-stream';
 import dartSass from 'sass';
-import webpackStream from 'webpack-stream';
+import webpack from 'webpack';
 
 // local
 import { getExternalData, renderGraphicHTML } from './externaldata.js';
 import { cleanDir } from './utils.js';
-import webpackConfig from '../webpack.config.js';
+import getWebpackConfig from '../webpack.config.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const { src, dest, series, parallel } = gulp;
 const sass = gulpSass(dartSass);
@@ -40,7 +45,7 @@ function exampleHtml() {
     .pipe(renderGraphicHTML({ examples: true }))
     .pipe(dest('build-examples'))
     .pipe(
-      flatmap(function (stream, file) {
+      flatmap(function (_, file) {
         // Replace asset paths to use subfolders that correspond to slug for the given example
         var exampleSlug = getSlugFromBuild(file);
         var pathData = {
@@ -64,7 +69,7 @@ function exampleHtml() {
 function exampleStyles() {
   return src('examples/*/graphic.scss')
     .pipe(
-      flatmap(function (stream, file) {
+      flatmap(function (_, file) {
         // Replace asset paths to use subfolders that correspond to slug for the given example
         var exampleSlug = getSlugFromExamples(file);
 
@@ -85,24 +90,28 @@ function exampleStyles() {
 }
 
 function exampleScripts() {
-  // Compile the vendor js
-  var libJs = src('examples/*/lib/*.js');
+  return new Promise((resolve, reject) => {
+    const webpackConfig = getWebpackConfig(
+      'production',
+      {
+        graphic: [
+          './examples/bar-charts/graphic.js',
+          './examples/line-charts/graphic.js',
+        ],
+      },
+      path.join(process.cwd(), 'build-examples')
+    );
 
-  var graphicJs = src('examples/*/graphic.js').pipe(
-    flatmap(function (stream, file) {
-      // Replace asset paths to use subfolders that correspond to slug for the given example
-      var exampleSlug = getSlugFromExamples(file);
+    const compiler = webpack(webpackConfig);
 
-      return src(file.path)
-        .pipe(webpackStream(webpackConfig('development')))
-        .pipe(addSlugToPaths(exampleSlug));
-    })
-  );
+    compiler.run((err) => {
+      if (err) {
+        reject(err);
+      }
 
-  return mergeStream(libJs, graphicJs)
-    .pipe(concat('graphic.js'))
-    .pipe(dest('build-examples'))
-    .pipe(livereload());
+      resolve();
+    });
+  });
 }
 
 function exampleAssets() {
