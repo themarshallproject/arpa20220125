@@ -1,89 +1,82 @@
 // native
-import path from 'path';
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const babelPreset = {
-  loader: 'babel-loader',
-  options: {
-    presets: ['@babel/preset-env'],
-  },
-};
+const jsRegex = /\.(mjs|js|jsx|ts|tsx)$/;
 
-export default function getConfig(env) {
+/** @typedef {import('webpack').Configuration} WebpackConfig */
+
+/**
+ * @param {'development' | 'production'} mode
+ * @param {WebpackConfig.entry} entry
+ * @param {WebpackConfig.output.path} outputPath
+ * @returns {WebpackConfig}
+ */
+export default function getConfig(mode, entry, outputPath) {
+  const isDev = mode === 'development';
+
+  /** @type {WebpackConfig} */
   const config = {
+    mode,
+    devtool: isDev ? 'eval-source-map' : 'source-map',
+    entry: entry || { graphic: './src/graphic.js' },
     output: {
-      path: __dirname + '/build',
+      path: outputPath ? outputPath : path.join(__dirname, 'build'),
       filename: '[name].js',
       chunkFilename: '[name].[id].js',
+      publicPath: '/',
     },
     resolve: {
       alias: {
-        svelte: path.dirname(require.resolve('svelte/package.json')),
+        svelte: path.resolve('node_modules', 'svelte'),
       },
       extensions: ['.mjs', '.js', '.svelte'],
-      mainFields: ['svelte', 'browser', 'module', 'main'],
-      modules: [path.resolve(__dirname, 'templates'), 'node_modules'],
+      mainFields: ['svelte', 'module', 'browser', 'main'],
     },
     module: {
+      parser: {
+        javascript: {
+          exportsPresence: 'error',
+        },
+      },
       rules: [
-        // transpile js
-        {
-          test: /\.js$/,
-          use: babelPreset,
-        },
-        // transpile js svelte helpers
-        {
-          test: /\.m?js$/,
-          include: [/svelte/],
-          use: babelPreset,
-        },
         {
           test: /\.svelte$/,
-          use: [
-            babelPreset,
-            {
-              loader: 'svelte-loader',
-              options: {
-                hotReload: false,
-                compilerOptions: {
-                  dev: env === 'development' ? true : false,
-                },
-              },
-            },
-          ],
-        },
-        {
-          test: /node_modules\/d3.*\/.*\.js$/,
           use: {
-            loader: 'babel-loader',
+            loader: 'svelte-loader',
             options: {
-              presets: ['@babel/preset-env'],
-              plugins: ['@babel/transform-runtime'],
+              dev: true,
             },
           },
         },
         {
-          // required to prevent errors from Svelte on Webpack 5+
+          // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
           test: /node_modules\/svelte\/.*\.mjs$/,
           resolve: {
             fullySpecified: false,
           },
         },
-      ],
+        !isDev && {
+          test: jsRegex,
+          exclude: {
+            // exclude node_modules...
+            or: [/node_modules/],
+            // ...but keep svelte internals
+            not: [/node_modules\/svelte\/internal/],
+          },
+          use: {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: ['@babel/preset-env'],
+            },
+          },
+        },
+      ].filter(Boolean),
     },
-    mode: env,
-    devtool: env === 'production' ? false : 'inline-source-map',
   };
-
-  if (env === 'production') {
-    config.optimization = {
-      minimize: true,
-    };
-  }
 
   return config;
 }

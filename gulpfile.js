@@ -7,7 +7,6 @@ import getPort from 'get-port';
 import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
 import changedInPlace from 'gulp-changed-in-place';
-import concat from 'gulp-concat';
 import gulpSass from 'gulp-sass';
 import gulpIf from 'gulp-if';
 import { prepend, append } from 'gulp-insert';
@@ -15,16 +14,13 @@ import livereload, { listen } from 'gulp-livereload';
 import markdown from 'gulp-markdown';
 import toc from 'gulp-markdown-toc';
 import revAll from 'gulp-rev-all';
-import sort from 'gulp-sort';
 import sourcemaps from 'gulp-sourcemaps';
-import uglify from 'gulp-uglify';
-import mergeStream from 'merge-stream';
 import open from 'open';
 import dartSass from 'sass';
-import webpackStream from 'webpack-stream';
+import webpack from 'webpack';
 
 // local
-import webpackConfig from './webpack.config.js';
+import getWebpackConfig from './webpack.config.js';
 import * as credentials from './scripts/credentials.js';
 import * as endrun from './scripts/endrun.js';
 import * as examples from './scripts/examples.js';
@@ -47,7 +43,7 @@ import { cleanDir } from './scripts/utils.js';
 
 var serverPort, multiple_graphics;
 
-const { local_markdown, use_es6, generate_external_embeds, cdn, slug } =
+const { local_markdown, generate_external_embeds, cdn, slug } =
   getLocalConfig();
 
 // Pass dart sass to gulp-sass
@@ -208,51 +204,19 @@ function jsFileComparator(file1, file2) {
   return 0;
 }
 
-function scripts() {
-  if (use_es6) {
-    // Compile the vendor js
-    var libJs = gulp.src('src/lib/*.js');
-
-    var graphicJs = gulp
-      .src('src/graphic.js')
-      .pipe(webpackStream(webpackConfig('development')));
-
-    return mergeStream(libJs, graphicJs)
-      .pipe(sort(jsFileComparator))
-      .pipe(concat('graphic.js'))
-      .pipe(gulp.dest('build'))
-      .pipe(livereload());
-  } else {
-    return gulp
-      .src('src/*.js')
-      .pipe(sort(jsFileComparator))
-      .pipe(concat('graphic.js'))
-      .pipe(gulp.dest('build'))
-      .pipe(livereload());
-  }
-}
-
 function productionScripts() {
-  if (use_es6) {
-    // Compile the vendor js
-    var libJs = gulp.src('src/lib/*.js');
+  return new Promise((resolve, reject) => {
+    const webpackConfig = getWebpackConfig('production');
+    const bundle = webpack(webpackConfig);
 
-    var graphicJs = gulp
-      .src('src/graphic.js')
-      .pipe(webpackStream(webpackConfig('production')));
+    bundle.run((err) => {
+      if (err) {
+        reject(err);
+      }
 
-    return mergeStream(libJs, graphicJs)
-      .pipe(sort(jsFileComparator))
-      .pipe(concat('graphic.js'))
-      .pipe(gulp.dest('build'));
-  } else {
-    return gulp
-      .src('src/*.js')
-      .pipe(sort(jsFileComparator))
-      .pipe(concat('graphic.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest('build'));
-  }
+      resolve();
+    });
+  });
 }
 
 function assets() {
@@ -265,7 +229,7 @@ function assets() {
 
 const buildDev = gulp.series(
   clean,
-  gulp.parallel(mustache, html, styles, scripts, assets, readme, graphicsReadme)
+  gulp.parallel(mustache, html, styles, assets, readme, graphicsReadme)
 );
 
 const buildProduction = gulp.series(
@@ -299,31 +263,11 @@ function watch() {
   gulp.watch(['README.md'], readme);
   gulp.watch(['templates/charts/README.md'], graphicsReadme);
   gulp.watch(['src/*.scss', 'templates/charts/stylesheets/*.scss'], styles);
-  gulp.watch(['src/*.js', 'src/lib/*.js', 'templates/charts/*.js'], scripts);
   gulp.watch(['src/assets/**'], assets);
 
   // Triggers a full refresh (html doesn't actually need to be recompiled)
   gulp.watch(['post-templates/**'], html);
   gulp.watch(['post-templates/custom-header-data.json'], mustache);
-
-  // Examples
-  gulp.watch(
-    [
-      'examples/*.scss',
-      'examples/*/*.scss',
-      'templates/charts/stylesheets/*.scss',
-    ],
-    examples.styles
-  );
-  gulp.watch(
-    ['examples/*/*.js', 'examples/*/lib/*.js', 'templates/charts/*.js'],
-    examples.scripts
-  );
-  gulp.watch(
-    ['examples/*/*.html', 'examples/*/template-files/*'],
-    examples.html
-  );
-  gulp.watch(['examples/*/assets/**'], examples.assets);
 
   gulp.watch(['src/*.mustache'], mustache);
   return gulp.watch(['src/*.html', 'src/template-files'], html);
@@ -355,10 +299,9 @@ function revision() {
 
 var defaultTask = gulp.series(
   clean,
+  buildDev,
   startServer,
   endrun.getPostData,
-  buildDev,
-  examples.build,
   openBrowser,
   watch
 );
@@ -399,6 +342,7 @@ gulp.task(
   'build:embed',
   gulp.series(buildProduction, externalEmbeds.setEmbedConfigFlag, buildEmbed)
 );
+gulp.task('build:examples', examples.build);
 gulp.task('revision', revision);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos);
