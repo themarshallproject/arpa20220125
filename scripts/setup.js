@@ -16,11 +16,11 @@ import {
 } from './github.js';
 
 const argv = mri(process.argv.slice(2));
-const config = getLocalConfig();
 
 export function setup(done) {
-  // If the slug isn't equal to the default, assume the project has already been setup.
+  const config = getLocalConfig();
 
+  // If the slug isn't equal to the default, assume the project has already been setup.
   if (!argv.force && config.slug !== 'cecinestpasuneslug') {
     console.log(
       '\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n'
@@ -61,6 +61,7 @@ export function handleMatchingRepo(cb) {
 }
 
 export function handleHeaderTemplateFiles(cb) {
+  const config = getLocalConfig();
   if (config.type !== 'header') {
     console.log('skipping header setup.');
     return cb();
