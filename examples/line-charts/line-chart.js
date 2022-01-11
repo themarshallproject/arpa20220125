@@ -1,15 +1,21 @@
 import * as d3 from 'd3';
-import * as utilities from 'charts/utilities.js';
-import ChartWithAxes from 'charts/axis-base.js';
+import ChartWithAxes from '../../templates/charts/axis-base.js';
 
 export default class LineChart extends ChartWithAxes {
   constructor(config) {
     super(config);
-    this.containerEl.classed('g-tmp-chart', true)
+    this.containerEl.classed('g-tmp-chart', true);
   }
 
   checkConfigKeys(config) {
-    const requiredKeys = ['containerId', 'data', 'xKey', 'yKey', 'xDomain', 'yDomain'];
+    const requiredKeys = [
+      'containerId',
+      'data',
+      'xKey',
+      'yKey',
+      'xDomain',
+      'yDomain',
+    ];
     this.ensureRequired(config, requiredKeys);
   }
 
@@ -24,39 +30,36 @@ export default class LineChart extends ChartWithAxes {
   }
 
   initScales() {
-    this.xScale = d3.scaleLinear()
-      .domain(this.config.xDomain)
+    this.xScale = d3.scaleLinear().domain(this.config.xDomain);
 
-    this.yScale = d3.scaleLinear()
-      .domain(this.config.yDomain)
+    this.yScale = d3.scaleLinear().domain(this.config.yDomain);
   }
 
   initDataElements() {
-    this.line = this.chart.append('g').attr('class', 'g-line-chart')
+    this.line = this.chart
+      .append('g')
+      .attr('class', 'g-line-chart')
       .datum(this.config.data)
       .append('path')
-      .attr('class', `line-chart-path ${ this.config.yKey }`)
+      .attr('class', `line-chart-path ${this.config.yKey}`);
   }
 
-  initAnnotations() {
-  }
+  initAnnotations() {}
 
   updateDataElements() {
     var lineGenerator = d3
       .line()
       .x((d) => {
-        return this.xScale(d[this.config.xKey])
+        return this.xScale(d[this.config.xKey]);
       })
       .y((d) => {
-        return this.yScale(d[this.config.yKey])
-      })
+        return this.yScale(d[this.config.yKey]);
+      });
 
-    this.line
-      .attr('d', lineGenerator)
+    this.line.attr('d', lineGenerator);
   }
 
-  updateAnnotations() {
-  }
+  updateAnnotations() {}
 
   sizeAndPositionChart() {
     super.sizeAndPositionChart();

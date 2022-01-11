@@ -28,6 +28,7 @@ any custom data processing this project may handle.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
+
 ## Table of Contents
 
 <!-- toc -->
@@ -67,8 +68,7 @@ any custom data processing this project may handle.
 ## Setup
 
 - Clone this repo (`themarshallproject/gfx-v2`) into an appropriately named and
-  located folder with this command: `git clone
-  git@github.com:themarshallproject/gfx-v2.git <project name>`
+  located folder with this command: `git clone git@github.com:themarshallproject/gfx-v2.git <project name>`
 
 - `cd <project name>`
 
@@ -107,19 +107,10 @@ any custom data processing this project may handle.
 - You will be prompted for credentials if you have not entered them before. You
   will need an AWS keypair, a Github API token, and an EndRun API key.
 
-
 ## Notes on JavaScript
 
-- By default, the graphics rig uses the ES6 import structure. Only `graphic.js`
-  is included automatically on the page, so other files should be `import`ed
-  from there. To use non-ES6-module code, place scripts in the `src/lib/`
-  folder. This will be included and concatenated without being compiled.
-
-- You can use ES5 by setting the `use_es6` configuration option in
-  `config.json` to `false`. This creates a slightly different compilation
-  behavior. Any `.js` file in the `src/` folder will be included automatically.
-  Your code in `graphic.js` will always come last in the concatenated file.
-
+- The graphics rig uses modern JavaScript imports. Anything
+  imported into `graphic.js` will be included in the page.
 
 ## Deploying multiple graphics from one repo
 
@@ -141,7 +132,6 @@ manually add the asset include graphic in the post. This will be slugged
 graphic allows us to load the project's JS and CSS once despite being shared
 across multiple graphics.
 
-
 #### Custom headers
 
 When you set up a project, you can choose "freeform header" as the graphic
@@ -156,7 +146,6 @@ When you deploy, the file named `header.mustache` or `header.html` will
 appear at the top of the post. If you have additional graphics in the
 post, you do not need to include the `includes` graphic as above. The
 assets will be included in the `header` file.
-
 
 ##### Using Endrun metadata to develop custom headers
 
@@ -179,14 +168,13 @@ the slug is associated with a specific post in Endrun, you can download
 metadata for that post by running `gulp posts:download`.
 
 Take a look at `post-templates/custom-header-data.json` to see what
-fields are available to use in developing a custom header. 
+fields are available to use in developing a custom header.
 
 Some fields (byline, producer byline, social tools) will appear by
 default within the sidebar of an Endrun post. If you use those fields in
 your custom header and wish to hide the defaults that appear in the
 sidebar, you can hide the entire sidebar with `.container article > aside.col4 { display: none; }`
 or can choose to hide individual children within that container.
-
 
 #### Customizing the layout of graphics locally
 
@@ -198,17 +186,14 @@ post. You may, in fact, want to just paste in a semi-produced post, graphic
 shortcodes and all.
 
 Your graphics will be placed according to where the graphic shortcodes appear
-in `localtext.md`. These shortcodes take the form of `[graphic
-slug=<graphicreposlug>:<filename>]`. So if you had a file named `intro.html` in
-a repo with the slug `slugfest`, the shortcode would `[graphic
-slug=slugfest:intro]`.
+in `localtext.md`. These shortcodes take the form of `[graphic slug=<graphicreposlug>:<filename>]`. So if you had a file named `intro.html` in
+a repo with the slug `slugfest`, the shortcode would `[graphic slug=slugfest:intro]`.
 
 Remember that you don't have to use `localtext.md` at all. A normal workflow
 might be leaving it empty while you develop prototypes of your various
 graphics, and then deploy and put them in a post. Then copy the produced post's
 contents back down to `localtext.md`, so that your graphics environment more
 closely resembles the real post.
-
 
 ## Using external data sources in your HTML
 
@@ -225,6 +210,7 @@ row of the table HTML by hand, you could create a Nunjucks template for
 a table row and loop over a dataset to populate the table.
 
 Let's say you have this CSV:
+
 ```
 name,date,nickname
 "New York","July 26, 1788","The Empire State"
@@ -241,6 +227,7 @@ corresponding to their filename. So our states data can be accessed as
 `data.states`.
 
 To build a table, you might write templating markup somewhat like this:
+
 ```
 <table>
   <thead>
@@ -312,6 +299,7 @@ By default, data will be formatted as an array of objects, where each
 object corresponds to a row in the CSV and the object keys correspond
 to the CSV's column headers. For example, the `states.csv` file above
 would appear as:
+
 ```
 [
   {
@@ -339,13 +327,16 @@ name the first column of your CSV `key` and use a unique value for each
 row.
 
 A CSV formatted like this:
+
 ```
 key,value,char_count
 "Headline","Dewey defeats Truman",20
 "Deck","G.O.P. Sweep Indicated in State",31
 "Description","This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948.",97
 ```
+
 will output like this:
+
 ```
 {
   Headline: {
@@ -374,6 +365,7 @@ reference.
 
 For example, removing the `char_count` column from our previous example
 CSV:
+
 ```
 key,value
 "Headline","Dewey defeats Truman"
@@ -382,6 +374,7 @@ key,value
 ```
 
 would return a JSON like this:
+
 ```
 {
   "Headline": "Dewey defeats Truman",
@@ -389,7 +382,6 @@ would return a JSON like this:
   "Description": "This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948."
 }
 ```
-
 
 ## Using pre-configured templates
 
@@ -402,7 +394,6 @@ Our chart templates are javascript modules that can be used to create
 basic d3.js charts with configurable options. Documentation for the
 templates, including instructions for setup, can be found in the [Chart
 Templates README](templates/charts/README.md).
-
 
 ### ai2html template
 
@@ -453,7 +444,6 @@ data-attributes from the parent.
 
 Details TK.
 
-
 ## Advanced Features
 
 #### Google Sheets Integration
@@ -470,8 +460,7 @@ with these instructions.
 
 The `client_secret.json` identifies our 'app' and shouldn't ever change. The
 bearer token can expire. If it does, you might see an error like
-`invalid_grant` or something similar. To refresh this token you can run `gulp
-credentials:google`. If for some reason you do need to reset the client app
+`invalid_grant` or something similar. To refresh this token you can run `gulp credentials:google`. If for some reason you do need to reset the client app
 credentials you should run `gulp credentials:google_client`.
 
 Once you've been properly authorized (which you shouldn't need to do again for
@@ -480,7 +469,6 @@ spreadsheet into a separate csv file in `src/template-files`, using the name of
 the sheet as the name of the file. You can then import this data into your
 templates using the process described in [using external data sources in your
 HTML](#using-external-data-sources-in-your-html).
-
 
 ## Examples
 
@@ -492,7 +480,6 @@ HTML](#using-external-data-sources-in-your-html).
     external data, preserving the same folder structure that you'd use
     within `src/`.
   - You're good to go!
-
 
 ## Sharing graphics outside of TMP
 
@@ -507,7 +494,7 @@ will publish your assets and html to s3 and upload an embed code to
 Endrun. You can then find the embed snippet in the [graphics admin in
 Endrun](https://www.themarshallproject.org/admin/graphics).
 
-If you are embedding multiple graphics, you do *not* need to include a
+If you are embedding multiple graphics, you do _not_ need to include a
 separate embed for script includes — they will be loaded by the embed
 code.
 
@@ -519,7 +506,7 @@ relying on any external code, you can preview your embeds at
 ### Legacy instructions - embedding as iframe
 
 If a partner can't publish inline javascript in their CMS, you can
-provide an iframe of a graphic.  Getting one to send them can take a
+provide an iframe of a graphic. Getting one to send them can take a
 little bit of work, especially for multiple graphics setups, but it's
 doable.
 
@@ -540,9 +527,7 @@ doable.
    this setup
    [here](https://github.com/themarshallproject/miamioffender20180627/blob/master/src/map-embed.html).
 4. You can now send the iframe to the partner with some sample code like this:
-   `<iframe width="100%" height="900"
-   src="https://www.themarshallproject.org/embed/graphic/<graphic-id>"
-   frameborder="0"></iframe>`, replacing the graphic id again.
+   `<iframe width="100%" height="900" src="https://www.themarshallproject.org/embed/graphic/<graphic-id>" frameborder="0"></iframe>`, replacing the graphic id again.
 
 Note that it is up to you to make sure your graphic is responsive, and works
 well within an iframe. It is up to the partner to make sure that the iframe is
@@ -554,12 +539,9 @@ pym](http://blog.apps.npr.org/pym.js/).
 When a project has data analysis associated with its graphic(s), you can
 include code for the source data, analysis, and output data in the `analysis/`
 folder. You can also set up workflows to run your analysis from scratch using
-the `Makefile`. For example, `make all` would run the analysis workflow; `make
-clean` would remove all outputs from previous runs of the analysis; `make
-deploy` would upload data from the `output_data/` folder onto S3 for sharing.
+the `Makefile`. For example, `make all` would run the analysis workflow; `make clean` would remove all outputs from previous runs of the analysis; `make deploy` would upload data from the `output_data/` folder onto S3 for sharing.
 See `Makefile` for more documentation of commands and to create your own
 analysis workflows.
-
 
 ## Tips
 
@@ -588,6 +570,7 @@ function clonegraphic() {
   bash setup.sh
 }
 ```
+
 - You can get the most recent version of this tool by running
   `git pull updates master && npm install`.
 
@@ -616,7 +599,7 @@ take an additional step. To tell the rig where you want to store your
 system-wide credentials, set the `CREDENTIALS_PATH` environment variable in
 your `.bashrc` or equivalent. For example, I added this line to my bashrc:
 
-```export CREDENTIALS_PATH=~/.ssh/.credentials.json```
+`export CREDENTIALS_PATH=~/.ssh/.credentials.json`
 
 (the ssh folder is convenient because it will already have appropriately
 restrictive permissions, but you can put it anywhere).
@@ -641,4 +624,3 @@ google, but feel free to ask around if you do run into trouble!
 ## Thoughts? Ideas? Issues?
 
 Make an issue in this repo!
-
