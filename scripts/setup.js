@@ -31,6 +31,7 @@ export function setup(done) {
   getSlug(function (slug) {
     console.log(`Using slug: ${slug}`);
     setLocalConfig({ slug });
+    done();
   });
 }
 
