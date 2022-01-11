@@ -60,8 +60,8 @@ Stylesheets can be found in `templates/charts/stylesheets/` and
 imported in your `graphic.scss` file.
 
 ```scss
-@import '../templates/charts/stylesheets/chart-with-axes.scss';
-@import '../templates/charts/stylesheets/chart-labels.scss';
+@import 'charts/stylesheets/chart-with-axes.scss';
+@import 'charts/stylesheets/chart-labels.scss';
 ```
 
 ## Individual template config options
