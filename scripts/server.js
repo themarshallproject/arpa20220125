@@ -19,7 +19,7 @@ export default function server(options) {
   var app = polka();
   app.use(sirv('build', { dev: true }));
   app.use('/examples', sirv('build-examples', { dev: true }));
-  app.use(sirv('post-templates', { dev: true }));
+  app.use('/post-templates', sirv('post-templates', { dev: true }));
 
   var config = getLocalConfig();
   console.log('Config:', config);
