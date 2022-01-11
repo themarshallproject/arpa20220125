@@ -34,28 +34,28 @@ any custom data processing this project may handle.
 <!-- toc -->
 
 - [Setup](#setup)
-  * [Setup for existing projects](#setup-for-existing-projects)
+  - [Setup for existing projects](#setup-for-existing-projects)
 - [Run](#run)
 - [Deploy](#deploy)
 - [Notes on JavaScript](#notes-on-javascript)
 - [Deploying multiple graphics from one repo](#deploying-multiple-graphics-from-one-repo)
-    + [Basic use](#basic-use)
-    + [Custom headers](#custom-headers)
-      - [Using Endrun metadata to develop custom headers](#using-endrun-metadata-to-develop-custom-headers)
-    + [Customizing the layout of graphics locally](#customizing-the-layout-of-graphics-locally)
+  - [Basic use](#basic-use)
+  - [Custom headers](#custom-headers)
+    - [Using Endrun metadata to develop custom headers](#using-endrun-metadata-to-develop-custom-headers)
+  - [Customizing the layout of graphics locally](#customizing-the-layout-of-graphics-locally)
 - [Using external data sources in your HTML](#using-external-data-sources-in-your-html)
-    + [Example: basic table](#example-basic-table)
-    + [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
-    + [CSV data formats](#csv-data-formats)
+  - [Example: basic table](#example-basic-table)
+  - [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
+  - [CSV data formats](#csv-data-formats)
 - [Using pre-configured templates](#using-pre-configured-templates)
-  * [Chart templates](#chart-templates)
-  * [ai2html template](#ai2html-template)
-  * [Scrolly template TK](#scrolly-template-tk)
+  - [Chart templates](#chart-templates)
+  - [ai2html template](#ai2html-template)
+  - [Scrolly template TK](#scrolly-template-tk)
 - [Advanced Features](#advanced-features)
-    + [Google Sheets Integration](#google-sheets-integration)
+  - [Google Sheets Integration](#google-sheets-integration)
 - [Examples](#examples)
 - [Sharing graphics outside of TMP](#sharing-graphics-outside-of-tmp)
-  * [Legacy instructions - embedding as iframe](#legacy-instructions---embedding-as-iframe)
+  - [Legacy instructions - embedding as iframe](#legacy-instructions---embedding-as-iframe)
 - [Running data analysis](#running-data-analysis)
 - [Tips](#tips)
 - [Other commands](#other-commands)
@@ -474,6 +474,7 @@ HTML](#using-external-data-sources-in-your-html).
 
 - View [examples of common graphics here](/examples/), or check out the
   code in `examples/`.
+- To build the example projects, run `gulp build:examples`.
 - To add a new example to the page:
   - create a new directory in `examples/` with a directory name that describes the graphic.
   - Place your html, javascript and sass inside. You can also include assets and

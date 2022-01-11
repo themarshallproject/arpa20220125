@@ -5,26 +5,26 @@ in `templates/charts/`.
 
 <!-- Auto-generated table of contents! -->
 <!-- This section will update itself if you make changes to the headers. -->
+
 ## Table of Contents
 
 <!-- toc -->
 
 - [Getting started](#getting-started)
-  * [Importing templates](#importing-templates)
-  * [Importing styles](#importing-styles)
+  - [Importing templates](#importing-templates)
+  - [Importing styles](#importing-styles)
 - [Individual template config options](#individual-template-config-options)
-  * [ChartBase](#chartbase)
-  * [ChartWithAxes](#chartwithaxes)
-  * [VerticalBarChart](#verticalbarchart)
-  * [HorizontalBarChart](#horizontalbarchart)
+  - [ChartBase](#chartbase)
+  - [ChartWithAxes](#chartwithaxes)
+  - [VerticalBarChart](#verticalbarchart)
+  - [HorizontalBarChart](#horizontalbarchart)
 
 <!-- tocstop -->
 
 ## Getting started
 
 All the charts in these templates use d3.js (version 5), which will be
-automatically installed when you set up a new chart or run `npm
-install`.
+automatically installed when you set up a new chart or run `npm install`.
 
 ### Importing templates
 
@@ -32,18 +32,18 @@ Each template can be imported into your javascript as an ES6 module and
 instantiated as a chart object. For example, here's how you would
 create a new bar chart in the div `#g-chart-example`:
 
-```
-import HorizontalBarChart from 'charts/bar-chart-horizontal.js';
+```js
+import HorizontalBarChart from '../templates/charts/bar-chart-horizontal.js';
 
 const BARS_DATA = [
   {
     name: 'Bar 1',
-    value: '20'
+    value: '20',
   },
   {
     name: 'Bar 2',
-    value: '10'
-  }
+    value: '10',
+  },
 ];
 
 const exampleChart = new HorizontalBarChart({
@@ -59,11 +59,10 @@ const exampleChart = new HorizontalBarChart({
 Stylesheets can be found in `templates/charts/stylesheets/` and
 imported in your `graphic.scss` file.
 
+```scss
+@import '../templates/charts/stylesheets/chart-with-axes.scss';
+@import '../templates/charts/stylesheets/chart-labels.scss';
 ```
-@import "charts/stylesheets/chart-with-axes.scss";
-@import "charts/stylesheets/chart-labels.scss";
-```
-
 
 ## Individual template config options
 
@@ -150,9 +149,7 @@ itself is drawn.
 Can be expressed as a function with one argument,
 the width of the chart SVG in pixels, to set values responsively.
 
-
 ---
-
 
 ### ChartWithAxes
 
@@ -352,7 +349,6 @@ A function that formats the tick labels along the y axis. The function
 is passed two arguments: `d`, representing the value of the tick, and
 `width`, the width of the chart SVG, which can be used to format the
 ticks responsively.
-
 
 ---
 
