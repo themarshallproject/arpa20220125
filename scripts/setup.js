@@ -1,5 +1,5 @@
 // native
-import { writeFileSync, existsSync, copyFileSync } from 'fs';
+import { existsSync, copyFileSync } from 'fs';
 import { basename } from 'path';
 import { createInterface } from 'readline';
 
@@ -8,7 +8,7 @@ import { lightFormat } from 'date-fns';
 import mri from 'mri';
 
 // local
-import { getLocalConfig } from './config.js';
+import { getLocalConfig, setLocalConfig } from './config.js';
 import {
   createAndSetRepository,
   createDefaultIssues,
@@ -16,11 +16,11 @@ import {
 } from './github.js';
 
 const argv = mri(process.argv.slice(2));
-const config = getLocalConfig();
 
 export function setup(done) {
-  // If the slug isn't equal to the default, assume the project has already been setup.
+  const config = getLocalConfig();
 
+  // If the slug isn't equal to the default, assume the project has already been setup.
   if (!argv.force && config.slug !== 'cecinestpasuneslug') {
     console.log(
       '\nLooks like this project has already been set up!\nTo setup anyway, run \n\n\tgulp setup --force\n'
@@ -30,11 +30,8 @@ export function setup(done) {
 
   getSlug(function (slug) {
     console.log(`Using slug: ${slug}`);
-    config.slug = slug;
-    getType(function () {
-      writeFileSync('config.json', JSON.stringify(config, null, 2));
-      done();
-    });
+    setLocalConfig({ slug });
+    done();
   });
 }
 
@@ -65,6 +62,7 @@ export function handleMatchingRepo(cb) {
 }
 
 export function handleHeaderTemplateFiles(cb) {
+  const config = getLocalConfig();
   if (config.type !== 'header') {
     console.log('skipping header setup.');
     return cb();
@@ -128,10 +126,7 @@ function getType(cb) {
 
 export function resetType(done) {
   getType(function (configUpdates) {
-    writeFileSync(
-      'config.json',
-      JSON.stringify(Object.assign(config, configUpdates), null, 2)
-    );
+    setLocalConfig(configUpdates);
     done();
   });
 }
