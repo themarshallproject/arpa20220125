@@ -41,7 +41,7 @@ export function deploy(done) {
           },
           maps: {
             CacheControl: (keyname) => {
-              if (keyname.match(/manifest-\.json/)) {
+              if (keyname.match(/rev-manifest\.json/)) {
                 console.log('Set 30-second max-age on rev-manifest.json');
                 return 'max-age=30';
               }
