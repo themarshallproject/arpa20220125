@@ -11,6 +11,6 @@
   "endrun_host": "https://www.themarshallproject.org",
   "multiple_graphics": false,
   "generate_external_embeds": false,
-  "embed_loader_version": "0.1.15",
+  "embed_loader_version": "0.1.16",
   "spreadsheet_id": ""
 }
