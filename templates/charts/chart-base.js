@@ -73,7 +73,7 @@ export default class ChartBase {
       marginBottom: 10,
       marginLeft: 10,
     };
-    this.config = Object.assign(classDefaults, config);
+    this.config = Object.assign({}, classDefaults, config);
   }
 
   // Initialize the graphic and size it. We call this separately from the
