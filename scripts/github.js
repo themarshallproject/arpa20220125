@@ -43,7 +43,7 @@ export async function createRepository(name) {
   } catch (err) {
     if (err.code === 422) {
       log.error(
-        JSON.parse(error.message)
+        JSON.parse(err.message)
           .errors.map((e) => e.message)
           .join()
       );
@@ -157,7 +157,7 @@ export function ensureUpdatesRemote() {
           ])
           .toString()
       );
-    } catch (error) {
+    } catch (err) {
       log('Got error, assuming remote already exists. Carry on.');
     }
 
@@ -207,9 +207,9 @@ export function ensureRepoCleanAndPushed(done) {
     log('Pushing local changes to origin.');
     try {
       child_process.execFileSync('git', ['push', '--porcelain', '--quiet']);
-    } catch (error) {
+    } catch (err) {
       log('Maybe you need to \n\n\tgit pull\n\n');
-      throw error;
+      throw err;
     }
   }
 
