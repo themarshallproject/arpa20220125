@@ -12,9 +12,7 @@ import { writeJsonSync } from './utils.js';
 
 const config = getLocalConfig();
 
-async function routeEndrunRequest(host) {
-  host = host ? host : config.endrun_host;
-
+async function routeEndrunRequest(host = config.endrun_host) {
   let secret;
   let task;
 
