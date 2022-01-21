@@ -2,8 +2,8 @@
 import fs from 'fs';
 
 // packages
+import axios from 'axios';
 import log from 'fancy-log';
-import request from 'request';
 
 // local
 import { getLocalConfig } from './config.js';
@@ -14,125 +14,97 @@ import { getGraphics } from './localrenderer.js';
 
 const config = getLocalConfig();
 
-function routeEndrunRequest(done, host, callback) {
-  host = host || config.endrun_host;
-  if (host == 'https://www.themarshallproject.org') {
-    credentials.ensureCredentials(function (creds) {
-      var endrunCredsKey = 'gfx-endrun';
-      var endrunTask = 'endrun';
-      callback(host, creds[endrunCredsKey], endrunTask);
-    });
-  } else {
-    credentials.getEndrunLocalCredentials(function (creds) {
-      log(
-        `Reminder: You are using an Endrun install hosted at ${host}. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`
-      );
+async function routeEndrunRequest(host) {
+  host = host ? host : config.endrun_host;
 
-      var endrunCredsKey = 'gfx-endrun-local';
-      var endrunTask = 'endrun_local';
-      callback(host, creds[endrunCredsKey], endrunTask);
-    });
+  let secret;
+  let task;
+
+  if (host === 'https://www.themarshallproject.org') {
+    secret = await credentials.ensureCredential(credentials.ENDRUN);
+    task = 'endrun';
+  } else {
+    secret = await credentials.ensureCredential(credentials.ENDRUN_LOCAL);
+    task = 'endrun_local';
+    log(
+      `Reminder: You are using an Endrun install hosted at ${host}. To deploy to https://www.themarshallproject.org, update the endrun_host in config.json.`
+    );
   }
+
+  return { host, secret, task };
 }
 
 function defaultEndrunResponseHandler(error, response, endrunTask) {
   if (error) {
-    log.error(error);
+    log.error(error.message);
   }
 
-  if (response.statusCode === 403) {
+  if (response.status === 403) {
     log(
       `Your API key is invalid! You can get a new one at ${config.endrun_host}/admin/api_keys\n which you can update here by running:\n\n\tgulp credentials:${endrunTask}\n\n`
     );
   }
 }
 
-export function endrunDeploy(done, host) {
-  routeEndrunRequest(done, host, function (host, endrunToken, endrunTask) {
-    var endpoint = '/admin/api/v2/deploy-gfx';
-    var body = {
-      token: endrunToken,
-      type: config.type,
-      slug: config.slug,
-      repo: github.getRemoteUrl(),
-    };
+export async function endrunDeploy() {
+  const params = await routeEndrunRequest();
 
-    body['contents'] = getGraphics({ isProduction: true });
+  const endpoint = '/admin/api/v2/deploy-gfx';
 
-    if (config.generate_external_embeds) {
-      body['embeds'] = getEmbedLoaders();
-    }
+  const body = {
+    token: params.secret,
+    type: config.type,
+    slug: config.slug,
+    repo: github.getRemoteUrl(),
+  };
 
-    request.post(
-      {
-        url: host + endpoint,
-        json: true,
-        body: body,
-      },
-      function (error, response, body) {
-        defaultEndrunResponseHandler(error, response, endrunTask);
+  body.contents = getGraphics({ isProduction: true });
 
-        if (response && response.statusCode !== 200) {
-          log.error(response.statusCode + ': ' + body.error);
-          done(body.error);
-        }
+  if (config.generate_external_embeds) {
+    body.embeds = getEmbedLoaders();
+  }
 
-        log(body);
-
-        done();
-      }
-    );
-  });
+  try {
+    const res = await axios.post(`${params.host}${endpoint}`, body);
+    log(res.data);
+  } catch (err) {
+    defaultEndrunResponseHandler(err, err.response, params.task);
+  }
 }
 
-export function getPostData(done, host) {
-  routeEndrunRequest(done, host, function (host, endrunToken, endrunTask) {
-    if (config.slug) {
-      host = host || config.endrun_host;
-      var endpoint = `/admin/api/v2/post-data/${config.slug}?token=${endrunToken}`;
+export async function getPostData() {
+  const params = await routeEndrunRequest();
 
-      request.get(
-        {
-          url: host + endpoint,
-          json: true,
-        },
-        function (error, response, body) {
-          defaultEndrunResponseHandler(error, response, endrunTask);
+  if (!config.slug) {
+    throw new Error(
+      'You must specify a slug in config.json to download custom header data.'
+    );
+  }
 
-          if (response && response.statusCode == 404) {
-            // This is not necessarily an error -- `getPostData` will run by
-            // default regardless of whether there's an associated post. We do
-            // not want to force the gulp series to break because that is normal
-            // behavior. Most graphics will not be using post data.
-            log.error(
-              response.statusCode +
-                ': ' +
-                JSON.stringify(body) +
-                '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.'
-            );
-            done();
-          } else if (response && response.statusCode !== 200) {
-            log.error(
-              response.statusCode + ': ' + body.error + '\nNo post data saved.'
-            );
-            done(body.error);
-          } else if (response && response.statusCode == 200) {
-            log('Writing post data to post-templates/custom-header-data.json.');
-            const content = JSON.stringify(response.body, null, 2);
-            fs.writeFileSync(
-              `./post-templates/custom-header-data.json`,
-              content
-            );
-          }
+  const endpoint = `/admin/api/v2/post-data/${config.slug}?token=${params.secret}`;
 
-          done();
-        }
-      );
-    } else {
-      log.error(
-        'You must specify a slug in config.json to download custom header data.'
-      );
-      done();
+  try {
+    const res = await axios.get(`${params.host}${endpoint}`);
+
+    log('Writing post data to post-templates/custom-header-data.json.');
+    const content = JSON.stringify(res.data, null, 2);
+    fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
+  } catch (err) {
+    defaultEndrunResponseHandler(err, err.response, params.task);
+
+    if (err.response) {
+      if (err.response.status === 404) {
+        // This is not necessarily an error -- `getPostData` will run by
+        // default regardless of whether there's an associated post. We do
+        // not want to force the gulp series to break because that is normal
+        // behavior. Most graphics will not be using post data.
+        log.error(
+          JSON.stringify(err.response.data) +
+            '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.'
+        );
+      }
+
+      log.warn('No post data saved.');
     }
-  });
+  }
 }
