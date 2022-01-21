@@ -1,6 +1,3 @@
-// native
-import { createRequire } from 'module';
-
 // packages
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
@@ -11,6 +8,7 @@ import log from 'fancy-log';
 // local
 import * as credentials from './credentials.js';
 import { getLocalConfig } from './config.js';
+import { S3Deploy } from './s3/index.js';
 
 const config = getLocalConfig();
 
@@ -27,6 +25,8 @@ async function getS3Credentials() {
 
 export async function deploy(done) {
   const { accessKeyId, secretAccessKey } = await getS3Credentials();
+
+  const client = new S3Deploy({ accessKeyId, secretAccessKey });
 
   const s3 = gulpS3Upload({ accessKeyId, secretAccessKey });
 
