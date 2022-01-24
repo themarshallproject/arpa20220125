@@ -92,15 +92,8 @@ export default class ChartBase {
 
   // Charts default to filling their container width
   getSVGWidth() {
-    const containerWidth = this.containerNode.getBoundingClientRect().width;
-    const computedStyles = getComputedStyle(this.containerNode);
-    const paddingLeft = +computedStyles
-      .getPropertyValue('padding-left')
-      .slice(0, -2);
-    const paddingRight = +computedStyles
-      .getPropertyValue('padding-right')
-      .slice(0, -2);
-    return containerWidth - paddingLeft - paddingRight;
+    this.svg.attr('width', '100%');
+    return this.svg.node().getBoundingClientRect().width;
   }
 
   // Charts default to basing their height as a proportion of the chart width.
@@ -139,15 +132,10 @@ export default class ChartBase {
     this.size = this.getBaseMeasurements();
 
     // The SVG should include margins in its width and height.
-    this.svg
-      .attr(
-        'width',
-        this.size.chartWidth + this.size.marginLeft + this.size.marginRight
-      )
-      .attr(
-        'height',
-        this.size.chartHeight + this.size.marginTop + this.size.marginBottom
-      );
+    this.svg.attr(
+      'height',
+      this.size.chartHeight + this.size.marginTop + this.size.marginBottom
+    );
 
     // Offset the chart group by top and left margins.
     this.chart.attr(
