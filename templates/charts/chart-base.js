@@ -131,7 +131,7 @@ export default class ChartBase {
   sizeBaseSVG() {
     this.size = this.getBaseMeasurements();
 
-    // The SVG should include margins in its width and height.
+    // SVG width is already set to 100%. The height measurement should include margins.
     this.svg.attr(
       'height',
       this.size.chartHeight + this.size.marginTop + this.size.marginBottom
