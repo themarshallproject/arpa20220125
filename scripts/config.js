@@ -1,6 +1,5 @@
-import { writeFileSync } from 'fs';
-
-import { readJsonSync } from './utils.js';
+// local
+import { readJsonSync, writeJsonSync } from './utils.js';
 
 const CONFIG_LOCATION = './config.json';
 
@@ -10,5 +9,5 @@ export function getLocalConfig() {
 
 export function setLocalConfig(configUpdates) {
   const config = Object.assign({}, getLocalConfig(), configUpdates);
-  writeFileSync(CONFIG_LOCATION, JSON.stringify(config, null, 2));
+  writeJsonSync(CONFIG_LOCATION, config, 2);
 }

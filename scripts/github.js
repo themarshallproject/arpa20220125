@@ -12,55 +12,64 @@ import * as credentials from './credentials.js';
 import { getLocalConfig } from './config.js';
 import { readJsonSync } from './utils.js';
 
-export function createRepository(name, cb) {
-  credentials.ensureCredentials(function (creds) {
-    const client = new Octokit({
-      auth: `token ${creds['gfx-github']}`,
+async function getGitHubClient() {
+  const secret = await credentials.ensureCredential(credentials.GITHUB);
+
+  return new Octokit({
+    auth: `token ${secret}`,
+  });
+}
+
+/**
+ * @param {string} name
+ */
+export async function createRepository(name) {
+  const client = await getGitHubClient();
+
+  log(`Creating github repo themarshallproject/${name}`);
+
+  try {
+    const result = await client.repos.createInOrg({
+      org: 'themarshallproject',
+      name,
+      private: true,
+      has_issues: true,
+      has_projects: false,
+      has_wiki: false,
+      description: 'Repo automatically created by gfx rig.',
     });
-    log('Creating github repo themarshallproject/' + name);
-    client.repos
-      .createInOrg({
-        org: 'themarshallproject',
-        name: name,
-        private: true,
-        has_issues: true,
-        has_projects: false,
-        has_wiki: false,
-        description: 'Repo automatically created by gfx rig.',
-      })
-      .then((result) => {
-        cb(result.data);
-      })
-      .catch((error) => {
-        if (error.code == 422) {
-          log.error(
-            JSON.parse(error.message)
-              .errors.map((e) => e.message)
-              .join()
-          );
-          log('Did someone already set up this repository?');
-        } else {
-          log.error('Unrecognized error:', error);
-        }
-      });
-  });
+
+    return result.data;
+  } catch (err) {
+    if (err.code === 422) {
+      log.error(
+        JSON.parse(err.message)
+          .errors.map((e) => e.message)
+          .join()
+      );
+      log('Did someone already set up this repository?');
+    } else {
+      log.error('Unrecognized error:', err);
+    }
+  }
 }
 
-export function createAndSetRepository(done) {
+export async function createAndSetRepository() {
   var config = getLocalConfig();
-  createRepository(config.slug, function (repo) {
-    log('Repo successfully created at ' + repo.html_url);
-    log('Setting new repo to origin remote');
-    log(
-      child_process
-        .execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url])
-        .toString()
-    );
-    ensureUpdatesRemote(done);
-  });
+
+  const repo = await createRepository(config.slug);
+  log('Repo successfully created at ' + repo.html_url);
+  log('Setting new repo to origin remote');
+  log(
+    child_process
+      .execFileSync('git', ['remote', 'set-url', 'origin', repo.ssh_url])
+      .toString()
+  );
+
+  await ensureUpdatesRemote();
 }
 
-export function setupDefaultLabels(done) {
+export async function setupDefaultLabels() {
   log('Customizing repo issue labels...');
   const { slug } = getLocalConfig();
 
@@ -94,81 +103,75 @@ export function setupDefaultLabels(done) {
     { name: 'Browser: Mobile', color: 'aaaaaa' },
   ];
 
-  credentials.ensureCredentials(async (creds) => {
-    const client = new Octokit({
-      auth: creds['gfx-github'],
-    });
+  const client = await getGitHubClient();
 
-    // first remove the default labels, if they exist
-    log('Removing default labels');
-    for (const name of labelsToRemove) {
-      try {
-        await client.issues.deleteLabel({
-          owner: 'themarshallproject',
-          repo: slug,
-          name,
-        });
-      } catch (e) {
-        // 404 means the label already didn't exist
-        // https://docs.github.com/en/rest/reference/issues#delete-a-label
-        if (e.status !== 404) {
-          throw e;
-        }
+  // first remove the default labels, if they exist
+  log('Removing default labels');
+  for (const name of labelsToRemove) {
+    try {
+      await client.issues.deleteLabel({
+        owner: 'themarshallproject',
+        repo: slug,
+        name,
+      });
+    } catch (err) {
+      // 404 means the label already didn't exist
+      // https://docs.github.com/en/rest/reference/issues#delete-a-label
+      if (err.status !== 404) {
+        throw err;
       }
     }
-
-    // then add our custom ones
-    log('Replacing default issue labels with more helpful ones');
-    for (const { name, color } of labelsToAdd) {
-      try {
-        await client.issues.createLabel({
-          owner: 'themarshallproject',
-          repo: slug,
-          name,
-          color,
-        });
-      } catch (e) {
-        // 422 means the label already exists, which is fine
-        // https://docs.github.com/en/rest/reference/issues#create-a-label
-        if (e.status !== 422) {
-          throw e;
-        }
-      }
-    }
-
-    done();
-  });
-}
-
-export function ensureUpdatesRemote(done) {
-  log('Adding original gfx repo as remote updates');
-  try {
-    log(
-      child_process
-        .execFileSync('git', [
-          'remote',
-          'add',
-          'updates',
-          'git@github.com:themarshallproject/gfx-v2.git',
-        ])
-        .toString()
-    );
-  } catch (error) {
-    log('Got error, assuming remote already exists. Carry on.');
   }
-  done();
+
+  // then add our custom ones
+  log('Replacing default issue labels with more helpful ones');
+  for (const { name, color } of labelsToAdd) {
+    try {
+      await client.issues.createLabel({
+        owner: 'themarshallproject',
+        repo: slug,
+        name,
+        color,
+      });
+    } catch (err) {
+      // 422 means the label already exists, which is fine
+      // https://docs.github.com/en/rest/reference/issues#create-a-label
+      if (err.status !== 422) {
+        throw err;
+      }
+    }
+  }
 }
 
-export function pullUpdates(done) {
-  ensureUpdatesRemote(() => {
-    log(
-      child_process
-        .execFileSync('git', ['pull', 'updates', 'master'])
-        .toString()
-    );
-    log(child_process.execFileSync('npm', ['install']).toString());
+export function ensureUpdatesRemote() {
+  return new Promise((resolve) => {
+    log('Adding original gfx repo as remote updates');
+    try {
+      log(
+        child_process
+          .execFileSync('git', [
+            'remote',
+            'add',
+            'updates',
+            'git@github.com:themarshallproject/gfx-v2.git',
+          ])
+          .toString()
+      );
+    } catch (err) {
+      log('Got error, assuming remote already exists. Carry on.');
+    }
+
+    resolve();
   });
-  done();
+}
+
+export async function pullUpdates() {
+  await ensureUpdatesRemote();
+
+  log(
+    child_process.execFileSync('git', ['pull', 'updates', 'master']).toString()
+  );
+  log(child_process.execFileSync('npm', ['install']).toString());
 }
 
 export function ensureRepoCleanAndPushed(done) {
@@ -204,9 +207,9 @@ export function ensureRepoCleanAndPushed(done) {
     log('Pushing local changes to origin.');
     try {
       child_process.execFileSync('git', ['push', '--porcelain', '--quiet']);
-    } catch (error) {
+    } catch (err) {
       log('Maybe you need to \n\n\tgit pull\n\n');
-      throw error;
+      throw err;
     }
   }
 
@@ -229,26 +232,20 @@ export function updateDependabotSettings(cb) {
   cb();
 }
 
-export function createDefaultIssues(done) {
+export async function createDefaultIssues() {
   const { slug } = getLocalConfig();
   const issues = readJsonSync('./scripts/issues.json');
 
-  credentials.ensureCredentials(async (creds) => {
-    const client = new Octokit({
-      auth: creds['gfx-github'],
+  const client = await getGitHubClient();
+
+  for (const issue of issues) {
+    await client.issues.create({
+      owner,
+      repo: slug,
+      title: issue.title,
+      labels: issue.labels,
     });
-
-    for (const issue of issues) {
-      await client.issues.create({
-        owner,
-        repo: slug,
-        title: issue.title,
-        labels: issue.labels,
-      });
-    }
-
-    done();
-  });
+  }
 }
 
 export function getRemoteUrl() {

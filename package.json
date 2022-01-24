@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
-    "@babel/core": "^7.16.10",
+    "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
     "@googleapis/sheets": "^0.3.0",
     "@octokit/rest": "^18.12.0",
@@ -61,12 +61,11 @@
     "premove": "^4.0.0",
     "prettier": "^2.5.1",
     "pretty-bytes": "^5.6.0",
-    "request": "^2.88.2",
     "sass": "^1.49.0",
     "sirv": "^2.0.2",
     "svelte": "^3.46.2",
     "svelte-loader": "^3.1.2",
-    "webpack": "^5.66.0",
+    "webpack": "^5.67.0",
     "webpack-dev-middleware": "^5.3.0",
     "webpack-stream": "^7.0.0",
     "yaml": "^1.10.2"
