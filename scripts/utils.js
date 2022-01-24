@@ -1,14 +1,25 @@
 // native
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 // packages
 import { premove } from 'premove';
 
 /**
  * @param {string} path
+ * @returns {unknown}
  */
 export function readJsonSync(path) {
   return JSON.parse(readFileSync(path));
+}
+
+/**
+ * @param {string} path
+ * @param {string} content
+ * @param {number} [indent]
+ * @returns {void}
+ */
+export function writeJsonSync(path, content, indent) {
+  writeFileSync(path, JSON.stringify(content, null, indent));
 }
 
 /**

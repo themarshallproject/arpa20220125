@@ -119,11 +119,7 @@ function transcodeAll(creds) {
 }
 
 function getCredentials() {
-  return new Promise((resolve, reject) => {
-    credentials.getMuxCredentials((creds) => {
-      resolve(creds);
-    });
-  });
+  return credentials.getMuxCredentials();
 }
 
 function formatOutput(url, responseData) {
