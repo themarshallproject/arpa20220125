@@ -348,7 +348,7 @@ gulp.task('deploy:s3:raw', s3.deploy);
 gulp.task('deploy:data', s3.deployData);
 
 // Credential management
-gulp.task('credentials', credentials.ensureCredentialsTask);
+gulp.task('credentials', credentials.ensureRequiredCredentialsTask);
 gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
