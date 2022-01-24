@@ -85,8 +85,6 @@ export async function getPostData() {
     log('Writing post data to post-templates/custom-header-data.json.');
     writeJsonSync(`./post-templates/custom-header-data.json`, res.data, 2);
   } catch (err) {
-    defaultEndrunResponseHandler(err, err.response, params.task);
-
     if (err.response) {
       if (err.response.status === 404) {
         // This is not necessarily an error -- `getPostData` will run by
@@ -97,6 +95,8 @@ export async function getPostData() {
           JSON.stringify(err.response.data) +
             '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.'
         );
+      } else {
+        defaultEndrunResponseHandler(err, err.response, params.task);
       }
 
       log.warn('No post data saved.');
