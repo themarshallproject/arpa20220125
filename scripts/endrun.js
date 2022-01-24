@@ -1,6 +1,3 @@
-// native
-import fs from 'fs';
-
 // packages
 import axios from 'axios';
 import log from 'fancy-log';
@@ -11,12 +8,11 @@ import * as credentials from './credentials.js';
 import { getEmbedLoaders } from './external-embeds.js';
 import * as github from './github.js';
 import { getGraphics } from './localrenderer.js';
+import { writeJsonSync } from './utils.js';
 
 const config = getLocalConfig();
 
-async function routeEndrunRequest(host) {
-  host = host ? host : config.endrun_host;
-
+async function routeEndrunRequest(host = config.endrun_host) {
   let secret;
   let task;
 
@@ -87,11 +83,8 @@ export async function getPostData() {
     const res = await axios.get(`${params.host}${endpoint}`);
 
     log('Writing post data to post-templates/custom-header-data.json.');
-    const content = JSON.stringify(res.data, null, 2);
-    fs.writeFileSync(`./post-templates/custom-header-data.json`, content);
+    writeJsonSync(`./post-templates/custom-header-data.json`, res.data, 2);
   } catch (err) {
-    defaultEndrunResponseHandler(err, err.response, params.task);
-
     if (err.response) {
       if (err.response.status === 404) {
         // This is not necessarily an error -- `getPostData` will run by
@@ -102,6 +95,8 @@ export async function getPostData() {
           JSON.stringify(err.response.data) +
             '\nNo post associated with this graphic slug. To create a new post linked to this slug, run `gulp deploy`. To link this slug to an existing post, add the slug to the "Internal Slug" field on the Endrun post, found in the Advanced post editor.'
         );
+      } else {
+        defaultEndrunResponseHandler(err, err.response, params.task);
       }
 
       log.warn('No post data saved.');

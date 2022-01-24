@@ -62,7 +62,7 @@ function readCredentialsFile() {
   try {
     return readJsonSync(CREDENTIALS_PATH);
   } catch (err) {
-    _error('Could not load credentials file, may not exist', error);
+    _error('Could not load credentials file, may not exist', err);
   }
 }
 
@@ -87,7 +87,7 @@ function getPassword(service, account) {
       });
     } else {
       const credentials = readCredentialsFile();
-      resolve(credentials[options.service]);
+      resolve(credentials[service]);
     }
   });
 }
@@ -129,7 +129,6 @@ function deletePassword(service, account) {
         resolve();
       });
     } else {
-      options.password = null;
       setPassword(service, account, null).then(resolve).catch(reject);
     }
   });
@@ -154,10 +153,6 @@ export async function ensureCredential(service) {
   }
 }
 
-export function ensureCredentials() {
-  return ensureRequestedCredentials(REQUIRED_CREDS);
-}
-
 /**
  * @param {{key: string, name: string}[]} requestedKeys
  */
@@ -167,8 +162,8 @@ async function ensureRequestedCredentials(requestedKeys) {
   }
 }
 
-export function ensureCredentialsTask() {
-  return ensureCredentials();
+export function ensureRequiredCredentialsTask() {
+  return ensureRequestedCredentials(REQUIRED_CREDS);
 }
 
 function resetServicePassword(service) {

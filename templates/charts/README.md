@@ -11,13 +11,13 @@ in `templates/charts/`.
 <!-- toc -->
 
 - [Getting started](#getting-started)
-  - [Importing templates](#importing-templates)
-  - [Importing styles](#importing-styles)
+  * [Importing templates](#importing-templates)
+  * [Importing styles](#importing-styles)
 - [Individual template config options](#individual-template-config-options)
-  - [ChartBase](#chartbase)
-  - [ChartWithAxes](#chartwithaxes)
-  - [VerticalBarChart](#verticalbarchart)
-  - [HorizontalBarChart](#horizontalbarchart)
+  * [ChartBase](#chartbase)
+  * [ChartWithAxes](#chartwithaxes)
+  * [VerticalBarChart](#verticalbarchart)
+  * [HorizontalBarChart](#horizontalbarchart)
 
 <!-- tocstop -->
 
