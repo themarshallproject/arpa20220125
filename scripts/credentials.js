@@ -153,10 +153,6 @@ export async function ensureCredential(service) {
   }
 }
 
-export function ensureRequiredCredentials() {
-  return ensureRequestedCredentials(REQUIRED_CREDS);
-}
-
 /**
  * @param {{key: string, name: string}[]} requestedKeys
  */
@@ -167,7 +163,7 @@ async function ensureRequestedCredentials(requestedKeys) {
 }
 
 export function ensureRequiredCredentialsTask() {
-  return ensureRequiredCredentials();
+  return ensureRequestedCredentials(REQUIRED_CREDS);
 }
 
 function resetServicePassword(service) {
