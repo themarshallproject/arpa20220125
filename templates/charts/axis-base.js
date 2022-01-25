@@ -51,7 +51,7 @@ export default class ChartWithAxes extends ChartBase {
       xAxisTickValues: null,
       yAxisTickValues: null,
     };
-    const classConfig = Object.assign(classDefaults, config);
+    const classConfig = Object.assign({}, classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);

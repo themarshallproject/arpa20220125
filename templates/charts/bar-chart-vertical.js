@@ -48,7 +48,7 @@ export default class VerticalBarChart extends ChartWithAxes {
         return addCommas(d);
       },
     };
-    const classConfig = Object.assign(classDefaults, config);
+    const classConfig = Object.assign({}, classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);

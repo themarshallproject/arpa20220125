@@ -40,7 +40,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
         return d;
       },
     };
-    const classConfig = Object.assign(classDefaults, config);
+    const classConfig = Object.assign({}, classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);
