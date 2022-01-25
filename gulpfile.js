@@ -192,18 +192,6 @@ function checkGraphicsCount(done) {
   done();
 }
 
-function jsFileComparator(file1, file2) {
-  var name1 = basename(file1.path);
-  var name2 = basename(file2.path);
-  if (name1 === 'graphic.js') {
-    return 1;
-  } else if (name2 === 'graphic.js') {
-    return -1;
-  }
-
-  return 0;
-}
-
 function productionScripts() {
   return new Promise((resolve, reject) => {
     const webpackConfig = getWebpackConfig('production');
@@ -297,11 +285,11 @@ function revision() {
     .pipe(gulp.dest('dist'));
 }
 
-var defaultTask = gulp.series(
+const defaultTask = gulp.series(
   clean,
   buildDev,
-  startServer,
   endrun.getPostData,
+  startServer,
   openBrowser,
   watch
 );
@@ -360,7 +348,7 @@ gulp.task('deploy:s3:raw', s3.deploy);
 gulp.task('deploy:data', s3.deployData);
 
 // Credential management
-gulp.task('credentials', credentials.ensureCredentialsTask);
+gulp.task('credentials', credentials.ensureRequiredCredentialsTask);
 gulp.task('credentials:clear', credentials.clearServicePasswords);
 gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
