@@ -81,10 +81,8 @@ function convertCSVtoJSON(fileContents) {
     } else {
       // If columns begin with 'key', return an object with each
       // data object accessible by key
-      let keyedData = {};
-
       for (const row of parsedFile) {
-        keyedData[row['key']] = row;
+        formattedData[row['key']] = row;
       }
     }
   } else {
