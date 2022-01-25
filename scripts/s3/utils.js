@@ -91,7 +91,7 @@ export function md5FromFile(path) {
  * @private
  * @type {RegExp}
  */
-const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
+export const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
 
 /**
  * The default function delivery uses to determine if a file should receive

@@ -5,7 +5,12 @@ import { Agent } from 'node:https';
 import { join } from 'node:path';
 
 // packages
-import { S3 } from '@aws-sdk/client-s3';
+import {
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
 import { lookup, mimes } from 'mrmime';
 
 // local
@@ -44,6 +49,7 @@ export class S3Deploy extends EventEmitter {
   /**
    * @param {Object} options
    * @param {string} options.bucket - The bucket on S3 to interact with.
+   * @param {string} options.region - The region to use for S3.
    * @param {string} [options.basePath] - A pre-defined base path for all interactions with S3.
    *                                      Useful for establishing the slug or prefix of an upload.
    * @param {boolean} [options.useAccelerateEndpoint] - If true, use the Accelerate endpoint.
@@ -56,22 +62,20 @@ export class S3Deploy extends EventEmitter {
     super();
 
     // instantiate the s3 instance
-    this.s3 = new S3({
+    this.client = new S3Client({
       credentials: {
         accessKeyId: options.accessKeyId,
         secretAccessKey: options.secretAccessKey,
       },
-      httpOptions: {
-        agent: new Agent({
-          keepAlive: true,
-          maxSockets: 50,
-        }),
-      },
+      region: options.region,
+      requestHandler: new NodeHttpHandler({
+        httpsAgent: new Agent({ keepAlive: true, maxSockets: 50 }),
+      }),
       useAccelerateEndpoint: options.useAccelerateEndpoint || false,
     });
 
     this.bucket = options.bucket;
-    this.basePath = options.basePath;
+    this.basePath = options.basePath || '';
     this.shouldBeCached = options.shouldBeCached || defaultShouldBeCached;
   }
 
@@ -121,7 +125,7 @@ export class S3Deploy extends EventEmitter {
 
     // if they were the same, no need to upload
     if (!isIdentical) {
-      /** @type {import('@aws-sdk/client-s3').PutObjectRequest} */
+      /** @type {import('@aws-sdk/client-s3').PutObjectCommandInput} */
       const params = {
         Bucket: this.bucket,
         ACL,
@@ -136,16 +140,18 @@ export class S3Deploy extends EventEmitter {
           params.CacheControl = options.cacheControlOverride;
         } else {
           // otherwise figure it out
-          if (ContentType === 'text/html') {
-            params.CacheControl = requireRevalidation;
-          } else if (this.shouldBeCached(path)) {
+          if (this.shouldBeCached(path)) {
             params.CacheControl = longLiveCache;
+          } else {
+            params.CacheControl = requireRevalidation;
           }
         }
       }
 
+      const command = new PutObjectCommand(params);
+
       try {
-        await this.s3.putObject(params).promise();
+        const res = await this.client.send(command);
       } catch (err) {
         throw err;
       }
@@ -156,7 +162,8 @@ export class S3Deploy extends EventEmitter {
       ETag,
       Key,
       isIdentical,
-      isPublic,
+      isPublic: options.isPublic,
+      isUpdated: !!s3ETag,
       size,
     };
 
@@ -214,19 +221,21 @@ export class S3Deploy extends EventEmitter {
    * @param {string} Key The key of the file on S3 to get the Etag for
    */
   async getS3ObjectETag(Key) {
-    /** @type {import('@aws-sdk/client-s3').HeadObjectRequest} */
+    /** @type {import('@aws-sdk/client-s3').HeadBucketCommandInput} */
     const params = {
       Bucket: this.bucket,
       Key,
     };
 
+    const command = new HeadObjectCommand(params);
+
     try {
-      const { ETag } = await this.s3.headObject(params).promise();
+      const { ETag } = await this.client.send(command);
 
       return ETag;
     } catch (err) {
       // the file didn't exist and that's fine
-      if (err.code === 'NotFound') {
+      if (err.name === 'NotFound') {
         return undefined;
       }
 
