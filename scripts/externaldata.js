@@ -23,9 +23,11 @@ export function getExternalData(options) {
   var fullData = {};
   var srcBasePath = options && options.examples ? './examples/*' : './src';
   var dataPaths = glob.sync(`${srcBasePath}/template-files/*.@(json|csv)`);
-
   var assetDataPath = './src/assets/import-data';
-  initializeDirectory(assetDataPath);
+
+  if (dataPaths.length) {
+    initializeDirectory(assetDataPath);
+  }
 
   for (let i in dataPaths) {
     var extName = extname(dataPaths[i]);
