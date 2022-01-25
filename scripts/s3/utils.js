@@ -1,10 +1,10 @@
 // native
 import { createHash } from 'node:crypto';
-import { createReadStream, promises as fs } from 'node:fs';
-import { dirname, relative, resolve } from 'node:path';
+import { createReadStream } from 'node:fs';
+import { relative, resolve } from 'node:path';
 
 // packages
-import glob from 'tiny-glob';
+import { totalist } from 'totalist';
 
 /**
  * Resolves a path relative to the current working directory.
@@ -26,40 +26,13 @@ export function resolvePath(relativePath) {
  * @returns {Promise<{file: string, dest: string}[]>} The resolved paths of all the files in the directory
  */
 export async function findFiles(dir) {
-  const resolvedDir = resolvePath(dir);
+  const files = [];
 
-  const files = await glob('**/*', {
-    absolute: true,
-    cwd: dir,
-    filesOnly: true,
+  await totalist(dir, (dest, file) => {
+    files.push({ file, dest });
   });
 
-  return files.map((file) => {
-    const dest = relative(resolvedDir, file);
-
-    return { file, dest };
-  });
-}
-
-/**
- *
- * @param {string} dest The output destination directory.
- * @param {any} data The data to write to the file.
- * @returns {Promise<void>}
- */
-export async function outputFile(dest, data) {
-  // get the file's directory
-  const dir = dirname(dest);
-
-  // ensure the directory exists
-  await fs.mkdir(dir, { recursive: true });
-
-  // attempt to write the file
-  try {
-    await fs.writeFile(dest, data);
-  } catch (e) {
-    throw e;
-  }
+  return files;
 }
 
 /**
@@ -91,7 +64,7 @@ export function md5FromFile(path) {
  * @private
  * @type {RegExp}
  */
-export const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
+const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
 
 /**
  * The default function delivery uses to determine if a file should receive
