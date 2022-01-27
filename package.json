@@ -63,7 +63,7 @@
     "pretty-bytes": "^5.6.0",
     "sass": "^1.49.0",
     "sirv": "^2.0.2",
-    "svelte": "^3.46.2",
+    "svelte": "^3.46.3",
     "svelte-loader": "^3.1.2",
     "webpack": "^5.67.0",
     "webpack-dev-middleware": "^5.3.0",
