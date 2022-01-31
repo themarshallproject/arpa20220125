@@ -20,17 +20,17 @@ def combine(output):
   tbody = table.find('tbody')
   trs = tbody.find_all('tr')
   table_list = []
-    for tr in trs:
-        tds = tr.find_all('td')
-        td_list = []
-        for (i, td) in enumerate (tds):
-            if (i == 5):
+  for tr in trs:
+    tds = tr.find_all('td')
+    td_list = []
+    for (i, td) in enumerate (tds):
+        if (i == 5):
+            td_list.append(td.find('a')['href'])
+        elif (i== 7):
+            try:
                 td_list.append(td.find('a')['href'])
-            elif (i== 7):
-                try:
-                    td_list.append(td.find('a')['href'])
-                except:
-                    pass
+            except:
+                pass
             else:
                 td_list.append(td.text)
         table_list.append(td_list)
