@@ -1,5 +1,5 @@
 // native
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { extname, basename } from 'path';
 
 // packages
@@ -21,10 +21,13 @@ function printDataFilenameError(baseFilename, dataFilePath) {
 
 export function getExternalData(options) {
   var fullData = {};
-  var dataPaths =
-    options && options.examples
-      ? glob.sync('./examples/*/template-files/*.@(json|csv)')
-      : glob.sync('./src/template-files/*.@(json|csv)');
+  var srcBasePath = options && options.examples ? './examples/*' : './src';
+  var dataPaths = glob.sync(`${srcBasePath}/template-files/*.@(json|csv)`);
+  var assetDataPath = './src/assets/import-data';
+
+  if (dataPaths.length) {
+    initializeDirectory(assetDataPath);
+  }
 
   for (let i in dataPaths) {
     var extName = extname(dataPaths[i]);
@@ -53,10 +56,23 @@ export function getExternalData(options) {
       printParseError(e, dataPaths[i]);
     }
 
+    // Write to assets for use in js
+    writeFileSync(
+      `${assetDataPath}/${baseFilename}.json`,
+      JSON.stringify(pathData)
+    );
+
     fullData[baseFilename] = pathData;
   }
 
   return data({ data: fullData });
+}
+
+function initializeDirectory(dirPath) {
+  if (existsSync(dirPath)) {
+    return;
+  }
+  mkdirSync(dirPath);
 }
 
 function convertCSVtoJSON(fileContents) {
@@ -75,10 +91,8 @@ function convertCSVtoJSON(fileContents) {
     } else {
       // If columns begin with 'key', return an object with each
       // data object accessible by key
-      let keyedData = {};
-
       for (const row of parsedFile) {
-        keyedData[row['key']] = row;
+        formattedData[row['key']] = row;
       }
     }
   } else {
