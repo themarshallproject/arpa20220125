@@ -39,7 +39,7 @@ def combine(output):
     df['Recovery Plan'] = ('https://home.treasury.gov' + df['Recovery Plan'])
     df.to_csv('output.csv', index=False)
 
-    if __name__ == '__main__':
-        combine()
+if __name__ == '__main__':
+    combine()
 
 
