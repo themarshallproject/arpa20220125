@@ -4,8 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 @click.command()
-@click.argument('output', type=click.File('w'))
-def combine(output):
+def combine():
   
   response = requests.get("https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds/recovery-plan-performance-reports-2021")
   soup = BeautifulSoup(response.text, 'html.parser')
