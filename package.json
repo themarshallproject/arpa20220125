@@ -65,7 +65,7 @@
     "sirv": "^2.0.2",
     "svelte": "^3.46.3",
     "svelte-loader": "^3.1.2",
-    "underscore": "^1.13.1",
+    "underscore": "^1.13.2",
     "webpack": "^5.68.0",
     "webpack-dev-middleware": "^5.3.0",
     "webpack-stream": "^7.0.0",
