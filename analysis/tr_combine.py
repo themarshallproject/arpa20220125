@@ -30,9 +30,9 @@ def combine():
                 td_list.append(td.find('a')['href'])
             except:
                 pass
-            else:
-                td_list.append(td.text)
-        table_list.append(td_list)
+        else:
+            td_list.append(td.text)
+    table_list.append(td_list)
 
     df = pd.DataFrame(table_list, columns = headers)
     df['Recovery Plan'] = ('https://home.treasury.gov' + df['Recovery Plan'])
