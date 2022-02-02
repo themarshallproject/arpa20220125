@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 @click.command()
-def combine():
+def treasury_scrape():
   
   response = requests.get("https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds/recovery-plan-performance-reports-2021")
   soup = BeautifulSoup(response.text, 'html.parser')
@@ -39,6 +39,6 @@ def combine():
     df.to_csv('output.csv', index=False)
 
 if __name__ == '__main__':
-    combine()
+    treasury_scrape()
 
 
