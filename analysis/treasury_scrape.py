@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 @click.command()
-def treasury_scrape():
+@click.argument("output_file", type=click.File("w"))
+def treasury_scrape(output_file):
   
   response = requests.get("https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds/recovery-plan-performance-reports-2021")
   soup = BeautifulSoup(response.text, 'html.parser')
@@ -32,11 +33,13 @@ def treasury_scrape():
                 pass
         else:
             td_list.append(td.text)
+
+    click.echo(f'scraped {td_list[1]}', err=True)
     table_list.append(td_list)
 
     df = pd.DataFrame(table_list, columns = headers)
-    df['Recovery Plan'] = ('https://home.treasury.gov' + df['Recovery Plan'])
-    df.to_csv('output.csv', index=False)
+    df['Recovery Plan'] = (f'https://home.treasury.gov{df["Recovery Plan"]}')
+    df.to_csv(output_file, index=False)
 
 if __name__ == '__main__':
     treasury_scrape()
