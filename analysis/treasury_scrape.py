@@ -1,10 +1,11 @@
+from doctest import OutputChecker
 import click 
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
 @click.command()
-@click.argument("output_file", type=click.File("w"))
+@click.argument('output_file', type=click.File('wb'))
 def treasury_scrape(output_file):
   
   response = requests.get("https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds/recovery-plan-performance-reports-2021")
