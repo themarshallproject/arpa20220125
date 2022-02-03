@@ -1,4 +1,3 @@
-key,value
-title,"A Title Pulled In From Another File"
-dek,"The source for this info is located in src/template-files/example-key-value.csv"
-text,"You can create literally any key-value pairs and access them in your HTML! And you can <strong>write HTML</strong> <em>inside this CSV</em>."
+version https://git-lfs.github.com/spec/v1
+oid sha256:18dc2da9000446b80e4e3a894ba22ae8d300eef99628f1d0e1405d8cda860dce
+size 288

@@ -1,4 +1,3 @@
-key,value
-title,"Using Nunjucks Templates to Display Data"
-dek,"Any CSV or JSON file placed in <span class=""nunjucks-path"">template-files</span> can be accessed as JSON on this page using the <a href=""https://mozilla.github.io/nunjucks/templating.html"">Nunjucks templating language</a>."
-text,"You can create literally any key-value pairs and access them in your HTML! And you can <strong>write HTML</strong> <em>inside this CSV</em>."
+version https://git-lfs.github.com/spec/v1
+oid sha256:707f82bf0abcf5dee2821663f4ae33631157b936e434e22679ce175e96c592ac
+size 440
