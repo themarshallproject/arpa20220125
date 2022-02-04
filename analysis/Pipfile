@@ -8,6 +8,8 @@ click = "*"
 requests = "*"
 beautifulsoup4 = "*"
 pandas = "*"
+lxml = "*"
+html5lib = "*"
 
 [dev-packages]
 
