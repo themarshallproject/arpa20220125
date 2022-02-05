@@ -14,6 +14,25 @@ import { S3Deploy } from './s3/index.js';
 
 const config = getLocalConfig();
 
+function logOnUpload(path, { isIdentical, isUpdated, Key, size }) {
+  let color, status;
+
+  if (isUpdated) {
+    if (isIdentical) {
+      color = colors.gray;
+      status = 'No change:';
+    } else {
+      color = colors.yellow;
+      status = 'Updated:  ';
+    }
+  } else {
+    color = colors.green;
+    status = 'Uploaded: ';
+  }
+
+  log(color(`${status} ${path} (${prettyBytes(size)})`));
+}
+
 async function getS3Credentials() {
   const accessKeyId = await credentials.ensureCredential(
     credentials.AWS_ACCESS
@@ -40,22 +59,7 @@ export async function deploy() {
 
   // use the event listener to log out the progress of the upload
   client.on('upload', ({ isIdentical, isUpdated, Key, size }) => {
-    let color, status;
-
-    if (isUpdated) {
-      if (isIdentical) {
-        color = colors.gray;
-        status = 'No change:';
-      } else {
-        color = colors.yellow;
-        status = 'Updated:  ';
-      }
-    } else {
-      color = colors.green;
-      status = 'Uploaded: ';
-    }
-
-    log(color(`${status} ${Key} (${prettyBytes(size)})`));
+    logOnUpload(Key, { isIdentical, isUpdated, size });
   });
 
   /** @type {[key: string, path: string][]} */
@@ -99,27 +103,12 @@ export async function deployData(done) {
 
   // use the event listener to log out the progress of the upload
   client.on('upload', ({ isIdentical, isUpdated, Key, size }) => {
-    let color, status;
-
-    if (isUpdated) {
-      if (isIdentical) {
-        color = colors.gray;
-        status = 'No change:';
-      } else {
-        color = colors.yellow;
-        status = 'Updated:  ';
-      }
-    } else {
-      color = colors.green;
-      status = 'Uploaded: ';
-    }
-
     const url = new URL(
       join(config.data_bucket, Key),
       'https://s3.amazonaws.com'
     );
 
-    log(color(`${status} ${url.toString()} (${prettyBytes(size)})`));
+    logOnUpload(url.toString(), { isIdentical, isUpdated, size });
   });
 
   /** @type {[key: string, path: string][]} */
