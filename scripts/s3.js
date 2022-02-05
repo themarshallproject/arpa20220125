@@ -1,18 +1,37 @@
 // native
-import { createRequire } from 'module';
+import { join, parse } from 'node:path';
 
 // packages
-import gulp from 'gulp';
-import gulpIf from 'gulp-if';
-import gzip from 'gulp-gzip';
-import gulpS3Upload from 'gulp-s3-upload';
+import * as colors from 'colorette';
 import log from 'fancy-log';
+import prettyBytes from 'pretty-bytes';
+import { totalist } from 'totalist';
 
 // local
 import * as credentials from './credentials.js';
 import { getLocalConfig } from './config.js';
+import { S3Deploy } from './s3/index.js';
 
 const config = getLocalConfig();
+
+function logOnUpload(path, { isIdentical, isUpdated, Key, size }) {
+  let color, status;
+
+  if (isUpdated) {
+    if (isIdentical) {
+      color = colors.gray;
+      status = 'No change:';
+    } else {
+      color = colors.yellow;
+      status = 'Updated:  ';
+    }
+  } else {
+    color = colors.green;
+    status = 'Uploaded: ';
+  }
+
+  log(color(`${status} ${path} (${prettyBytes(size)})`));
+}
 
 async function getS3Credentials() {
   const accessKeyId = await credentials.ensureCredential(
@@ -25,70 +44,91 @@ async function getS3Credentials() {
   return { accessKeyId, secretAccessKey };
 }
 
-export async function deploy(done) {
+export async function deploy() {
+  // get our S3 credentials
   const { accessKeyId, secretAccessKey } = await getS3Credentials();
 
-  const s3 = gulpS3Upload({ accessKeyId, secretAccessKey });
+  // create the S3 client
+  const client = new S3Deploy({
+    basePath: config.slug,
+    bucket: config.bucket,
+    region: 'us-east-1',
+    accessKeyId,
+    secretAccessKey,
+  });
 
-  gulp
-    .src('dist/**', {
-      base: 'dist',
-      ignore: 'dist/embed-loaders/*',
-    })
-    .pipe(
-      gulpIf((file) => {
-        return !file.path.match(/\.mp4$/);
-      }, gzip({ append: false }))
+  // use the event listener to log out the progress of the upload
+  client.on('upload', ({ isIdentical, isUpdated, Key, size }) => {
+    logOnUpload(Key, { isIdentical, isUpdated, size });
+  });
+
+  /** @type {[key: string, path: string][]} */
+  const files = [];
+
+  // find our target files, filtering out anything within the "embed-loaders" directory
+  await totalist('./dist', (name, abs) => {
+    const { dir } = parse(name);
+
+    if (!dir.startsWith('embed-loaders')) {
+      files.push([abs, name]);
+    }
+  });
+
+  log(
+    colors.bold(
+      `Uploading ${files.length} file${files.length === 1 ? '' : 's'}...`
     )
-    .pipe(
-      s3({
-        bucket: config.bucket,
-        ACL: 'public-read',
-        keyTransform: function (filename) {
-          const key = config.slug + '/' + filename;
-          console.log(config.cdn + '/' + key);
-          return key;
-        },
-        maps: {
-          CacheControl: (keyname) => {
-            if (keyname.match(/rev-manifest\.json/)) {
-              console.log('Set 30-second max-age on rev-manifest.json');
-              return 'max-age=30';
-            }
-            console.log('Set month-long max age on other files');
-            return 'max-age=2592000';
-          },
-          ContentEncoding: (keyname) => {
-            if (keyname.match(/\.mp4$/)) {
-              console.log('Skipping gzip for mp4');
-              return null;
-            }
-            return 'gzip';
-          },
-        },
-      })
+  );
+
+  // upload the files
+  return Promise.all(
+    files.map(([file, key]) =>
+      client.uploadFile(file, key, { isPublic: true, shouldCache: true })
     )
-    .on('end', done);
+  );
 }
 
 export async function deployData(done) {
+  // get our S3 credentials
   const { accessKeyId, secretAccessKey } = await getS3Credentials();
 
-  const s3 = gulpS3Upload({ accessKeyId, secretAccessKey });
+  // create the S3 client
+  const client = new S3Deploy({
+    basePath: config.slug,
+    bucket: config.data_bucket,
+    region: 'us-east-1',
+    accessKeyId,
+    secretAccessKey,
+  });
 
-  gulp
-    .src('analysis/output_data/**', { base: 'analysis/output_data' })
-    .pipe(
-      s3({
-        bucket: config.data_bucket,
-        ACL: 'public-read',
-        keyTransform: function (filename) {
-          const key = config.slug + '/' + filename;
-          const url = `https://s3.amazonaws.com/${config.data_bucket}/${key}`;
-          log.info('Deployed to url: ' + url);
-          return key;
-        },
-      })
+  // use the event listener to log out the progress of the upload
+  client.on('upload', ({ isIdentical, isUpdated, Key, size }) => {
+    const url = new URL(
+      join(config.data_bucket, Key),
+      'https://s3.amazonaws.com'
+    );
+
+    logOnUpload(url.toString(), { isIdentical, isUpdated, size });
+  });
+
+  /** @type {[key: string, path: string][]} */
+  const files = [];
+
+  // find our target files
+  await totalist('./analysis/output_data', (name, abs) => {
+    // don't let .keep + other dot files in
+    if (name.startsWith('.')) return;
+    files.push([abs, name]);
+  });
+
+  log(
+    colors.bold(
+      `Uploading ${files.length} file${files.length === 1 ? '' : 's'}...`
     )
-    .on('end', done);
+  );
+
+  // upload the files
+  return Promise.all(
+    files.map(([file, key]) => client.uploadFile(file, key, { isPublic: true }))
+  );
 }

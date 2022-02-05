@@ -339,10 +339,7 @@ gulp.task('posts:download', endrun.getPostData);
 
 // Deployment
 gulp.task('deploy:endrun', endrun.endrunDeploy);
-gulp.task(
-  'deploy:s3',
-  gulp.series(buildProduction, revision, s3.deploy, buildDev)
-);
+gulp.task('deploy:s3', gulp.series(buildProduction, revision, s3.deploy));
 
 gulp.task('deploy:s3:raw', s3.deploy);
 gulp.task('deploy:data', s3.deployData);
