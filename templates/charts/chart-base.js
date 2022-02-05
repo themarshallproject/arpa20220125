@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import throttle from 'underscore/modules/throttle.js';
 
 /* * * * *
  * CHART BASE
@@ -13,15 +14,26 @@ export default class ChartBase {
   constructor(config) {
     this.checkConfigKeys(config);
 
-    this.$containerEl = $(`#${config.containerId}`);
     this.containerEl = d3.select(`#${config.containerId}`);
+    this.containerNode = this.containerEl.node();
+
+    if (!this.containerNode) {
+      console.warn(
+        `Skipped creating chart: container #${config.containerId} not found on page`
+      );
+      return;
+    }
+
     this.setConfigDefaults(config);
     this.data = this.config.data;
 
     if (this.config.responsive) {
-      $(window).on('tmp_resize', () => {
-        this.redrawChart();
-      });
+      window.addEventListener(
+        'resize',
+        throttle(() => {
+          this.redrawChart();
+        }, 100)
+      );
     }
 
     this.initChart();
@@ -53,14 +65,15 @@ export default class ChartBase {
   // already-defined config options, which means you can pass literally any
   // sort of data through to your graphic.
   setConfigDefaults(config) {
-    this.config = _.defaults(config, {
+    const classDefaults = {
       responsive: true,
       aspectRatio: 4 / 3,
       marginTop: 10,
       marginRight: 10,
       marginBottom: 10,
       marginLeft: 10,
-    });
+    };
+    this.config = Object.assign({}, classDefaults, config);
   }
 
   // Initialize the graphic and size it. We call this separately from the
@@ -79,7 +92,8 @@ export default class ChartBase {
 
   // Charts default to filling their container width
   getSVGWidth() {
-    return this.$containerEl.width();
+    this.svg.attr('width', '100%');
+    return this.svg.node().getBoundingClientRect().width;
   }
 
   // Charts default to basing their height as a proportion of the chart width.
@@ -117,16 +131,11 @@ export default class ChartBase {
   sizeBaseSVG() {
     this.size = this.getBaseMeasurements();
 
-    // The SVG should include margins in its width and height.
-    this.svg
-      .attr(
-        'width',
-        this.size.chartWidth + this.size.marginLeft + this.size.marginRight
-      )
-      .attr(
-        'height',
-        this.size.chartHeight + this.size.marginTop + this.size.marginBottom
-      );
+    // SVG width is already set to 100%. The height measurement should include margins.
+    this.svg.attr(
+      'height',
+      this.size.chartHeight + this.size.marginTop + this.size.marginBottom
+    );
 
     // Offset the chart group by top and left margins.
     this.chart.attr(
@@ -136,7 +145,7 @@ export default class ChartBase {
   }
 
   // Redraw the graphic, re-calculating the size and positions. This is called
-  // on `tmp_resize` in the constructor.
+  // on `window.resize` in the constructor.
   redrawChart() {
     this.sizeBaseSVG();
   }
