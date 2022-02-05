@@ -121,7 +121,7 @@ export class S3Deploy extends EventEmitter {
 
     // we check to see if the file already exists on S3 and if it is identical
     const s3ETag = await this.getS3ObjectETag(Key);
-    const isIdentical = this.isFileIdenticaltoS3File(ETag, s3ETag);
+    const isIdentical = this.doETagsMatch(ETag, s3ETag);
 
     // if they were the same, no need to upload
     if (!isIdentical) {
@@ -252,7 +252,7 @@ export class S3Deploy extends EventEmitter {
    * @param {string | Optional} localETag The ETag of the local file being compared.
    * @param { string | Optional} s3ETag The Etag of the file on S3 being compared.
    */
-  isFileIdenticaltoS3File(localETag, s3ETag) {
+  doETagsMatch(localETag, s3ETag) {
     // the AWS API returns this with a extra quotes for some reason, so make
     // sure this follows suit
     localETag = `"${localETag}"`;
