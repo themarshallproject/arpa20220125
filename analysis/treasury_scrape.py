@@ -39,7 +39,6 @@ def treasury_scrape(output_file):
         table_list.append(td_list)
 
     df = pd.DataFrame(table_list, columns = headers)
-
     
     #new_list =  []
     #for (i, link) in enumerate (df["Recovery Plan"]):
@@ -52,13 +51,7 @@ def treasury_scrape(output_file):
     
     #df["Recovery_Plan"] =  f'https://home.treasury.gov{df["Recovery Plan"]}'
     df['Recovery_Plan'] = ('https://home.treasury.gov' + df['Recovery Plan'])
-    
-    for link in df['Recovery_Plan']:
-        if math.isnan(link) == FALSE:
-            pass
-        else:
-            print(requests.head(link)) 
-    
+
     df.to_csv(output_file, index=False)
 
 if __name__ == '__main__':
