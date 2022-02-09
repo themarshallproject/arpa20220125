@@ -10,6 +10,7 @@ beautifulsoup4 = "*"
 pandas = "*"
 lxml = "*"
 html5lib = "*"
+xlwt = "*"
 
 [dev-packages]
 
