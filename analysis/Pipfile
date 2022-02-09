@@ -11,6 +11,7 @@ pandas = "*"
 lxml = "*"
 html5lib = "*"
 xlwt = "*"
+xlrd = "*"
 
 [dev-packages]
 

@@ -42,3 +42,10 @@ for file in filenames:
     name = name.split(',')[0]
     df['Territory'] = name
     df.to_excel(f'output_data/CLEAN/{name}.xls', index = False)
+
+files = glob.glob("output_data/CLEAN/*.xls")
+df = pd.DataFrame()
+for file in files:
+    df = df.append(pd.read_excel(file), ignore_index=True) 
+df.head() 
+df.to_csv('output_data/alabama.csv')
