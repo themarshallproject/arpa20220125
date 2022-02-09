@@ -79,7 +79,7 @@
     <Cell ss:StyleID="s3"><Data ss:Type="String"> 2021 Interim Report Submission</Data></Cell> 
 </Row>
 <Row>
-    <Cell ss:StyleID="s3"><Data ss:Type="String">Recipient Name - Mobile County, Alabama</Data></Cell> 
+    <Cell ss:StyleID="s3"><Data ss:Type="String">Recipient Name - Henry County, Alabama</Data></Cell> 
 </Row>
 <Row></Row>
 <Row>
@@ -114,13 +114,13 @@
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">1.4 Prevention in Congregate Settings (Nursing Homes, Prisons/Jails, Dense Work Sites, Schools, etc.)</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">1935.76</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">1935.76</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">1.5 Personal Protective Equipment</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">49256.39</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">49256.39</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">1.6 Medical Expenses (including Alternative Care Facilities)</Data></Cell>
@@ -134,8 +134,8 @@
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">1.8 Other COVID-19 Public Health Expenses (including Communications, Enforcement, Isolation/Quarantine)</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">2100.00</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">2100.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">1.9 Payroll Costs for Public Health, Safety, and Other Public Sector Staff Responding to COVID-19</Data></Cell>
@@ -154,8 +154,8 @@
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">1.12 Other Public Health Services</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">137308.07</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">137308.07</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
 </Row>
 
 <Row></Row>
@@ -230,8 +230,8 @@
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">2.13 Other Economic Support</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">887578.00</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">887578.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">2.14 Rehiring Public Sector Staff</Data></Cell>
@@ -471,7 +471,7 @@
 </Row>
 <Row>
     <Cell ss:StyleID="s2a"><Data ss:Type="String">7.1 Administrative Expenses</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">200512.00</Data></Cell>
     <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
 </Row>
 <Row>
@@ -496,8 +496,8 @@
 </Row>
 <Row>
     <Cell ss:StyleID="s2"><Data ss:Type="String"></Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">1078178.22</Data></Cell>
-    <Cell ss:StyleID="s2"><Data ss:Type="Number">1078178.22</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">200512.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
 </Row>
 
 <Row></Row>
@@ -553,7 +553,7 @@
         <Cell ss:StyleID="s3"><Data ss:Type="String"> 2021 Interim Report Submission</Data></Cell> 
     </Row>
     <Row>
-        <Cell ss:StyleID="s3"><Data ss:Type="String">Recipient Name - Mobile County, Alabama</Data></Cell> 
+        <Cell ss:StyleID="s3"><Data ss:Type="String">Recipient Name - Henry County, Alabama</Data></Cell> 
     </Row>
     <Row></Row>
     <Row>
@@ -561,23 +561,23 @@
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Base Year Revenue</Data></Cell>
-        <Cell ss:StyleID="s2"><Data ss:Type="Number">219130516.01</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">8665442.00</Data></Cell>
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Fiscal Year End Date</Data></Cell>
-        <Cell ss:StyleID="s2b"><Data ss:Type="String">2019-09-30</Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String">2020-12-31</Data></Cell>
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Growth Adjustment Used</Data></Cell>
-        <Cell ss:StyleID="s2b"><Data ss:Type="String">4.100%</Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String">5.250%</Data></Cell>
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Actual General Revenue as of 12 months ended December 31, 2020</Data></Cell>
-        <Cell ss:StyleID="s2"><Data ss:Type="Number">214134386.42</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">14387335.73</Data></Cell>
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Estimated Revenue Loss Due to Covid-19 Public Health Emergency as of December 31, 2020</Data></Cell>
-        <Cell ss:StyleID="s2"><Data ss:Type="Number">16283544.94</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Were Fiscal Recovery Funds used to make a deposit into a pension fund?</Data></Cell>
@@ -585,7 +585,7 @@
     </Row>
     <Row>
         <Cell ss:StyleID="s2"><Data ss:Type="String">Explanation of how revenue replacement funds were allocated </Data></Cell>
-        <Cell ss:StyleID="s2b"><Data ss:Type="String"><p><b> </b><b style="background-color: rgb(255, 255, 255); font-size: 21.3333px;">Mobile County, Alabama hereby represents that it is fully evaluating its ability to exercise its right to capture expenses under the allowable U.S. Treasury category of provision of government services to the extent the county suffered a reduction in revenue due to the COVID-19 public health emergency. Mobile County intends to calculate its revenue loss using the 4.1% assumed growth rate formula articulated by U.S. Treasury in its Interim Rule. Please note the calculation entered for purposes of the Interim Report due on 8/31/21 is an estimate, as we have not yet expended funds under this category, and we reserve the right to amend this calculation prior to obligating or expended funds for government services as allowed by this eligibility category. </b></p><p><b> </b></p></Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String"><p>Henry County had no revenue loss due to COVID-19.</p></Data></Cell>
     </Row>
     
     
