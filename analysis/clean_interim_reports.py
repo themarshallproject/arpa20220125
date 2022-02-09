@@ -28,11 +28,10 @@ class ExcelHandler(ContentHandler):
         elif name=="Table":
             self.tables.append(self.rows)
 
-excelHandler = ExcelHandler()
-
 for file in filenames:
-    parse(file, excelHandler)
-    df = pd.DataFrame(excelHandler.tables[0][7:], columns=excelHandler.tables[0][6])
+    excel_handler = ExcelHandler()
+    parse(file, excel_handler)
+    df = pd.DataFrame(excel_handler.tables[0][7:], columns=excel_handler.tables[0][6])
     df = df[df["Category"].notna()]
     df = df[df["Category"].str.contains("Category") == False]
     df = df[df["Cumulative Obligations"].str.contains("Total Cumulative Obligations") == False]
