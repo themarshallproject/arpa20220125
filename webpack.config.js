@@ -70,7 +70,23 @@ export default function getConfig(mode, entry, outputPath) {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
-              presets: ['@babel/preset-env'],
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    bugfixes: true,
+                    exclude: [
+                      'transform-async-to-generator',
+                      'transform-regenerator',
+                    ],
+                    loose: true,
+                    targets: {
+                      esmodules: true,
+                    },
+                    useBuiltIns: false,
+                  },
+                ],
+              ],
             },
           },
         },
