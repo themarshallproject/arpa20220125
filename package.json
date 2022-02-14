@@ -58,7 +58,7 @@
     "polka": "^0.5.2",
     "premove": "^4.0.0",
     "prettier": "^2.5.1",
-    "pretty-bytes": "^5.6.0",
+    "pretty-bytes": "^6.0.0",
     "sass": "^1.49.7",
     "sirv": "^2.0.2",
     "svelte": "^3.46.4",
