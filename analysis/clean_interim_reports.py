@@ -49,7 +49,8 @@ def reports_clean(output_file):
     files = glob.glob("output_data/CLEAN/*.xls")
     df = pd.DataFrame()
     for file in files:
-        df = df.append(pd.read_excel(file), ignore_index=True)  
+        df = df.append(pd.read_excel(file), ignore_index=True)
+    df = df.rename(columns={'Cumulative Obligations': 'Obligations', 'Cumulative Expenditures': 'Expenditures'})  
     df.to_csv(output_file, index = False)
 
 if __name__ == '__main__':
