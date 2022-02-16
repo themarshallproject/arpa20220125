@@ -12,6 +12,7 @@ lxml = "*"
 html5lib = "*"
 xlwt = "*"
 xlrd = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
