@@ -3,13 +3,11 @@ import requests
 from time import sleep
 import json
 import os
-from dotenv import load_dotenv
 
 @click.command()
 @click.argument("docket_id")
 def get_comments(docket_id):
 
-    load_dotenv()
     API_KEY=os.getenv('API_KEY')
 
     click.echo("REQUESTING by the docket ID")
@@ -41,10 +39,7 @@ def get_comments(docket_id):
         for item in data['data']:
             links.append(item['links']['self'])
 
-    click.echo("CREATE a folder for all the comments")
-    os.mkdir("output_data/comments")
-
-    click.echo("DOWNLOAD all the comments as jsons in a separate folder") 
+    click.echo("DOWNLOAD all the comments as jsons") 
     for link in links:
         query_params = {
             "api_key": API_KEY
