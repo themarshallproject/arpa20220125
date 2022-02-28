@@ -1,0 +1,598 @@
+<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:x="urn:schemas-microsoft-com:office:excel">
+
+<Styles>
+    <Style ss:ID="s1">
+        <Alignment></Alignment>
+        <Borders></Borders>
+        <Font ss:Bold="1" ss:Color="White"></Font>
+        <Interior ss:Color="#203764" ss:Pattern="Solid"></Interior>
+        <NumberFormat></NumberFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s2">
+        <Alignment ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font></Font>
+        <Interior></Interior>
+        <NumberFormat ss:Format="Currency"></NumberFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s2a">
+        <Alignment ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font></Font>
+        <Interior></Interior>
+        <TextFormat></TextFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s2b">
+        <Alignment ss:Horizontal="Right" ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font></Font>
+        <Interior></Interior>
+        <TextFormat></TextFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s3">
+        <Alignment ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font ss:Bold="1"></Font>
+        <Interior></Interior>
+        <TextFormat></TextFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s4">
+        <Alignment ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font ss:Bold="1" ss:Color="White"></Font>
+        <Interior ss:Color="#8EA9DB" ss:Pattern="Solid"></Interior>
+        <TextFormat></TextFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s4a">
+        <Alignment ss:Horizontal="Center" ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font ss:Bold="1" ss:Color="White"></Font>
+        <Interior ss:Color="#8EA9DB" ss:Pattern="Solid"></Interior>
+        <TextFormat></TextFormat>
+        <Protection></Protection>
+    </Style>
+    <Style ss:ID="s5">
+        <Alignment ss:WrapText="1"></Alignment>
+        <Borders></Borders>
+        <Font ss:Bold="1" ss:Color="White"></Font>
+        <Interior ss:Color="#44546A" ss:Pattern="Solid"></Interior>
+        <NumberFormat></NumberFormat>
+        <Protection></Protection>
+    </Style>
+</Styles>
+
+<Worksheet ss:Name="Expenditure Summary">
+
+<Table x:FullColumns="1" x:FullRows="1">
+
+<Column ss:Width="380"></Column>
+<Column ss:Width="150"></Column>
+<Column ss:Width="150"></Column>
+
+<Row>
+    <Cell ss:StyleID="s3"><Data ss:Type="String"> 2021 Interim Report Submission</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s3"><Data ss:Type="String">Recipient Name - Wilcox County, Alabama</Data></Cell> 
+</Row>
+<Row></Row>
+<Row>
+    <Cell ss:StyleID="s3"><Data ss:Type="String">EXPENDITURE SUMMARY LEVEL INFORMATION</Data></Cell> 
+</Row>
+
+<Row></Row>
+
+<Row>
+    
+    <Cell ss:StyleID="s4"><Data ss:Type="String">1. Expenditure Category: Public Health</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.1 COVID-19 Vaccination</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.2 COVID-19 Testing</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.3 COVID-19 Contact Tracing</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.4 Prevention in Congregate Settings (Nursing Homes, Prisons/Jails, Dense Work Sites, Schools, etc.)</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.5 Personal Protective Equipment</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.6 Medical Expenses (including Alternative Care Facilities)</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.7 Capital Investments or Physical Plant Changes to Public Facilities that respond to the COVID-19 public health emergency</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.8 Other COVID-19 Public Health Expenses (including Communications, Enforcement, Isolation/Quarantine)</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.9 Payroll Costs for Public Health, Safety, and Other Public Sector Staff Responding to COVID-19</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.10 Mental Health Services</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.11 Substance Use Services</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">1.12 Other Public Health Services</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+
+<Row></Row>
+
+<Row>
+    <Cell ss:StyleID="s4"><Data ss:Type="String">2. Expenditure Category: Negative Economic Impacts</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.1 Household Assistance: Food Programs</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.2 Household Assistance: Rent, Mortgage, and Utility Aid</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.3 Household Assistance: Cash Transfers </Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.4 Household Assistance: Internet Access Programs</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.5 Household Assistance: Eviction Prevention</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.6 Unemployment Benefits or Cash Assistance to Unemployed Workers</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.7 Job Training Assistance (e.g., Sectoral job-training, Subsidized Employment, Employment Supports or Incentives)</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.8 Contributions to UI Trust Funds</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.9 Small Business Economic Assistance (General)</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.10 Aid to nonprofit organizations</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.11 Aid to Tourism, Travel, or Hospitality</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.12 Aid to Other Impacted Industries</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.13 Other Economic Support</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">2.14 Rehiring Public Sector Staff</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+
+<Row></Row>
+
+<Row>
+    <Cell ss:StyleID="s4"><Data ss:Type="String">3. Expenditure Category: Services to Disproportionately Impacted Communities</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.1 Education Assistance: Early Learning</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.2 Education Assistance: Aid to High-Poverty Districts</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.3 Education Assistance: Academic Services</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.4 Education Assistance: Social, Emotional, and Mental Health Services</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.5 Education Assistance: Other</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.6 Healthy Childhood Environments: Child Care</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.7 Healthy Childhood Environments: Home Visiting</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.8 Healthy Childhood Environments: Services to Foster Youth or Families Involved in Child Welfare System</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.9 Healthy Childhood Environments: Other</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.10 Housing Support: Affordable Housing</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.11 Housing Support: Services for Unhoused persons</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.12 Housing Support: Other Housing Assistance</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.13 Social Determinants of Health: Other</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.14 Social Determinants of Health: Community Health Workers or Benefits Navigators</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.15 Social Determinants of Health: Lead Remediation</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">3.16 Social Determinants of Health: Community Violence Interventions</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+
+<Row></Row>
+<Row>
+    <Cell ss:StyleID="s4"><Data ss:Type="String">4. Expenditure Category: Premium Pay</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">4.1 Public Sector Employees</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">4.2 Private Sector: Grants to other employers </Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+
+<Row></Row>
+<Row>
+    <Cell ss:StyleID="s4"><Data ss:Type="String">5. Expenditure Category: Infrastructure</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.1 Clean Water: Centralized wastewater treatment</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.2 Clean Water: Centralized wastewater collection and conveyance</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.3 Clean Water: Decentralized wastewater</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.4 Clean Water: Combined sewer overflows</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.5 Clean Water: Other sewer infrastructure</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.6 Clean Water: Stormwater</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.7 Clean Water: Energy conservation</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.8 Clean Water: Water conservation</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.9 Clean Water: Nonpoint source</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.10 Drinking water: Treatment</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.11 Drinking water: Transmission and distribution</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.12 Drinking water: Transmission and distribution: lead remediation</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.13 Drinking water: Source</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.14 Drinking water: Storage</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.15 Drinking water: Other water infrastructure</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.16 Broadband: “Last Mile” projects</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">5.17 Broadband: Other projects</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+
+<Row></Row>
+<Row>
+    <Cell ss:StyleID="s4"><Data ss:Type="String">6. Expenditure Category: Revenue Replacement</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">6.1 Provision of Government Services</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+
+<Row></Row>
+<Row>
+    <Cell ss:StyleID="s4"><Data ss:Type="String">7. Expenditure Category: Administrative and Other</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">7.1 Administrative Expenses</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">7.2 Evaluation and data analysis</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2a"><Data ss:Type="String">7.3 Transfers to Other Units of Government</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+</Row>
+
+<Row></Row>
+<Row>
+    <Cell ss:mergeAcross="4" ss:StyleID="s4a"><Data ss:Type="String">Cumulative Amounts to Date, excluding NEU and Non-UGLG transfers</Data></Cell> 
+</Row>
+<Row>
+    <Cell ss:StyleID="s1"><Data ss:Type="String"></Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Total Cumulative Obligations</Data></Cell>
+    <Cell ss:StyleID="s1"><Data ss:Type="String">Total Cumulative Expenditures</Data></Cell>
+</Row>
+<Row>
+    <Cell ss:StyleID="s2"><Data ss:Type="String"></Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+</Row>
+
+<Row></Row>
+
+    <Row>
+        <Cell ss:StyleID="s4"><Data ss:Type="String">7. Expenditure Category: Recipient Allocation</Data></Cell> 
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s1"><Data ss:Type="String">Category</Data></Cell>
+        <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Obligations</Data></Cell>
+        <Cell ss:StyleID="s1"><Data ss:Type="String">Cumulative Expenditures</Data></Cell>
+    </Row>
+    
+        <Row>
+            <Cell ss:StyleID="s2a"><Data ss:Type="String">7.4 Transfers to Nonentitlement Units (NEU)</Data></Cell>
+            <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+            <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+        </Row>
+    
+    <Row>
+        <Cell ss:StyleID="s2a"><Data ss:Type="String">7.5 Transfers to Non-UGLGs</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number"></Data></Cell>
+    </Row>
+
+    <Row></Row>
+    <Row>
+        <Cell ss:mergeAcross="6" ss:StyleID="s4a"><Data ss:Type="String">Cumulative Amounts to Date, for NEU and Non-UGLG transfers only</Data></Cell> 
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s1"><Data ss:Type="String"></Data></Cell>
+        <Cell ss:StyleID="s1"><Data ss:Type="String">Total Cumulative Obligations</Data></Cell>
+        <Cell ss:StyleID="s1"><Data ss:Type="String">Total Cumulative Expenditures</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String"></Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    </Row>
+
+</Table>
+
+</Worksheet>
+
+<Worksheet ss:Name="Revenue Replacement">
+
+    <Table x:FullColumns="1" x:FullRows="1">
+    
+    <Column ss:Width="380"></Column>
+    <Column ss:Width="150"></Column>
+    
+    <Row>
+        <Cell ss:StyleID="s3"><Data ss:Type="String"> 2021 Interim Report Submission</Data></Cell> 
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s3"><Data ss:Type="String">Recipient Name - Wilcox County, Alabama</Data></Cell> 
+    </Row>
+    <Row></Row>
+    <Row>
+        <Cell ss:StyleID="s4"><Data ss:Type="String">Revenue Replacement</Data></Cell> 
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Base Year Revenue</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">10569171.27</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Fiscal Year End Date</Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String">2021-09-30</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Growth Adjustment Used</Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String">4.100%</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Actual General Revenue as of 12 months ended December 31, 2020</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">11762435.29</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Estimated Revenue Loss Due to Covid-19 Public Health Emergency as of December 31, 2020</Data></Cell>
+        <Cell ss:StyleID="s2"><Data ss:Type="Number">0.00</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Were Fiscal Recovery Funds used to make a deposit into a pension fund?</Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String">No</Data></Cell>
+    </Row>
+    <Row>
+        <Cell ss:StyleID="s2"><Data ss:Type="String">Explanation of how revenue replacement funds were allocated </Data></Cell>
+        <Cell ss:StyleID="s2b"><Data ss:Type="String"><p>No ARP funds have currently been used to replace lost revenue to date.</p></Data></Cell>
+    </Row>
+    
+    
+    </Table>
+    
+    </Worksheet>
+
+
+
+</Workbook>
