@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
-    "@aws-sdk/client-s3": "^3.54.1",
+    "@aws-sdk/client-s3": "^3.55.0",
     "@babel/core": "^7.17.8",
     "@babel/preset-env": "^7.16.11",
     "@googleapis/sheets": "^0.3.0",
