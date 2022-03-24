@@ -1,11 +1,9 @@
 import click
 import pandas as pd
 import requests
-import urllib.request
 from urllib.request import urlopen
-from urllib.parse import quote 
+import urllib.parse
 import validators
-from urllib.parse import urlparse
 
 @click.command()
 @click.argument("links_file")
@@ -19,7 +17,6 @@ def down_pdfs(links_file):
             r = requests.get(url)
             if r.status_code == 200:
                 try:
-                    response = urllib.request.urlopen(url)
                     filename=url.rsplit('/', 1)[1]
                     open(f'output_data/pdfs/{filename}', 'wb').write(r.content)
                     click.echo(f'saved {filename}')
@@ -28,13 +25,12 @@ def down_pdfs(links_file):
                     url = list(url)
                     url[2] = urllib.parse.quote(url[2])
                     url = urllib.parse.urlunsplit(url)
-                    response = urllib.request.urlopen(url)
                     filename=url.rsplit('/', 1)[1]
                     open(f'output_data/pdfs/{filename}', 'wb').write(r.content)
             else:
                 print(url)
         else:
-            print(url)
+            click.echo(f'{url} invalid')
 
 if __name__ == '__main__':
     down_pdfs()
