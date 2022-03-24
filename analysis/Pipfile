@@ -14,6 +14,8 @@ xlwt = "*"
 xlrd = "*"
 python-dotenv = "*"
 validators = "*"
+us = "*"
+census-data-downloader = "*"
 
 [dev-packages]
 
