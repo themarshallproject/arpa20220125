@@ -1,8 +1,9 @@
 import requests
+import os
 #from census import Census
 #from us import states
 
-API_KEY_CENSUS = "64c5c62713b9769a5a273e8a98df638a5a67a0c2"
+API_KEY_CENSUS = os.getenv('API_KEY_CENSUS')
 
 # c = Census(API_KEY_CENSUS)
 # c.acs5.get(('NAME', 'DP05_0078PEM'),
