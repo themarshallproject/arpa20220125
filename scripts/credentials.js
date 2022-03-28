@@ -273,10 +273,18 @@ async function authorize(credentials) {
   );
 
   // Check if we have previously stored a token.
-  const secret = await getPassword(GOOGLE_TOKEN.key, ACCOUNT);
+  try {
+    const secret = await getPassword(GOOGLE_TOKEN.key, ACCOUNT);
 
-  if (secret == null) {
-    return getNewToken(oAuth2Client);
+    if (secret == null) {
+      return getNewToken(oAuth2Client);
+    }
+  } catch (err) {
+    if (err.code === 'PasswordNotFound') {
+      return getNewToken(oAuth2Client);
+    }
+
+    throw err;
   }
 
   oAuth2Client.setCredentials(JSON.parse(secret));
