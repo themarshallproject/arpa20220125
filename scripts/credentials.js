@@ -122,7 +122,7 @@ function deletePassword(service, account) {
   return new Promise((resolve, reject) => {
     if (platform() === 'darwin') {
       keychain.deletePassword({ service, account }, (err) => {
-        if (err) {
+        if (err && err.code !== 'PasswordNotFound') {
           return reject(err);
         }
 
