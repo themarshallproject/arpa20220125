@@ -2,16 +2,16 @@ import requests
 #from census import Census
 #from us import states
 
-API_KEY = "64c5c62713b9769a5a273e8a98df638a5a67a0c2"
+API_KEY_CENSUS = "64c5c62713b9769a5a273e8a98df638a5a67a0c2"
 
-# c = Census(API_KEY)
+# c = Census(API_KEY_CENSUS)
 # c.acs5.get(('NAME', 'DP05_0078PEM'),
 #           {'for': 'county:{}'.format(counties.MD.fips)})
 # print(c.acs5.get)
 # query_params = {
 #         "get": "NAME, DP05_0078PEM"
 #         "for": "county:*",
-#         "api_key": API_KEY
+#         "api_key": API_KEY_CENSUS
 #     }
 resp = requests.get("https://api.census.gov/data/2019/acs/acs5/groups/B26103B.json")
 print(resp.json()["variables"].keys())

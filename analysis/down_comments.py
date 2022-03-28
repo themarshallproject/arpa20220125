@@ -8,12 +8,12 @@ import os
 @click.argument("docket_id")
 def get_comments(docket_id):
 
-    API_KEY=os.getenv('API_KEY')
+    API_KEY_REG=os.getenv('API_KEY_REG')
 
     click.echo("REQUESTING by the docket ID")
     query_params = {
         "filter[docketId]": docket_id,
-        "api_key": API_KEY
+        "api_key": API_KEY_REG
     }
     response = requests.get("https://api.regulations.gov/v4/documents", params=query_params)
 
