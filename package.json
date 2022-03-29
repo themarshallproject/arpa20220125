@@ -14,7 +14,7 @@
     "@aws-sdk/client-s3": "^3.58.0",
     "@babel/core": "^7.17.8",
     "@babel/preset-env": "^7.16.11",
-    "@googleapis/sheets": "^0.3.0",
+    "@googleapis/sheets": "^2.0.1",
     "@octokit/rest": "^18.12.0",
     "@polka/send-type": "^0.5.2",
     "@themarshallproject/prettier-config": "^1.0.0",
