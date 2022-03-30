@@ -1,11 +1,13 @@
 // native
-import { platform } from 'os';
+import { createServer } from 'node:http';
+import { platform } from 'node:os';
 
 // packages
 import log, { error as _error } from 'fancy-log';
 import { OAuth2Client } from 'google-auth-library';
 import keychain from 'keychain';
 import { createInterface } from 'readline';
+import destroy from 'server-destroy';
 
 // local
 import { readJsonSync, writeJsonSync } from './utils.js';
@@ -264,14 +266,6 @@ export async function getGoogleClient() {
  * @returns {Promise<OAuth2Client>}
  */
 async function authorize(credentials) {
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
-
-  const oAuth2Client = new OAuth2Client(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
-
   // Check if we have previously stored a token.
   let secret;
   try {
@@ -281,6 +275,14 @@ async function authorize(credentials) {
       throw err;
     }
   }
+
+  const { client_secret, client_id } = credentials.installed;
+
+  const oAuth2Client = new OAuth2Client(
+    client_id,
+    client_secret,
+    'http://localhost:3000/oauth2callback'
+  );
 
   if (secret == null) {
     return getNewToken(oAuth2Client);
@@ -304,22 +306,27 @@ function getNewToken(oAuth2Client) {
       scope: GOOGLE_TOKEN.scopes,
     });
 
-    console.log('Authorize this app by visiting this url:', authUrl);
+    const server = createServer(async (req, res) => {
+      try {
+        if (req.url.includes('/oauth2callback')) {
+          const params = new URL(req.url, 'http://localhost:3000').searchParams;
 
-    const rl = createInterface({
-      input: process.stdin,
-      output: process.stdout,
+          res.end('Authentication successful! Please return to the console.');
+          server.destroy();
+
+          const { tokens } = await oAuth2Client.getToken(params.get('code'));
+          oAuth2Client.setCredentials(tokens);
+          await setPassword(GOOGLE_TOKEN.key, ACCOUNT, JSON.stringify(tokens));
+          resolve(oAuth2Client);
+        }
+      } catch (e) {
+        reject(e);
+      }
+    }).listen(3000, () => {
+      // vist the authorize url to start the workflow
+      console.log('Authorize this app by visiting this url:', authUrl);
     });
 
-    rl.question('Enter the code from that page here: ', async (code) => {
-      rl.close();
-      const token = await oAuth2Client.getToken(code);
-
-      oAuth2Client.setCredentials(token);
-
-      await setPassword(GOOGLE_TOKEN.key, ACCOUNT, JSON.stringify(token));
-
-      resolve(oAuth2Client);
-    });
+    destroy(server);
   });
 }
