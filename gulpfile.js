@@ -27,6 +27,7 @@ import * as examples from './scripts/examples.js';
 import * as externaldata from './scripts/externaldata.js';
 import * as externalEmbeds from './scripts/external-embeds.js';
 import * as github from './scripts/github.js';
+import * as google from './scripts/google.js';
 import * as includes from './scripts/includes.js';
 import server from './scripts/server.js';
 import * as setup from './scripts/setup.js';
@@ -351,8 +352,8 @@ gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 gulp.task('credentials:github', credentials.resetGithubKey);
-gulp.task('credentials:google', credentials.resetGoogleToken);
-gulp.task('credentials:google_client', credentials.resetGoogleClient);
+gulp.task('credentials:google', google.resetGoogleToken);
+gulp.task('credentials:google_client', google.resetGoogleClient);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);
