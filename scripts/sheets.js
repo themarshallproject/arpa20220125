@@ -13,7 +13,6 @@ const config = getLocalConfig();
 
 export async function downloadData() {
   const auth = await credentials.getGoogleClient();
-  console.log(auth);
 
   return downloadSheet(auth);
 }
