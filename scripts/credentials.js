@@ -281,7 +281,7 @@ async function authorize(credentials) {
   const oAuth2Client = new OAuth2Client(
     client_id,
     client_secret,
-    'http://localhost:3000/oauth2callback'
+    'http://localhost:3030/oauth2callback'
   );
 
   if (secret == null) {
@@ -309,7 +309,7 @@ function getNewToken(oAuth2Client) {
     const server = createServer(async (req, res) => {
       try {
         if (req.url.includes('/oauth2callback')) {
-          const params = new URL(req.url, 'http://localhost:3000').searchParams;
+          const params = new URL(req.url, 'http://localhost:3030').searchParams;
 
           res.end('Authentication successful! Please return to the console.');
           server.destroy();
@@ -322,7 +322,7 @@ function getNewToken(oAuth2Client) {
       } catch (e) {
         reject(e);
       }
-    }).listen(3000, () => {
+    }).listen(3030, () => {
       // vist the authorize url to start the workflow
       console.log('Authorize this app by visiting this url:', authUrl);
     });
