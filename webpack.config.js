@@ -2,6 +2,9 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// plugins
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const jsRegex = /\.(mjs|js|jsx|ts|tsx)$/;
@@ -92,6 +95,7 @@ export default function getConfig(mode, entry, outputPath) {
         },
       ].filter(Boolean),
     },
+    plugins: [isDev && new CaseSensitivePathsPlugin()].filter(Boolean),
   };
 
   return config;
