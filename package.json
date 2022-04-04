@@ -57,7 +57,7 @@
     "open": "^8.4.0",
     "polka": "^0.5.2",
     "premove": "^4.0.0",
-    "prettier": "^2.6.1",
+    "prettier": "^2.6.2",
     "pretty-bytes": "^6.0.0",
     "sass": "^1.49.10",
     "server-destroy": "^1.0.1",
