@@ -31,7 +31,7 @@ export async function resetGoogleToken() {
  * Ensure that client credentials, and bearer token are present and stored.
  * Calls back with an authenticated client.
  */
-async function getGoogleClient() {
+export async function getGoogleClient() {
   // Ensure credentials are present.
   await ensureCredential(GOOGLE_CLIENT);
   // Get the stored credentials.
