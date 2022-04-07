@@ -51,7 +51,7 @@ const { local_markdown, generate_external_embeds, cdn, slug } =
 const sass = gulpSass(dartSass);
 
 async function startServer() {
-  const port = await getPort({ port: 3000 });
+  const port = await getPort({ port: [3000, 3001, 3002, 3003] });
   const lrPort = await getPort({ port: 35729 });
 
   server({ port, lrPort });
