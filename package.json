@@ -12,7 +12,7 @@
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
     "@aws-sdk/client-s3": "^3.58.0",
-    "@babel/core": "^7.17.8",
+    "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@googleapis/sheets": "^2.0.1",
     "@octokit/rest": "^18.12.0",
