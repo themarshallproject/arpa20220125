@@ -43,7 +43,10 @@ export const GOOGLE_CLIENT = {
 export const GOOGLE_TOKEN = {
   key: 'gfx-google-token',
   name: 'OAuth2 bearer token for google apis',
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+  scopes: [
+    'https://www.googleapis.com/auth/documents.readonly',
+    'https://www.googleapis.com/auth/spreadsheets.readonly',
+  ],
 };
 const MUX_SECRET = {
   key: 'gfx-mux-secret',
