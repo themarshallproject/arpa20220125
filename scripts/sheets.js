@@ -1,5 +1,5 @@
 // native
-import fs from 'fs';
+import fs from 'node:fs';
 
 // packages
 import { csvFormatRows } from 'd3-dsv';

@@ -31,6 +31,7 @@ import * as google from './scripts/google.js';
 import * as includes from './scripts/includes.js';
 import server from './scripts/server.js';
 import * as setup from './scripts/setup.js';
+import * as docs from './scripts/docs.js';
 import * as sheets from './scripts/sheets.js';
 import * as videos from './scripts/videos.js';
 import * as s3 from './scripts/s3.js';
@@ -334,6 +335,7 @@ gulp.task(
 );
 gulp.task('build:examples', examples.build);
 gulp.task('revision', revision);
+gulp.task('docs:download', docs.downloadData);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos);
 gulp.task('posts:download', endrun.getPostData);
