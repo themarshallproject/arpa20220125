@@ -22,7 +22,7 @@
     "babel-loader": "^8.2.4",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "colorette": "^2.0.16",
-    "d3": "^7.4.2",
+    "d3": "^7.4.3",
     "date-fns": "^2.28.0",
     "fancy-log": "^2.0.0",
     "get-port": "^6.1.2",
