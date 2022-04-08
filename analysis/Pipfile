@@ -16,6 +16,8 @@ python-dotenv = "*"
 validators = "*"
 us = "*"
 census-data-downloader = "*"
+selenium = "*"
+python-slugify = "*"
 
 [dev-packages]
 
