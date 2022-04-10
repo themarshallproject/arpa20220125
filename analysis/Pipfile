@@ -18,6 +18,7 @@ us = "*"
 census-data-downloader = "*"
 selenium = "*"
 python-slugify = "*"
+webdriver-manager = "*"
 
 [dev-packages]
 
