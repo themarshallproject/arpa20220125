@@ -13,22 +13,18 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
 WAIT_FOR_ELEMENT = 10
+
+options = webdriver.ChromeOptions()
+prefs = {'download.default_directory' : '/Users/anastasia/Desktop/arpa20220125/analysis/output_data/REPORTS//'}
+options.add_experimental_option("prefs", prefs)
+
 s=Service(ChromeDriverManager().install()) 
-driver = webdriver.Chrome(service=s)
+driver = webdriver.Chrome(service=s, chrome_options=options)
 
 @click.command()
 @click.argument("url")
 @click.argument("output_file", type=click.File('w'))
 def down_reports(url, output_file):
-    #options = webdriver.ChromeOptions()
-    #prefs = {'download.default_directory' : '/Users/anastasia/Desktop/arpa20220125/analysis/output_data'}
-    #options.add_argument("download.default_directory=/Users/anastasia/Desktop/arpa20220125/analysis/output_data")
-    #driver_path = 'source_data/chromedriver'
-    #driver = webdriver.Chrome(driver_path, chrome_options=options)
-
-    #driver = webdriver.Chrome(chrome_options=options)
-
-    #driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.get(url)    
     try:
         click.echo("downloading", err=True)
@@ -43,12 +39,11 @@ def down_reports(url, output_file):
         download_button.click()
         click.echo("saving", err=True) 
         output_file.write(file_name)
-
     except TimeoutException as e:
         print("Wait Time Out")
         print(e)
     return file_name
-    #df.head().apply(down_interim_report, axis = 1)
+    #df.head().apply(down_reports, axis = 1)
 
 if __name__ == '__main__':
     down_reports()
