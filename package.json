@@ -62,7 +62,7 @@
     "premove": "^4.0.0",
     "prettier": "^2.6.2",
     "pretty-bytes": "^6.0.0",
-    "sass": "^1.50.0",
+    "sass": "^1.50.1",
     "server-destroy": "^1.0.1",
     "sirv": "^2.0.2",
     "svelte": "^3.47.0",
