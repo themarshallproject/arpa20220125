@@ -9,41 +9,49 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from time import sleep 
+
+import os.path 
 
 from webdriver_manager.chrome import ChromeDriverManager
 
 WAIT_FOR_ELEMENT = 10
 
 options = webdriver.ChromeOptions()
-prefs = {'download.default_directory' : '/Users/anastasia/Desktop/arpa20220125/analysis/output_data/REPORTS//'}
+#prefs = {'download.default_directory' : '/Users/anastasia/Desktop/arpa20220125/analysis/output_data/reports//'}
+prefs = {'download.default_directory' : '/tmp/reports//'}
+'/tmp/interim_reports/'
 options.add_experimental_option("prefs", prefs)
+options.add_argument("--headless")
 
 s=Service(ChromeDriverManager().install()) 
-driver = webdriver.Chrome(service=s, chrome_options=options)
+driver = webdriver.Chrome(service=s, options=options)
 
 @click.command()
 @click.argument("url")
-@click.argument("output_file", type=click.File('w'))
-def down_reports(url, output_file):
-    driver.get(url)    
-    try:
-        click.echo("downloading", err=True)
+def down_reports(url):  
+    driver.get(url) 
+    try:  
+        click.echo("waiting for the button", err=True)
         WebDriverWait(driver, WAIT_FOR_ELEMENT).until(
             EC.element_to_be_clickable((By.CLASS_NAME, "downloadbutton"))
         )     
         file_name = driver.find_element(by = By.CLASS_NAME, value = "title").text
-        click.echo(file_name, err=True)    
-        click.echo("clicking", err=True) 
-        download_button = driver.find_element(by=By.CLASS_NAME, value="downloadbutton")
-        click.echo(download_button.text, err=True) 
-        download_button.click()
-        click.echo("saving", err=True) 
-        output_file.write(file_name)
+        click.echo(file_name, err=True)
+        file_exists = os.path.exists(f'output_data/tmp/reports/{file_name}.xls')
+        #file_exists = os.path.exists(f'output_data/reports/{file_name}.xls')
+        click.echo(file_exists, err = True)
+        if file_exists == False:
+            click.echo("finding the button", err=True) 
+            download_button = driver.find_element(by=By.CLASS_NAME, value="downloadbutton")
+            click.echo("clicking")  
+            download_button.click()
+            click.echo("saving", err=True)
+            return (file_name, sleep(3), driver.close())
+        else: 
+            return (driver.close())
     except TimeoutException as e:
         print("Wait Time Out")
         print(e)
-    return file_name
-    #df.head().apply(down_reports, axis = 1)
-
 if __name__ == '__main__':
     down_reports()
