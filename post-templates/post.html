@@ -25,6 +25,11 @@
   <title>|META:slug| - GFX Rig</title>
   <link rel="stylesheet" media="all" href="https://www.themarshallproject.org/api/v1/asset-redirect/app.css" />
 
+  <!-- hack/trick to async load CSS via https://www.filamentgroup.com/lab/load-css-simpler/ -->
+  <link rel="stylesheet" href="https://use.typekit.net/crx5tsx.css" media="print" onload="this.onload=null; this.media='all';">
+  <!-- fall back for no-JS users -->
+  <noscript><link rel="stylesheet" href="https://use.typekit.net/crx5tsx.css"></noscript>
+
   <script>
     window.endrun_config = {
           post_id: "759",
