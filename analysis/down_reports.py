@@ -19,9 +19,8 @@ WAIT_FOR_ELEMENT = 10
 
 options = webdriver.ChromeOptions()
 #prefs = {'download.default_directory' : '/Users/anastasia/Desktop/arpa20220125/analysis/output_data/reports//'}
-prefs = {'download.default_directory' : '/tmp/reports//'}
-'/tmp/interim_reports/'
-options.add_experimental_option("prefs", prefs)
+#prefs = {'download.default_directory' : '/tmp/reports//'}
+#options.add_experimental_option("prefs", prefs)
 options.add_argument("--headless")
 
 s=Service(ChromeDriverManager().install()) 
@@ -35,19 +34,39 @@ def down_reports(url):
         click.echo("waiting for the button", err=True)
         WebDriverWait(driver, WAIT_FOR_ELEMENT).until(
             EC.element_to_be_clickable((By.CLASS_NAME, "downloadbutton"))
-        )     
+        ) 
         file_name = driver.find_element(by = By.CLASS_NAME, value = "title").text
         click.echo(file_name, err=True)
-        file_exists = os.path.exists(f'output_data/tmp/reports/{file_name}.xls')
-        #file_exists = os.path.exists(f'output_data/reports/{file_name}.xls')
+
+        output = driver.execute("""
+        [].forEach.call(document.querySelectorAll('a'), function(link){
+        if(link.attributes.target) {
+            link.attributes.target.value = '_self';
+        }
+        });
+        window.open = function(url) {
+        location.href = url;
+        console.log(url);
+            };""".replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' '))
+        click.echo(output)
+
+
+
+
+
+
+
+        file_exists = os.path.exists(f'output_data/reports/{file_name}.xls')
+        #file_exists = #check the bucket
         click.echo(file_exists, err = True)
         if file_exists == False:
             click.echo("finding the button", err=True) 
             download_button = driver.find_element(by=By.CLASS_NAME, value="downloadbutton")
             click.echo("clicking")  
-            download_button.click()
+            down_btn = download_button.click()
+            click.echo(down_btn)
             click.echo("saving", err=True)
-            return (file_name, sleep(3), driver.close())
+            #return (file_name, sleep(3), driver.close())
         else: 
             return (driver.close())
     except TimeoutException as e:
