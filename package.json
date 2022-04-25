@@ -67,7 +67,7 @@
     "svelte": "^3.47.0",
     "svelte-loader": "^3.1.2",
     "totalist": "^3.0.0",
-    "underscore": "^1.13.2",
+    "underscore": "^1.13.3",
     "webpack": "^5.72.0",
     "webpack-dev-middleware": "^5.3.1",
     "webpack-stream": "^7.0.0",
