@@ -24,7 +24,7 @@
     "d3": "^7.4.4",
     "date-fns": "^2.28.0",
     "esbuild": "^0.14.39",
-    "esbuild-loader": "^2.18.0",
+    "esbuild-loader": "^2.19.0",
     "fancy-log": "^2.0.0",
     "get-port": "^6.1.2",
     "glob": "^8.0.3",
