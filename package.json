@@ -27,7 +27,7 @@
     "esbuild-loader": "^2.18.0",
     "fancy-log": "^2.0.0",
     "get-port": "^6.1.2",
-    "glob": "^8.0.1",
+    "glob": "^8.0.3",
     "google-auth-library": "^8.0.2",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.0.0",
