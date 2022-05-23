@@ -69,7 +69,7 @@
     "totalist": "^3.0.0",
     "underscore": "^1.13.3",
     "webpack": "^5.72.1",
-    "webpack-dev-middleware": "^5.3.1",
+    "webpack-dev-middleware": "^5.3.3",
     "webpack-stream": "^7.0.0",
     "yaml": "^2.1.0"
   },
