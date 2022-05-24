@@ -211,7 +211,9 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
     // By default, we want the y axis labels on horizontal bar charts to be aligned
     // flush with the left edge of the graphic.
-    this.yAxisElement.selectAll('text').attr('x', 0 - this.config.marginLeft);
+    this.yAxisElement
+      .selectAll('text')
+      .attr('x', 0 - this.evaluateOption('marginLeft'));
 
     this.xAxisElement
       .attr('transform', `translate(0, ${this.size.chartHeight})`)
