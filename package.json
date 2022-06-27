@@ -12,7 +12,7 @@
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.118.0",
     "@evilmartians/lefthook": "^1.0.4",
-    "@googleapis/docs": "^0.4.2",
+    "@googleapis/docs": "^1.0.1",
     "@googleapis/sheets": "^3.0.1",
     "@octokit/rest": "^18.12.0",
     "@polka/send-type": "^0.5.2",
