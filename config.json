@@ -9,7 +9,6 @@
   "inline_threshold": 4000,
   "gfx_version": "2.1.0",
   "endrun_host": "https://www.themarshallproject.org",
-  "multiple_graphics": false,
   "generate_external_embeds": false,
   "embed_loader_version": "0.1.16",
   "document_id": "",
