@@ -23,7 +23,7 @@
     "colorette": "^2.0.19",
     "d3": "^7.5.0",
     "date-fns": "^2.28.0",
-    "esbuild": "^0.14.47",
+    "esbuild": "^0.14.48",
     "esbuild-loader": "^2.19.0",
     "fancy-log": "^2.0.0",
     "get-port": "^6.1.2",
