@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 
-import os
-os.path.isdir('source_data')
-
 df = pd.read_excel('source_data/SLFRF-2021.xlsx', 'Project Updated', skiprows=0, index_col=0)
 
 #conditions: 
@@ -41,7 +38,7 @@ df["law_enforcement"] = np.where((df["le_cat"] != "other"), 1, 0)
 recipients = df.groupby(["SLT Application ID", 'Recipient Name', "State/Territory", "law_enforcement", "Total Expenditures"])["Total Obligations"].sum().reset_index()
 recipients_le = recipients[recipients["law_enforcement"]!=0].sort_values(by=['Total Obligations'], ascending = False)
 
-tranche = pd.read_excel('SLFRF-2021.xlsx', 'Recipients Updated', skiprows=0, index_col=0)
+tranche = pd.read_excel('source_data/SLFRF-2021.xlsx', 'Recipients Updated', skiprows=0, index_col=0)
 result = pd.merge(recipients_le, tranche, on=["SLT Application ID","Recipient Name"])
 result = result.rename(columns={result.columns[-1]: 'tranche'})
 
