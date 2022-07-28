@@ -21,12 +21,12 @@ help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z\%\\.\/_-]+:.*?##/ { printf "\033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 
-
 ##@ Analysis
-analysis/output_data/output.csv: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
-	@echo "Running R analysis"
-	Rscript analysis/analysis.R
+analysis/output_data/q1_cj_related_projects_to_vet.xlsx: analysis/source_data/arpaQ12022.xlsx
+	$(PYENV) python analysis/project_level_analysis_q1.py -f xlsx
 
+analysis/output_data/q1_cj_related_projects_to_vet.csv: analysis/source_data/arpaQ12022.xlsx
+	$(PYENV) python analysis/project_level_analysis_q1.py -f csv
 
 ##@ Source files
 analysis/source_data/input.csv:  ## Download a test input csv to source data directory
