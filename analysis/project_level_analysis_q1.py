@@ -38,8 +38,10 @@ def process_data(format='xlsx'):
 
 
     if format == 'xlsx':
+        click.echo('Writing analysis/output_data/q1_cj_related_projects_to_vet.xlsx', err=True)
         df.to_excel('analysis/output_data/q1_cj_related_projects_to_vet.xlsx', index=False)
     elif format == 'csv':
+        click.echo('Writing analysis/output_data/q1_cj_related_projects_to_vet.csv', err=True)
         df.to_csv('analysis/output_data/q1_cj_related_projects_to_vet.csv', index=False)
     else:
         click.echo('No valid output format specified, must be csv or xlsx', err=True)
