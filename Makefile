@@ -37,7 +37,6 @@ analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-Marc
 	@echo "Downloading source data"
 	curl https://s3.amazonaws.com/tmp-gfx-public-data/arpa_ncsl20220125/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx -o $@
 
-
 ##@ Upload/sync
 
 .PHONY: deploy
