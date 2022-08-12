@@ -23,6 +23,10 @@ help:  ## Display this help
 
 
 ##@ Analysis
+analysis/output_data/group_by_category.csv: analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx ## Export grouped data for graphics
+	@echo "Export grouped data for graphics"
+	$(PYENV) python analysis/group_by_category.py
+
 analysis/output_data/output.csv: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
 	@echo "Running R analysis"
 	Rscript analysis/analysis.R
