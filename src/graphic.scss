@@ -6,27 +6,24 @@
     min-width:100%; 
 }
 .arpa-project-example-card-content {
-    height: 350px;
+    height: 250px;
     overflow-y: scroll;
-}
 
-.card-location {
-    font-weight: 600;
-    font-size: 20px;
-}
-
-.card-project-name {
-    font-size: 18px;
-}
-
-.card-spending {
-    font-size: 18px;
-}
-
-.card-desciption {
-    font-size: 16px;
-}
-
-.s-card {
-    border: none;
+    .card-location {
+        font-weight: 600;
+        font-size: 20px;
+    }
+    
+    .card-project-name {
+        font-size: 18px;
+    }
+    
+    .card-spending {
+        font-size: 18px;
+    }
+    
+    .card-desciption {
+        font-size: 16px;
+    }
+    
 }
