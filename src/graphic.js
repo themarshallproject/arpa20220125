@@ -38,8 +38,8 @@ function getWTFData() {
       name: "Example 4",
       statecode: "DC"
     }
-  ])
-}
+  ]
+)}
 
 // Helper to get GeoIP response
 function getGeoIpResponse() {
