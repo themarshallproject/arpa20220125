@@ -58,6 +58,13 @@
     </CardActions>
   </Card>
 </MaterialApp>
+<div class="graphic-source">
+  Source:
+    <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
+      U.S. Department of Treasury
+    </a>
+</div>
+
   
   
 {/await}
