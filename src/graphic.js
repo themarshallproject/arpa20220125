@@ -18,19 +18,28 @@ const randouselApp = new Randousel({
 // Read in data from Airtable
 // You can make this with `make graphics_data`
 function getWTFData() {
-  return Promise.resolve().then(() => wtfDataRaw['data']['requests']
-)}
-
-// testing getting GeoIP
-getGeoIpResponse()
-      .then(response => console.log(response))
-      .then(data => {
-        console.log(data.region_code)
-        // if (data.country_code === 'US' && data.region_code) {
-        //   window.localStorage.setItem(cacheSlug, JSON.stringify(data));
-        //   return data;
-        // }
-      })
+  try {
+    return fetch("https://api.baseql.com/airtable/graphql/appjNDCHFduMTVuRA", {
+      "headers": {
+        "accept": "application/json",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": "Bearer MTJhNGIzNjgtZmRkZS00MWJiLWIxMjAtYzU4NzVkNDM2YTI5",
+        "cache-control": "no-cache",
+        "content-type": "application/json",
+        "pragma": "no-cache",
+      },
+      "referrer": "https://app.baseql.com/",
+      "referrerPolicy": "strict-origin-when-cross-origin",
+      "body": "{\"query\":\"query MyQuery {\\n  requests {\\n    budget\\n    category\\n    description\\n    obligations\\n    place\\n    projectName\\n    state\\n    wtf\\n  }\\n}\\n\",\"variables\":null,\"operationName\":\"MyQuery\"}",
+      "method": "POST",
+      "mode": "cors",
+      // "credentials": "include"
+    })
+    .then(r => r.json());
+  } catch(err) {
+    console.log("fetching error while getting data:", err);
+  }
+}
 
 // Helper to get GeoIP response
 function getGeoIpResponse() {

@@ -8,9 +8,7 @@
   
   const loading = Promise.all([location, wtfData])
     .then( ([locationResponse, wtfResponse]) => {
-      console.log('location promise:', locationResponse)
-      data = wtfResponse.filter(d => d.wtf);
-      console.log('data:', data)
+      data = wtfResponse['data']['requests'].filter(d => d.wtf);
 
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
