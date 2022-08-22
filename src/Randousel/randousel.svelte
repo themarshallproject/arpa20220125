@@ -39,24 +39,29 @@
 
 <MaterialApp class="arpa-project-example">
   <Card div class="arpa-project-example-card">
-    <CardTitle div class="card-location">
-      {selectedWTF.place}, {selectedWTF.state}
-    </CardTitle>
-    <CardTitle div class="card-project-name">
-      {selectedWTF.projectName}
-    </CardTitle>
-    <CardText div class="card-spending">
-      Budget: {selectedWTF.budget}, Obligation: {selectedWTF.obligations}
-    </CardText>
-    <CardText div class="card-desciption">
-      {selectedWTF.description}
-    </CardText>
+    <div class="arpa-project-example-card-content">
+      <CardTitle div class="card-location">
+        {selectedWTF.place}, {selectedWTF.state}
+      </CardTitle>
+      <CardTitle div class="card-project-name">
+        {selectedWTF.projectName}
+      </CardTitle>
+      <CardText div class="card-spending">
+        {#if selectedWTF.budget} Budget: ${selectedWTF.budget.toLocaleString("en-US")}{/if} 
+        {#if selectedWTF.obligations}Obligation: ${selectedWTF.obligations.toLocaleString("en-US")}{/if}
+      </CardText>
+      <CardText div class="card-desciption">
+        {selectedWTF.description}
+      </CardText>
+    </div>
+    <div class="arpa-project-example-card-action">
+      <CardActions>
+        <Button div class="card-button" on:click={randomize}>Show me another</Button>
+      </CardActions>
+    </div>
+
   </Card>
-  <Card>
-    <CardActions>
-      <Button div class="card-button" on:click={randomize}>Show me another</Button>
-    </CardActions>
-  </Card>
+
 </MaterialApp>
 <div class="graphic-source">
   Source:
