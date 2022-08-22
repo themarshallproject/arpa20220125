@@ -16,7 +16,7 @@ import toc from 'gulp-markdown-toc';
 import revAll from 'gulp-rev-all';
 import sourcemaps from 'gulp-sourcemaps';
 import open from 'open';
-import dartSass from 'sass';
+import dartSass from 'sass-embedded';
 import webpack from 'webpack';
 
 // local
@@ -69,11 +69,9 @@ function styles() {
     .src('src/graphic.scss')
     .pipe(sourcemaps.init())
     .pipe(
-      sass
-        .sync({
-          includePaths: ['templates/'],
-        })
-        .on('error', sass.logError)
+      sass({
+        includePaths: ['templates/'],
+      }).on('error', sass.logError)
     )
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('build'))
