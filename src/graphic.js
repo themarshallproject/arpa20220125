@@ -1,5 +1,5 @@
 import Randousel from './Randousel/randousel.svelte';
-
+import wtfDataRaw from './assets/data/arpa_wtfs.json'
 const cacheSlug = 'arpa-categories-geoip-location';
 
 // Provide our components with promises
@@ -17,28 +17,8 @@ const randouselApp = new Randousel({
 
 // Mock data
 function getWTFData() {
-  return Promise.resolve().then(() => [
-    {
-      id: "1",
-      name: "Example 1",
-      statecode: "IL"
-    },
-    {
-      id: "2",
-      name: "Example 2",
-      statecode: "CA"
-    },
-    {
-      id: "3",
-      name: "Example 3",
-      statecode: "NY"
-    },
-    {
-      id: "4",
-      name: "Example 4",
-      statecode: "DC"
-    }
-  ]
+  console.log(wtfDataRaw['data']['requests'])
+  return Promise.resolve().then(() => wtfDataRaw['data']['requests']
 )}
 
 // Helper to get GeoIP response
