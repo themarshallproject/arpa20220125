@@ -40,7 +40,7 @@ analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-Marc
 	curl https://s3.amazonaws.com/tmp-gfx-public-data/arpa_ncsl20220125/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx -o $@
 
 
-analysis/source_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airtable
+analysis/output_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airtable
 	curl 'https://api.baseql.com/airtable/graphql/appjNDCHFduMTVuRA?' \
 		-H 'accept: application/json' \
 		-H 'cache-control: no-cache' \
@@ -50,7 +50,7 @@ analysis/source_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airt
 		--compressed \
 		-o $@
 
-src/assets/data/arpa_wtfs.json: analysis/source_data/arpa_wtfs.json ## move wtf data from source folder to graphics data folder
+src/assets/data/arpa_wtfs.json: analysis/output_data/arpa_wtfs.json ## move wtf data from source folder to graphics data folder
 	cp -R $< $@
 ##@ Upload/sync
 
