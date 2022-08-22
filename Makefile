@@ -37,6 +37,17 @@ analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-Marc
 	@echo "Downloading source data"
 	curl https://s3.amazonaws.com/tmp-gfx-public-data/arpa_ncsl20220125/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx -o $@
 
+
+analysis/source_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airtable
+	curl 'https://api.baseql.com/airtable/graphql/appjNDCHFduMTVuRA?' \
+		-H 'accept: application/json' \
+		-H 'cache-control: no-cache' \
+		-H 'content-type: application/json' \
+		-H 'pragma: no-cache' \
+		--data-raw '{"query":"query MyQuery {\n  requests {\n\t\tplace\n    state\n    description\n    obligations\n    projectName\n    obligations\n    budget\n    category\n    wtf\n  }\n}","variables":null,"operationName":"MyQuery"}' \
+		--compressed \
+		-o $@
+
 ##@ Upload/sync
 
 .PHONY: deploy
