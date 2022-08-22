@@ -20,6 +20,8 @@ clean: clean/source_data clean/output_data  ## Clean files
 help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z0-9\%\\.\/_-]+:.*?##/ { printf "\033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
+.PHONY: graphics_data
+graphics_data: src/assets/data/arpa_wtfs.json ## Download and parse data used for carousel
 
 
 ##@ Analysis
@@ -48,6 +50,8 @@ analysis/source_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airt
 		--compressed \
 		-o $@
 
+src/assets/data/arpa_wtfs.json: analysis/source_data/arpa_wtfs.json ## move wtf data from source folder to graphics data folder
+	cp -R $< $@
 ##@ Upload/sync
 
 .PHONY: deploy
@@ -62,3 +66,7 @@ clean/source_data:  ## Clean source data
 .PHONY: clean/output_data
 clean/output_data:  ## Clean processed data
 	rm -rf analysis/output_data/* 
+
+.PHONY: clean/graphics_data
+clean/graphics_data:  ## Clean graphics data
+	rm -rf src/assets/data/* 
