@@ -32,9 +32,9 @@
   $: selectedWTF = data[selectedIndex]
 </script>
 
-
+<p>Here's an example of how local government spent the federal COVID-19 relief fund on the criminal justice system.</p>
 {#await loading}
-	<p>...Loading...</p>
+	<p>...Loading examples...</p>
 {:then}
 
 <MaterialApp class="arpa-project-example">
