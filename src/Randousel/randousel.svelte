@@ -1,4 +1,6 @@
 <script>
+  import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialApp } from 'svelte-materialify';
+
   export let location;
   export let wtfData;
   let data = []; // Initialize data
@@ -6,8 +8,11 @@
   
   const loading = Promise.all([location, wtfData])
     .then( ([locationResponse, wtfResponse]) => {
-      data = wtfResponse;
-      selectedIndex = data.findIndex(d => d.statecode === locationResponse.region_code);
+      console.log('location promise:', locationResponse)
+      data = wtfResponse.filter(d => d.wtf);
+      console.log('data:', data)
+
+      selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
   function randomize() {
@@ -31,6 +36,28 @@
 {#await loading}
 	<p>...Loading...</p>
 {:then}
-  <p>{selectedWTF.name}, {selectedWTF.statecode}</p>
-  <button on:click={randomize}>Show me another</button>
+
+<MaterialApp class="arpa-project-example">
+  <Card div class="arpa-project-example-card">
+    <CardTitle div class="card-location">
+      {selectedWTF.place}, {selectedWTF.state}
+    </CardTitle>
+    <CardTitle div class="card-project-name">
+      {selectedWTF.projectName}
+    </CardTitle>
+    <CardText div class="card-spending">
+      Budget: {selectedWTF.budget}, Obligation: {selectedWTF.obligations}
+    </CardText>
+    <CardText div class="card-desciption">
+      {selectedWTF.description}
+    </CardText>
+  </Card>
+  <Card>
+    <CardActions>
+      <Button div class="card-button" on:click={randomize}>Show me another</Button>
+    </CardActions>
+  </Card>
+</MaterialApp>
+  
+  
 {/await}

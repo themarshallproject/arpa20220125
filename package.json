@@ -72,5 +72,8 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"
+  },
+  "dependencies": {
+    "svelte-materialify": "^0.3.11"
   }
 }

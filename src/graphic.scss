@@ -1,1 +1,26 @@
 @import "palette";
+
+// Card styles
+.arpa-project-example-card {
+    @include acumin;
+    min-width:100%; 
+    height: 350px;
+    overflow-y: scroll;
+}
+
+.card-location {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.card-project-name {
+    font-size: 18px;
+}
+
+.card-spending {
+    font-size: 18px;
+}
+
+.card-desciption {
+    font-size: 16px;
+}

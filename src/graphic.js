@@ -15,11 +15,22 @@ const randouselApp = new Randousel({
   }
 });
 
-// Mock data
+// Read in data from Airtable
+// You can make this with `make graphics_data`
 function getWTFData() {
-  console.log(wtfDataRaw['data']['requests'])
   return Promise.resolve().then(() => wtfDataRaw['data']['requests']
 )}
+
+// testing getting GeoIP
+getGeoIpResponse()
+      .then(response => console.log(response))
+      .then(data => {
+        console.log(data.region_code)
+        // if (data.country_code === 'US' && data.region_code) {
+        //   window.localStorage.setItem(cacheSlug, JSON.stringify(data));
+        //   return data;
+        // }
+      })
 
 // Helper to get GeoIP response
 function getGeoIpResponse() {
@@ -39,7 +50,7 @@ function getGeoIpData() {
   if (params.get('statecode')) { // Querystring overrides all other options
     return Promise.resolve()
       .then(() => ({
-        region_code: params.get('statecode')
+        region: params.get('statecode')
       }));
   } else if (location) { // Wrap local storage response in a promise and return if it exists 
     return Promise.resolve()
@@ -48,7 +59,7 @@ function getGeoIpData() {
     return getGeoIpResponse()
       .then(response => response.json())
       .then(data => {
-        if (data.country_code === 'US' && data.region_code) {
+        if (data.country_code === 'US' && data.region) {
           window.localStorage.setItem(cacheSlug, JSON.stringify(data));
           return data;
         }
