@@ -52,13 +52,14 @@
         {selectedWTF.description}
       </CardText>
     </div>
-    <div class="arpa-project-example-card-action">
-      <CardActions>
-        <Button div class="card-button" on:click={randomize}>Show me another</Button>
-      </CardActions>
-    </div>
-
   </Card>
+
+  <div class="arpa-project-example-card-action">
+    <CardActions>
+      <Button div class="card-button" on:click={randomize}>Show me another</Button>
+    </CardActions>
+  </div>
+
 
 </MaterialApp>
 <div class="graphic-source">
