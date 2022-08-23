@@ -13,6 +13,14 @@
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
+  function titleCase(str) {
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    }
+    return str.join(' ');
+  }
+
   function randomize() {
     // Get a random index
     const newIndex = Math.floor(Math.random() * data.length);
@@ -39,14 +47,15 @@
   <Card div class="arpa-project-example-card">
     <div class="arpa-project-example-card-content">
       <CardTitle div class="card-location">
-        {selectedWTF.place}, {selectedWTF.state}
+        {titleCase(selectedWTF.place)}, {titleCase(selectedWTF.state)}
       </CardTitle>
       <CardTitle div class="card-project-name">
-        {selectedWTF.projectName}
+        {titleCase(selectedWTF.projectName)}
       </CardTitle>
       <CardText div class="card-spending">
-        {#if selectedWTF.budget} Budget: ${selectedWTF.budget.toLocaleString("en-US")}{/if} 
-        {#if selectedWTF.obligations}Obligation: ${selectedWTF.obligations.toLocaleString("en-US")}{/if}
+        {#if selectedWTF.obligations > 0} Obligation: ${selectedWTF.obligations.toLocaleString("en-US")}
+        {:else if selectedWTF.budget > 0} Budget: ${selectedWTF.budget.toLocaleString("en-US")}
+        {/if} 
       </CardText>
       <CardText div class="card-desciption">
         {selectedWTF.description}
