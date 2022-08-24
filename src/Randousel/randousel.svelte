@@ -81,7 +81,7 @@
       the U.S. Department of Treasury
     </a>. While the federal government does not specifically track criminal justice-related spending, The Marshall Project selected a sample of ARPA spending on criminal justice by conducting keyword searches on the project descriptions that local government wrote.
   <br><br>
-  Hi
+  Each project reported to the Treasury has multiple spending columns attached, including total cumulative expenditures (how much money was already spent), total cumulative obligations (how much money the government promised to spend) and adopted budget (only reported by large cities and states at this point). Experts The Marshall Project interviewed recommended using obligation as the most accurate way to show how much was spent on each project, and use budget when obligation is not available.
 </div>
 
   
