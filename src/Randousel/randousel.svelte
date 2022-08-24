@@ -1,5 +1,6 @@
 <script>
   import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialApp } from 'svelte-materialify';
+  import { format } from 'd3';
 
   export let location;
   export let wtfData;
@@ -12,6 +13,8 @@
 
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
+
+  const amountFormatter = format('~s');
 
   function randomize() {
     // Get a random index
@@ -45,27 +48,25 @@
         {selectedWTF.projectName}
       </CardTitle>
       <CardText div class="card-spending">
-        {#if selectedWTF.budget} Budget: ${selectedWTF.budget.toLocaleString("en-US")}{/if} 
-        {#if selectedWTF.obligations}Obligation: ${selectedWTF.obligations.toLocaleString("en-US")}{/if}
+        {#if selectedWTF.budget}Budget: ${amountFormatter(selectedWTF.budget).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if} 
+        {#if selectedWTF.obligations}Obligation: ${amountFormatter(selectedWTF.obligations).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if}
       </CardText>
       <CardText div class="card-desciption">
         {selectedWTF.description}
       </CardText>
+      <CardText div class="graphic-source">
+        Source: Spending data reported to the
+          <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
+            U.S. Department of Treasury
+          </a>
+      </CardText>
     </div>
-    <div class="arpa-project-example-card-action">
-      <CardActions>
-        <Button div class="card-button" on:click={randomize}>Show me another</Button>
-      </CardActions>
-    </div>
-
   </Card>
-
 </MaterialApp>
-<div class="graphic-source">
-  Source: Spending data reported to the
-    <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
-      U.S. Department of Treasury
-    </a>
+<div class="arpa-project-example-card-action">
+  <CardActions>
+    <Button div class="card-button" on:click={randomize}>Show me another</Button>
+  </CardActions>
 </div>
 
   
