@@ -20,12 +20,7 @@ $arpa-fill-orange:      #f5be73;
         color: $arpa-text-black;
     }
     
-    .card-project-name {
-        font-size: 18px;
-        color: $arpa-text-black;
-    }
-    
-    .card-spending {
+    .card-category, .card-project-name, .card-spending {
         font-size: 18px;
         color: $arpa-text-black;
     }
@@ -39,19 +34,16 @@ $arpa-fill-orange:      #f5be73;
 
 .arpa-project-example-card-action {
     @include acumin;
-
     background-color: $bg-gray;
+
     .s-card-actions {
+        padding-left: 0px;
         background-color: none;
     }
 
     .s-btn .s-btn__content {
         font-size: 20px;
         color: $arpa-text-black;
-        // color: #D47156;
-        // background-clip: content-box, padding-box;
-        // background-color: #F5BE73;
-        // box-shadow: inset 0 0 0 10px lightGreen;
     }
 
     .s-btn {

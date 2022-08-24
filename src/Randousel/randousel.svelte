@@ -50,15 +50,20 @@
         {titleCase(selectedWTF.place)}, {titleCase(selectedWTF.state)}
       </CardTitle>
       <CardTitle div class="card-project-name">
-        {titleCase(selectedWTF.projectName)}
+        Project name: {titleCase(selectedWTF.projectName)}
       </CardTitle>
-      <CardText div class="card-spending">
+      <CardTitle div class="card-spending">
         {#if selectedWTF.obligations > 0} Obligation: ${selectedWTF.obligations.toLocaleString("en-US")}
         {:else if selectedWTF.budget > 0} Budget: ${selectedWTF.budget.toLocaleString("en-US")}
         {/if} 
-      </CardText>
+      </CardTitle>
+      <CardTitle div class="card-category">
+        Project category: {selectedWTF.category.split("-")[1]}
+      </CardTitle>
+
+
       <CardText div class="card-desciption">
-        {selectedWTF.description}
+        "{selectedWTF.description}"
       </CardText>
     </div>
   </Card>
@@ -72,10 +77,11 @@
 
 </MaterialApp>
 <div class="graphic-source">
-  Source: Spending data reported to the
-    <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
-      U.S. Department of Treasury
-    </a>
+  Source: State and local governments are required to report how they are spending the American Resecue Plan funds to <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
+      the U.S. Department of Treasury
+    </a>. While the federal government does not specifically track criminal justice-related spending, The Marshall Project selected a sample of ARPA spending on criminal justice by conducting keyword searches on the project descriptions that local government wrote.
+  <br><br>
+  Hi
 </div>
 
   
