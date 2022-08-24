@@ -19,11 +19,12 @@ def group_data(df):
     df_grouped["Obligations, %"] =  100 * (df_grouped['Total Cumulative Obligations']/df_grouped['Total Cumulative Obligations'].sum().round(2))
     df_grouped['Expenditure Category Group'] = df_grouped['Expenditure Category Group'].str[2:]
     df_grouped = df_grouped[df_grouped["Total Cumulative Obligations"]!= 0]
-   #df_grouped.loc[df_grouped["Expenditure Caterogy Group"].str.contains('Capacity'), "Expenditure Caterogy Group"] = "Public sector capacity*"
     df_grouped = df_grouped.rename(columns={"Expenditure Category Group": "Expenditure group", "Total Cumulative Obligations": "Obligations, $", 'Project Name': 'Number of projects'})
     df_grouped["Expenditure group"] = df_grouped['Expenditure group'].str.lower()
     df_grouped["Expenditure group"] = df_grouped['Expenditure group'].str.capitalize()
     df_grouped["Expenditure group"] = df_grouped["Expenditure group"].replace("Public health-negative economic impact: public sector capacity", "Public sector capacity*")
+    df_grouped = df_grouped[["Expenditure group", "Obligations, %", "Obligations, $", "Number of projects"]]
+    df_grouped = df_grouped.sort_values(by='Obligations, %', ascending=False)
     return df_grouped
 
 def export(df_grouped, output_filename):
