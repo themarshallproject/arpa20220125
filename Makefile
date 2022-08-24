@@ -20,17 +20,10 @@ clean: clean/source_data clean/output_data  ## Clean files
 help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z0-9\%\\.\/_-]+:.*?##/ { printf "\033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-
-
 ##@ Analysis
-analysis/output_data/group_by_category.csv: analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx ## Export grouped data for graphics
-	@echo "Export grouped data for graphics"
-	$(PYENV) python analysis/group_by_category.py $< $@
-
-analysis/output_data/output.csv: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
-	@echo "Running R analysis"
-	Rscript analysis/analysis.R
-
+analysis/output_data/group_by_group.csv: analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx ## Export grouped data for graphics
+	@echo "Export grouped data for datawrapper"
+	$(PYENV) python analysis/group_by_group.py $< $@
 
 ##@ Source files
 analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx:	## Download April twenty-two ARPA Data
