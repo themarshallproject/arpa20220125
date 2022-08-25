@@ -1,8 +1,10 @@
 <script>
   import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialApp } from 'svelte-materialify';
+  import { format } from 'd3';
 
   export let location;
   export let wtfData;
+  let count = 0;
   let data = []; // Initialize data
   let selectedIndex = 0; // Randomly pick an array element
   
@@ -12,6 +14,8 @@
 
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
+
+  const amountFormatter = format('~s');
 
   function titleCase(str) {
     str = str.toLowerCase().split(' ');
@@ -34,6 +38,11 @@
       selectedIndex = newIndex;
     }
   }
+	
+	function handleClick() {
+		count += 1;
+	}
+
   
   $: selectedWTF = data[selectedIndex]
 </script>
@@ -52,36 +61,27 @@
       <CardTitle div class="card-project-name">
         Project name: {titleCase(selectedWTF.projectName)}
       </CardTitle>
-      <CardTitle div class="card-spending">
-        {#if selectedWTF.obligations > 0} Obligation: ${selectedWTF.obligations.toLocaleString("en-US")}
-        {:else if selectedWTF.budget > 0} Budget: ${selectedWTF.budget.toLocaleString("en-US")}
-        {/if} 
-      </CardTitle>
-      <CardTitle div class="card-category">
-        Project category: {selectedWTF.category.split("-")[1]}
-      </CardTitle>
-
-
+      <CardText div class="card-spending">
+        {#if selectedWTF.budget}Budget: ${amountFormatter(selectedWTF.budget).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if} 
+        {#if selectedWTF.obligations}Obligation: ${amountFormatter(selectedWTF.obligations).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if}
+      </CardText>
       <CardText div class="card-desciption">
         "{selectedWTF.description}"
+      </CardText>
+      <CardText div class="graphic-source">
+        Source: Spending data reported to the
+          <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
+            U.S. Department of Treasury
+          </a>
       </CardText>
     </div>
   </Card>
 
-  <div class="arpa-project-example-card-action">
-    <CardActions>
-      <Button div class="card-button" on:click={randomize}>Show me another</Button>
-    </CardActions>
-  </div>
-
-
 </MaterialApp>
-<div class="graphic-source">
-  Source: State and local governments are required to report how they are spending the American Resecue Plan funds to <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
-      the U.S. Department of Treasury
-    </a>. While the federal government does not specifically track criminal justice-related spending, The Marshall Project selected a sample of ARPA spending on criminal justice by conducting keyword searches on the project descriptions that local government wrote.
-  <br><br>
-  Each project reported to the Treasury has multiple spending columns attached, including total cumulative expenditures (how much money was already spent), total cumulative obligations (how much money the government promised to spend) and adopted budget (only reported by large cities and states at this point). Experts The Marshall Project interviewed recommended using obligation as the most accurate way to show how much was spent on each project, and use budget when obligation is not available.
+<div class="arpa-project-example-card-action">
+  <CardActions>
+    <Button div class="card-button" on:click={handleClick}>Show me another</Button>
+  </CardActions>
 </div>
 
   

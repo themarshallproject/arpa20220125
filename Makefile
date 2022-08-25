@@ -46,12 +46,15 @@ analysis/output_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airt
 		-H 'cache-control: no-cache' \
 		-H 'content-type: application/json' \
 		-H 'pragma: no-cache' \
-		--data-raw '{"query":"query MyQuery {\n  requests {\n\t\tplace\n    state\n    description\n    obligations\n    projectName\n    obligations\n    budget\n    category\n    wtf\n  }\n}","variables":null,"operationName":"MyQuery"}' \
+		--data-raw '{"query":"query MyQuery {\n  requests {\n\t\tplace\n    state\n    description\n    obligations\n    projectName\n    obligations\n    budget\n    category\n    wtf\n    topPicks\n  }\n}","variables":null,"operationName":"MyQuery"}' \
 		--compressed \
 		-o $@
 
 src/assets/data/arpa_wtfs.json: analysis/output_data/arpa_wtfs.json ## move wtf data from source folder to graphics data folder
 	cp -R $< $@
+
+src/assets/data/arpa_wtfs_ranked.json: src/assets/data/arpa_wtfs.json ## Give the WTF projects a rank
+	$(PYENV) python analysis/rank_wtfs.py $< $@
 ##@ Upload/sync
 
 .PHONY: deploy

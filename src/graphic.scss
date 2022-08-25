@@ -7,29 +7,53 @@ $arpa-fill-orange:      #f5be73;
 .arpa-project-example-card {
     @include acumin;
     min-width:100%; 
+    padding-bottom: 15px;
 }
 .arpa-project-example-card-content {
-    @include acumin;
-
-    height: 350px;
+    height: 500px;
     overflow-y: scroll;
 
+    .s-card-title {
+        word-break: normal;
+    }
+
     .card-location {
-        font-weight: 600;
-        font-size: 20px;
-        color: $arpa-text-black;
+        font-size: 22px;
+        line-height: 24px;
+        margin-bottom: 28px;
+        border-bottom: 1px solid $light-gray;
     }
     
-    .card-category, .card-project-name, .card-spending {
+    .card-project-name {
+        font-size: 18px;
+        font-weight: 800;
+        padding-bottom: 0;
+    }
+    
+    .card-spending {
+        padding-top: 0;
         font-size: 18px;
         color: $arpa-text-black;
     }
     
     .card-desciption {
+        font-style: italic;
         font-size: 16px;
         color: $arpa-text-black;
     }
-    
+    .graphic-source {
+        margin-bottom: 0;
+    }  
+}
+.arpa-project-example-card-action {
+    button {
+        background-color: salmon;
+        color: white;
+        margin: 1em auto 3em auto;
+        .s-btn__content {
+            font-weight: bold;
+        }
+    }
 }
 
 .arpa-project-example-card-action {
