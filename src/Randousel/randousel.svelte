@@ -53,8 +53,6 @@
     selectedWTF = data[selectedIndex]
   } else {
     selectedWTF = data.filter(d => +d.rank == count)[0]
-    console.log(selectedWTF)
-
   }
 </script>
 
@@ -94,9 +92,6 @@
     <Button div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
 </div>
-
-<div>{count}</div>
-
   
   
 {/await}
