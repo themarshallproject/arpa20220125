@@ -16,7 +16,7 @@
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
-  const amountFormatter = format('~s');
+  const amountFormatter = format('.2s');
 
   function titleCase(str) {
     str = str.toLowerCase().split(' ');
@@ -71,8 +71,10 @@
         Project name: {titleCase(selectedWTF.projectName)}
       </CardTitle>
       <CardText div class="card-spending">
-        {#if selectedWTF.budget}Budget: ${amountFormatter(selectedWTF.budget).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if} 
-        {#if selectedWTF.obligations}Obligation: ${amountFormatter(selectedWTF.obligations).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if}
+        {#if selectedWTF.obligations}
+          Obligation: ${amountFormatter(selectedWTF.obligations).toLocaleString("en-US", {maximumSignificantDigits: 0})}
+          {:else} Budget: ${amountFormatter(selectedWTF.budget).toLocaleString("en-US", {maximumSignificantDigits: 0})}
+        {/if}
       </CardText>
       <CardText div class="card-desciption">
         "{selectedWTF.description}"
