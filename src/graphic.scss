@@ -10,8 +10,12 @@ $arpa-fill-orange:      #f5be73;
     padding-bottom: 15px;
 }
 .arpa-project-example-card-content {
-    height: 500px;
+    height: 350px;
     overflow-y: scroll;
+
+    @media (max-width: 740px) {
+        height: 500px;
+    }
 
     .s-card-title {
         word-break: normal;
