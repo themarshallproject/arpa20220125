@@ -16,6 +16,14 @@
 
   const amountFormatter = format('~s');
 
+  function titleCase(str) {
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    }
+    return str.join(' ');
+  }
+
   function randomize() {
     // Get a random index
     const newIndex = Math.floor(Math.random() * data.length);
@@ -42,17 +50,17 @@
   <Card div class="arpa-project-example-card">
     <div class="arpa-project-example-card-content">
       <CardTitle div class="card-location">
-        {selectedWTF.place}, {selectedWTF.state}
+        {titleCase(selectedWTF.place)}, {titleCase(selectedWTF.state)}
       </CardTitle>
       <CardTitle div class="card-project-name">
-        {selectedWTF.projectName}
+        Project name: {titleCase(selectedWTF.projectName)}
       </CardTitle>
       <CardText div class="card-spending">
         {#if selectedWTF.budget}Budget: ${amountFormatter(selectedWTF.budget).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if} 
         {#if selectedWTF.obligations}Obligation: ${amountFormatter(selectedWTF.obligations).toLocaleString("en-US", {maximumSignificantDigits: 0})}{/if}
       </CardText>
       <CardText div class="card-desciption">
-        {selectedWTF.description}
+        "{selectedWTF.description}"
       </CardText>
       <CardText div class="graphic-source">
         Source: Spending data reported to the
@@ -62,6 +70,7 @@
       </CardText>
     </div>
   </Card>
+
 </MaterialApp>
 <div class="arpa-project-example-card-action">
   <CardActions>

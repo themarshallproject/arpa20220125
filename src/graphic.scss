@@ -1,5 +1,8 @@
 @import "palette";
 
+// Colors
+$arpa-text-black:       #3F3B24; // Site bg color
+$arpa-fill-orange:      #f5be73;
 // Card styles
 .arpa-project-example-card {
     @include acumin;
@@ -30,11 +33,13 @@
     .card-spending {
         padding-top: 0;
         font-size: 18px;
+        color: $arpa-text-black;
     }
     
     .card-desciption {
         font-style: italic;
         font-size: 16px;
+        color: $arpa-text-black;
     }
     .graphic-source {
         margin-bottom: 0;
@@ -48,5 +53,24 @@
         .s-btn__content {
             font-weight: bold;
         }
+    }
+}
+
+.arpa-project-example-card-action {
+    @include acumin;
+    background-color: $bg-gray;
+
+    .s-card-actions {
+        padding-left: 0px;
+        background-color: none;
+    }
+
+    .s-btn .s-btn__content {
+        font-size: 20px;
+        color: $arpa-text-black;
+    }
+
+    .s-btn {
+        background-color: $arpa-fill-orange;
     }
 }
