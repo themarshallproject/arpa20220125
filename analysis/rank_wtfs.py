@@ -22,4 +22,5 @@ def export(df_grouped, output_filename):
     print("export obligation grouped by category")
 
 if __name__ == '__main__':
-    process()
+    # process()
+    print("hellow world")

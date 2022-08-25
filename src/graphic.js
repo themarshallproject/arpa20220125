@@ -30,7 +30,7 @@ function getWTFData() {
       },
       "referrer": "https://app.baseql.com/",
       "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"query\":\"query MyQuery {\\n  requests {\\n    budget\\n    category\\n    description\\n    obligations\\n    place\\n    projectName\\n    state\\n    wtf\\n  }\\n}\\n\",\"variables\":null,\"operationName\":\"MyQuery\"}",
+      "body": "{\"query\":\"query MyQuery {\\n  requests {\\n    budget\\n    category\\n    description\\n    id\\n    obligations\\n    place\\n    projectName\\n    rank\\n    state\\n    wtf\\n    topPicks\\n  }\\n}\\n\",\"variables\":null,\"operationName\":\"MyQuery\"}",
       "method": "POST",
       "mode": "cors",
       // "credentials": "include"

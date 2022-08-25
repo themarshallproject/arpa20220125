@@ -7,11 +7,12 @@
   let count = 0;
   let data = []; // Initialize data
   let selectedIndex = 0; // Randomly pick an array element
-  
+  let selectedWTF;
+
   const loading = Promise.all([location, wtfData])
     .then( ([locationResponse, wtfResponse]) => {
       data = wtfResponse['data']['requests'].filter(d => d.wtf);
-
+      console.log(data)
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
@@ -40,11 +41,21 @@
   }
 	
 	function handleClick() {
-		count += 1;
+    if (count == 51) {
+      count = 1
+    } else {
+      count += 1
+    }
 	}
 
   
-  $: selectedWTF = data[selectedIndex]
+  $: if (count == 0) {
+    selectedWTF = data[selectedIndex]
+  } else {
+    selectedWTF = data.filter(d => +d.rank == count)[0]
+    console.log(selectedWTF)
+
+  }
 </script>
 
 <p>Here's an example of how local government spent the federal COVID-19 relief fund on the criminal justice system.</p>
@@ -83,6 +94,8 @@
     <Button div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
 </div>
+
+<div>{count}</div>
 
   
   
