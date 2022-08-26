@@ -1,18 +1,18 @@
 // native
-import fs from 'fs';
+import fs from 'node:fs';
 
 // packages
 import { csvFormatRows } from 'd3-dsv';
 import google from '@googleapis/sheets';
 
 // local
-import * as credentials from './credentials.js';
+import * as googleClient from './google.js';
 import { getLocalConfig } from './config.js';
 
 const config = getLocalConfig();
 
 export async function downloadData() {
-  const auth = await credentials.getGoogleClient();
+  const auth = await googleClient.getGoogleClient();
 
   return downloadSheet(auth);
 }

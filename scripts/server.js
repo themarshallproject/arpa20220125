@@ -12,7 +12,7 @@ import * as renderer from './localrenderer.js';
 import getWebpackConfig from '../webpack.config.js';
 
 const htmlContentType = {
-  'Content-Type': 'text/html',
+  'Content-Type': 'text/html; charset=utf-8',
 };
 
 export default function server(options) {

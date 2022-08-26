@@ -31,7 +31,7 @@ export default class HorizontalBarChart extends VerticalBarChart {
   // sort of data through to your chart.
   setConfigDefaults(config) {
     // Set defaults specific to this class first
-    const classConfig = _.defaults(config, {
+    const classDefaults = {
       marginLeft: 60,
       xAxisTickFormat: (d) => {
         return addCommas(d);
@@ -39,7 +39,8 @@ export default class HorizontalBarChart extends VerticalBarChart {
       yAxisTickFormat: (d) => {
         return d;
       },
-    });
+    };
+    const classConfig = Object.assign({}, classDefaults, config);
 
     // Then set the basic defaults
     super.setConfigDefaults(classConfig);
@@ -210,7 +211,9 @@ export default class HorizontalBarChart extends VerticalBarChart {
 
     // By default, we want the y axis labels on horizontal bar charts to be aligned
     // flush with the left edge of the graphic.
-    this.yAxisElement.selectAll('text').attr('x', 0 - this.config.marginLeft);
+    this.yAxisElement
+      .selectAll('text')
+      .attr('x', 0 - this.evaluateOption('marginLeft'));
 
     this.xAxisElement
       .attr('transform', `translate(0, ${this.size.chartHeight})`)

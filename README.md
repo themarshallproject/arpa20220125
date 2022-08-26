@@ -43,10 +43,10 @@ any custom data processing this project may handle.
     + [Custom headers](#custom-headers)
       - [Using Endrun metadata to develop custom headers](#using-endrun-metadata-to-develop-custom-headers)
     + [Customizing the layout of graphics locally](#customizing-the-layout-of-graphics-locally)
-- [Using external data sources in your HTML](#using-external-data-sources-in-your-html)
+- [Using external data sources in your HTML and JavaScript](#using-external-data-sources-in-your-html-and-javascript)
     + [Example: basic table](#example-basic-table)
-    + [Example: writing to JavaScript variable](#example-writing-to-javascript-variable)
     + [CSV data formats](#csv-data-formats)
+    + [Accessing the data from JavaScript](#accessing-the-data-from-javascript)
 - [Using pre-configured templates](#using-pre-configured-templates)
   * [Chart templates](#chart-templates)
   * [ai2html template](#ai2html-template)
@@ -195,7 +195,7 @@ graphics, and then deploy and put them in a post. Then copy the produced post's
 contents back down to `localtext.md`, so that your graphics environment more
 closely resembles the real post.
 
-## Using external data sources in your HTML
+## Using external data sources in your HTML and JavaScript
 
 You may want to use a data file such as a CSV or JSON to populate your HTML.
 The graphics rig makes any CSV or JSON files placed in `src/template-files`
@@ -273,19 +273,6 @@ The result should appear like this:
     <td>The Islands of Aloha</td>
   </tr>
 </tbody></table>
-
-#### Example: writing to JavaScript variable
-
-This templating also allows us make data accessible to the JavaScript by
-writing it directly to the page as a global variable. Here's an example:
-
-```
-<script type="text/javascript">var statesData = {{ data.states|dump|safe }};</script>
-```
-
-We use two Nunjucks filters, [dump](https://mozilla.github.io/nunjucks/templating.html#dump)
-and [safe](https://mozilla.github.io/nunjucks/templating.html#safe) to
-print the data as JSON and prevent the template engine from escaping the values.
 
 #### CSV data formats
 
@@ -382,6 +369,24 @@ would return a JSON like this:
   "Description": "This is the text from the erroneous early edition of the Chicago Daily Tribune from Nov. 3, 1948."
 }
 ```
+
+#### Accessing the data from JavaScript
+
+The above methods explain how to access data in `src/template-files`
+from your HTML. If you need to access that same data file from your JavaScript, you can find it in JSON format in `assets/import-data`.
+
+For example, the file `src/template-files/sports.csv` will be converted
+to JSON and written to `src/assets/import-data/sports.json`. You can
+load it into your JavaScript however you like from there. For example:
+
+```
+fetch('assets/import-data/sports.json')
+  .then((response) => response.json())
+  .then((data) => {
+    // Whatever you want from here
+  })
+```
+
 
 ## Using pre-configured templates
 
