@@ -12,7 +12,6 @@
   const loading = Promise.all([location, wtfData])
     .then( ([locationResponse, wtfResponse]) => {
       data = wtfResponse['data']['requests'].filter(d => d.wtf);
-      console.log(data)
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
@@ -25,23 +24,9 @@
     }
     return str.join(' ');
   }
-
-  function randomize() {
-    // Get a random index
-    const newIndex = Math.floor(Math.random() * data.length);
-
-    if (data.length > 1 && newIndex === selectedIndex) {
-      // If new index matches the current index, re-randomize;
-      // check array length to avoid infinite recursion
-      randomize();
-    } else {
-      // Else update index
-      selectedIndex = newIndex;
-    }
-  }
 	
 	function handleClick() {
-    if (count == 51) {
+    if (count === 51) {
       count = 1
     } else {
       count += 1
@@ -49,10 +34,14 @@
 	}
 
   
-  $: if (count == 0) {
-    selectedWTF = data[selectedIndex]
+  $: if (count === 0) {
+    if (data[selectedIndex]) {
+      selectedWTF = data[selectedIndex]
+    } else {
+      selectedWTF = data.filter(d => +d.rank === 1)[0]
+    }
   } else {
-    selectedWTF = data.filter(d => +d.rank == count)[0]
+    selectedWTF = data.filter(d => +d.rank === count)[0]
   }
 </script>
 
