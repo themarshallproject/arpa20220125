@@ -71,7 +71,7 @@
 </MaterialApp>
 <div class="arpa-project-example-card-action">
   <CardActions>
-    <Button div class="card-button" on:click={handleClick}>Show me another</Button>
+    <Button size="large" div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
 </div>
   
