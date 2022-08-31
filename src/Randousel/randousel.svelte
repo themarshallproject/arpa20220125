@@ -12,33 +12,10 @@
   const loading = Promise.all([location, wtfData])
     .then( ([locationResponse, wtfResponse]) => {
       data = wtfResponse['data']['requests'].filter(d => d.wtf);
-      console.log(data)
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
   const amountFormatter = format('.2s');
-
-  function titleCase(str) {
-    str = str.toLowerCase().split(' ');
-    for (var i = 0; i < str.length; i++) {
-      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-    }
-    return str.join(' ');
-  }
-
-  function randomize() {
-    // Get a random index
-    const newIndex = Math.floor(Math.random() * data.length);
-
-    if (data.length > 1 && newIndex === selectedIndex) {
-      // If new index matches the current index, re-randomize;
-      // check array length to avoid infinite recursion
-      randomize();
-    } else {
-      // Else update index
-      selectedIndex = newIndex;
-    }
-  }
 
 	function handleClick() {
     // Report the interaction to GA
@@ -48,22 +25,24 @@
       String(count)
     );
 
-    if (count == 51) {
+    if (count === 51) {
       count = 1
     } else {
       count += 1
     }
 	}
 
-
-  $: if (count == 0) {
-    selectedWTF = data[selectedIndex]
+  $: if (count === 0) {
+    if (data[selectedIndex]) {
+      selectedWTF = data[selectedIndex]
+    } else {
+      selectedWTF = data.filter(d => +d.rank === 1)[0]
+    }
   } else {
-    selectedWTF = data.filter(d => +d.rank == count)[0]
+    selectedWTF = data.filter(d => +d.rank === count)[0]
   }
 </script>
 
-<p>Here's an example of how local government spent the federal COVID-19 relief fund on the criminal justice system.</p>
 {#await loading}
 	<p>...Loading examples...</p>
 {:then}
@@ -72,10 +51,10 @@
   <Card div class="arpa-project-example-card">
     <div class="arpa-project-example-card-content">
       <CardTitle div class="card-location">
-        {titleCase(selectedWTF.place)}, {titleCase(selectedWTF.state)}
+        {selectedWTF.place}, {selectedWTF.state}
       </CardTitle>
       <CardTitle div class="card-project-name">
-        Project name: {titleCase(selectedWTF.projectName)}
+        Project name: {selectedWTF.projectName}
       </CardTitle>
       <CardText div class="card-spending">
         {#if selectedWTF.obligations}
@@ -84,7 +63,7 @@
         {/if}
       </CardText>
       <CardText div class="card-desciption">
-        "{selectedWTF.description}"
+        <span class="card-desciption card-desciption-lead-in">From their report submitted to the Treasury Department:</span> "{selectedWTF.description}"
       </CardText>
       <CardText div class="graphic-source">
         Source: Spending data reported to the
@@ -98,7 +77,7 @@
 </MaterialApp>
 <div class="arpa-project-example-card-action">
   <CardActions>
-    <Button div class="card-button" on:click={handleClick}>Show me another</Button>
+    <Button size="large" div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
 </div>
 

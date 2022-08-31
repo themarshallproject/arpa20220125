@@ -1,4 +1,4 @@
-import Randousel from './Randousel/randousel.svelte';
+import Randousel from './Randousel/Randousel.svelte';
 import wtfDataRaw from './assets/data/arpa_wtfs.json';
 const cacheSlug = 'arpa-categories-geoip-location';
 
