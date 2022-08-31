@@ -16,14 +16,6 @@
     });
 
   const amountFormatter = format('.2s');
-
-  function titleCase(str) {
-    str = str.toLowerCase().split(' ');
-    for (var i = 0; i < str.length; i++) {
-      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
-    }
-    return str.join(' ');
-  }
 	
 	function handleClick() {
     if (count === 51) {
@@ -53,7 +45,7 @@
   <Card div class="arpa-project-example-card">
     <div class="arpa-project-example-card-content">
       <CardTitle div class="card-location">
-        {titleCase(selectedWTF.place)}, {titleCase(selectedWTF.state)}
+        {selectedWTF.place}, {selectedWTF.state}
       </CardTitle>
       <CardTitle div class="card-project-name">
         Project name: {titleCase(selectedWTF.projectName)}
@@ -65,7 +57,7 @@
         {/if}
       </CardText>
       <CardText div class="card-desciption">
-        "{selectedWTF.description}"
+        <span class="card-desciption card-desciption-lead-in">From their report submitted to the Treasury Department:</span> "{selectedWTF.description}"
       </CardText>
       <CardText div class="graphic-source">
         Source: Spending data reported to the
