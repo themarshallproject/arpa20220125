@@ -21,7 +21,7 @@
   function titleCase(str) {
     str = str.toLowerCase().split(' ');
     for (var i = 0; i < str.length; i++) {
-      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
     }
     return str.join(' ');
   }
@@ -39,8 +39,15 @@
       selectedIndex = newIndex;
     }
   }
-	
+
 	function handleClick() {
+    // Report the interaction to GA
+    window.TMPAnalytics.trackEvent(
+      '#arpa-categories-randousel',
+      'clicked',
+      String(count)
+    );
+
     if (count == 51) {
       count = 1
     } else {
@@ -48,7 +55,7 @@
     }
 	}
 
-  
+
   $: if (count == 0) {
     selectedWTF = data[selectedIndex]
   } else {
@@ -94,6 +101,6 @@
     <Button div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
 </div>
-  
-  
+
+
 {/await}
