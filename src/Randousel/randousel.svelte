@@ -48,7 +48,7 @@
         {selectedWTF.place}, {selectedWTF.state}
       </CardTitle>
       <CardTitle div class="card-project-name">
-        Project name: {titleCase(selectedWTF.projectName)}
+        Project name: {selectedWTF.projectName}
       </CardTitle>
       <CardText div class="card-spending">
         {#if selectedWTF.obligations}
