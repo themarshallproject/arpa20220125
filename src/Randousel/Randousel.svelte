@@ -1,6 +1,7 @@
 <script>
   import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialApp } from 'svelte-materialify';
   import { format } from 'd3';
+import { now } from 'svelte/internal';
 
   export let location;
   export let wtfData;
@@ -8,6 +9,7 @@
   let data = []; // Initialize data
   let selectedIndex = 0; // Randomly pick an array element
   let selectedWTF;
+  let timeBeforeClick;
 
   const loading = Promise.all([location, wtfData])
     .then( ([locationResponse, wtfResponse]) => {
@@ -19,11 +21,28 @@
 
 	function handleClick() {
     // Report the interaction to GA
+    const currentTime = Date.now()
+
+    if (timeBeforeClick) {
+      const clickDelta = currentTime - timeBeforeClick;
+      const clickDeltaSecond = Math.ceil(clickDelta/1000);
+
+      window.TMPAnalytics.trackEvent(
+        '#arpa-categories-randousel',
+        'timeOnCard',
+        String(clickDeltaSecond), 
+      );
+    }
+
+    timeBeforeClick = currentTime;
+
     window.TMPAnalytics.trackEvent(
       '#arpa-categories-randousel',
       'clicked',
-      String(count)
+      String(count), 
     );
+
+ 
 
     if (count === 51) {
       count = 1
