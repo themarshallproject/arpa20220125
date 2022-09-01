@@ -6,14 +6,41 @@ const cacheSlug = 'arpa-categories-geoip-location';
 const location = getGeoIpData();
 const wtfData = getWTFData();
 
+const randouselElement = document.getElementById('arpa-categories-randousel');
+
+window.addEventListener('load', (event) => {
+  trackVisibility();
+});
+
 // Set up randousel component
 const randouselApp = new Randousel({
-  target: document.getElementById('arpa-categories-randousel'),
+  target: randouselElement,
   props: {
     location,
     wtfData,
   },
 });
+
+function trackVisibility() {
+  const observer = new IntersectionObserver(reportInitialVisibility, {
+    threshold: 1,
+  });
+
+  observer.observe(randouselElement);
+
+  function reportInitialVisibility(entries) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        window.TMPAnalytics.trackEvent(
+          '#arpa-categories-randousel',
+          'activated',
+          'true'
+        );
+        observer.disconnect();
+      }
+    });
+  }
+}
 
 // Read in data from Airtable
 // You can make this with `make graphics_data`

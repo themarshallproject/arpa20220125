@@ -16,8 +16,15 @@
     });
 
   const amountFormatter = format('.2s');
-	
+
 	function handleClick() {
+    // Report the interaction to GA
+    window.TMPAnalytics.trackEvent(
+      '#arpa-categories-randousel',
+      'clicked',
+      String(count)
+    );
+
     if (count === 51) {
       count = 1
     } else {
@@ -25,7 +32,6 @@
     }
 	}
 
-  
   $: if (count === 0) {
     if (data[selectedIndex]) {
       selectedWTF = data[selectedIndex]
@@ -78,6 +84,6 @@
     <Button size="large" div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
 </div>
-  
-  
+
+
 {/await}
