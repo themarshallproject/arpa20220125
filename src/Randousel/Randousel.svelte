@@ -1,7 +1,6 @@
 <script>
   import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialApp } from 'svelte-materialify';
   import { format } from 'd3';
-import { now } from 'svelte/internal';
 
   export let location;
   export let wtfData;
