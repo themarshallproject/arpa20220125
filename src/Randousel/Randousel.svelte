@@ -51,7 +51,11 @@
   <Card div class="arpa-project-example-card">
     <div class="arpa-project-example-card-content">
       <CardTitle div class="card-location">
+        {#if selectedWTF.place.includes("State") | selectedWTF.state === "District Of Columbia"}
+        {selectedWTF.place}
+        {:else}
         {selectedWTF.place}, {selectedWTF.state}
+        {/if}
       </CardTitle>
       <CardTitle div class="card-project-name">
         Project name: {selectedWTF.projectName}
