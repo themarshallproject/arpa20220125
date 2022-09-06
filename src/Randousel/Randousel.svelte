@@ -1,9 +1,10 @@
 <script>
-  import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialApp } from 'svelte-materialify';
+  import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialAppMin } from 'svelte-materialify';
   import { format } from 'd3';
 
   export let location;
   export let wtfData;
+  let theme = 'light';
   let count = 0;
   let data = []; // Initialize data
   let selectedIndex = 0; // Randomly pick an array element
@@ -65,7 +66,7 @@
 	<p>...Loading examples...</p>
 {:then}
 
-<MaterialApp class="arpa-project-example">
+<MaterialAppMin {theme} class="arpa-project-example">
   <Card div class="arpa-project-example-card">
     <div class="arpa-project-example-card-content">
       <CardTitle div class="card-location">
@@ -96,7 +97,7 @@
     </div>
   </Card>
 
-</MaterialApp>
+</MaterialAppMin>
 <div class="arpa-project-example-card-action">
   <CardActions>
     <Button size="large" div class="card-button" on:click={handleClick}>Show me another</Button>
