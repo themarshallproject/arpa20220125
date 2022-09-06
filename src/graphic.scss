@@ -4,83 +4,86 @@
 $arpa-text-black: #3f3b24; // Site bg color
 $arpa-fill-orange: #f5be73;
 // Card styles
-.arpa-project-example-card {
-  @include acumin;
-  min-width: 100%;
-  padding-bottom: 15px;
-}
-.arpa-project-example-card-content {
-  height: 350px;
-  overflow-y: scroll;
 
-  @media (max-width: 740px) {
-    height: 500px;
+#arpa-categories-randousel {
+  .arpa-project-example-card {
+    @include acumin;
+    min-width: 100%;
+    padding-bottom: 15px;
   }
+  .arpa-project-example-card-content {
+    height: 350px;
+    overflow-y: scroll;
 
-  .s-card-title {
-    word-break: normal;
-  }
+    @media (max-width: 740px) {
+      height: 500px;
+    }
 
-  .card-location {
-    font-size: 22px;
-    line-height: 24px;
-    margin-bottom: 28px;
-    border-bottom: 1px solid $light-gray;
-  }
+    .s-card-title {
+      word-break: normal;
+    }
 
-  .card-project-name {
-    font-size: 18px;
-    font-weight: 800;
-    padding-bottom: 0;
-    line-height: 1.2;
-  }
+    .card-location {
+      font-size: 22px;
+      line-height: 24px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid $light-gray;
+    }
 
-  .card-spending {
-    padding-top: 0;
-    font-size: 18px;
-    color: $arpa-text-black;
-  }
+    .card-project-name {
+      font-size: 18px;
+      font-weight: 800;
+      padding-bottom: 0;
+      line-height: 1.2;
+    }
 
-  .card-desciption-lead-in {
-    border-bottom: 2px solid $arpa-fill-orange;
-  }
-  .card-desciption {
-    // font-style: italic;
-    font-size: 16px;
-    color: $arpa-text-black;
-  }
-  .graphic-source {
-    margin-bottom: 0;
-  }
-}
-.arpa-project-example-card-action {
-  button {
-    background-color: salmon;
-    color: white;
-    margin: 1em auto 3em auto;
-    .s-btn__content {
-      font-weight: bold;
+    .card-spending {
+      padding-top: 0;
+      font-size: 18px;
+      color: $arpa-text-black;
+    }
+
+    .card-desciption-lead-in {
+      border-bottom: 2px solid $arpa-fill-orange;
+    }
+    .card-desciption {
+      // font-style: italic;
+      font-size: 16px;
+      color: $arpa-text-black;
+    }
+    .graphic-source {
+      margin-bottom: 0;
     }
   }
-}
-
-.arpa-project-example-card-action {
-  @include acumin;
-  background-color: $bg-gray;
-
-  .s-card-actions {
-    padding-left: 0px;
-    background-color: none;
+  .arpa-project-example-card-action {
+    button {
+      background-color: salmon;
+      color: white;
+      margin: 1em auto 3em auto;
+      .s-btn__content {
+        font-weight: bold;
+      }
+    }
   }
 
-  .s-btn .s-btn__content {
-    font-size: 20px;
-    color: $arpa-text-black;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
+  .arpa-project-example-card-action {
+    @include acumin;
+    background-color: $bg-gray;
 
-  .s-btn {
-    background-color: $arpa-fill-orange;
+    .s-card-actions {
+      padding-left: 0px;
+      background-color: none;
+    }
+
+    .s-btn .s-btn__content {
+      font-size: 20px;
+      color: $arpa-text-black;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .s-btn {
+      background-color: $arpa-fill-orange;
+    }
   }
 }
