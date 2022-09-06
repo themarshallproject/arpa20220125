@@ -1,10 +1,8 @@
 import Randousel from './Randousel/Randousel.svelte';
-import wtfDataRaw from './assets/data/arpa_wtfs.json';
 const cacheSlug = 'arpa-categories-geoip-location';
 
 // Provide our components with promises
 const location = getGeoIpData();
-const wtfData = getWTFData();
 
 const randouselElement = document.getElementById('arpa-categories-randousel');
 
@@ -17,7 +15,6 @@ const randouselApp = new Randousel({
   target: randouselElement,
   props: {
     location,
-    wtfData,
   },
 });
 
@@ -39,32 +36,6 @@ function trackVisibility() {
         observer.disconnect();
       }
     });
-  }
-}
-
-// Read in data from Airtable
-// You can make this with `make graphics_data`
-function getWTFData() {
-  try {
-    return fetch('https://api.baseql.com/airtable/graphql/appjNDCHFduMTVuRA', {
-      headers: {
-        'accept': 'application/json',
-        'accept-language': 'en-US,en;q=0.9',
-        'authorization':
-          'Bearer MTJhNGIzNjgtZmRkZS00MWJiLWIxMjAtYzU4NzVkNDM2YTI5',
-        'cache-control': 'no-cache',
-        'content-type': 'application/json',
-        'pragma': 'no-cache',
-      },
-      referrer: 'https://app.baseql.com/',
-      referrerPolicy: 'strict-origin-when-cross-origin',
-      body: '{"query":"query MyQuery {\\n  requests {\\n    budget\\n    category\\n    description\\n    id\\n    obligations\\n    place\\n    projectName\\n    rank\\n    state\\n    wtf\\n    topPicks\\n  }\\n}\\n","variables":null,"operationName":"MyQuery"}',
-      method: 'POST',
-      mode: 'cors',
-      // "credentials": "include"
-    }).then((r) => r.json());
-  } catch (err) {
-    console.log('fetching error while getting data:', err);
   }
 }
 

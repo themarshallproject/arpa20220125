@@ -51,7 +51,7 @@ analysis/output_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airt
 		-o $@
 
 src/assets/data/arpa_wtfs.json: analysis/output_data/arpa_wtfs.json ## move wtf data from source folder to graphics data folder
-	cp -R $< $@
+	$(PYENV) python analysis/filter_by_wtf.py $< $@
 
 ##@ Upload/sync
 

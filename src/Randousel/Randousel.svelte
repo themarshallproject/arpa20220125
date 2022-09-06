@@ -1,19 +1,18 @@
 <script>
   import { Card, CardSubtitle, CardTitle, CardText, CardActions, Button, MaterialAppMin } from 'svelte-materialify';
   import { format } from 'd3';
+  import wtfDataRaw from '../assets/data/arpa_wtfs.json';
 
   export let location;
-  export let wtfData;
   let theme = 'light';
   let count = 0;
-  let data = []; // Initialize data
+  let data = wtfDataRaw; // Initialize data
   let selectedIndex = 0; // Randomly pick an array element
   let selectedWTF;
   let timeBeforeClick;
 
-  const loading = Promise.all([location, wtfData])
-    .then( ([locationResponse, wtfResponse]) => {
-      data = wtfResponse['data']['requests'].filter(d => d.wtf);
+  const loading = Promise.all([location])
+    .then( ([locationResponse]) => {
       selectedIndex = data.findIndex(d => d.state === locationResponse.region);
     });
 
