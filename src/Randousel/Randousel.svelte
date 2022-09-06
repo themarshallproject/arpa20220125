@@ -88,12 +88,7 @@
       <CardText div class="card-desciption">
         <span class="card-desciption card-desciption-lead-in">From their report submitted to the Treasury Department:</span> "{selectedWTF.description}"
       </CardText>
-      <CardText div class="graphic-source">
-        Source: Spending data reported to the
-          <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
-            U.S. Department of Treasury
-          </a>
-      </CardText>
+
     </div>
   </Card>
 
@@ -102,6 +97,13 @@
   <CardActions>
     <Button size="large" div class="card-button" on:click={handleClick}>Show me another</Button>
   </CardActions>
+
+  <CardText div class="graphic-source">
+    Source: Spending data reported to the
+      <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds">
+        U.S. Department of Treasury
+      </a>
+  </CardText>
 </div>
 
 
