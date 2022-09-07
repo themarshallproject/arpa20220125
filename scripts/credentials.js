@@ -1,16 +1,15 @@
 // native
-import { platform } from 'os';
+import { platform } from 'node:os';
 
 // packages
 import log, { error as _error } from 'fancy-log';
-import { OAuth2Client } from 'google-auth-library';
 import keychain from 'keychain';
 import { createInterface } from 'readline';
 
 // local
 import { readJsonSync, writeJsonSync } from './utils.js';
 
-const ACCOUNT = 'gfx';
+export const ACCOUNT = 'gfx';
 const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || './.credentials.json';
 
 export const ENDRUN = {
@@ -36,15 +35,18 @@ export const GITHUB = {
   name: 'Github personal access token',
   hint: 'You can get a personal access token at https://github.com/settings/tokens. Make sure it has at least "repo" scope.',
 };
-const GOOGLE_CLIENT = {
+export const GOOGLE_CLIENT = {
   key: 'gfx-google-client-secret',
   name: 'client_secret.json for google apis',
   hint: "You can retrieve this at https://console.cloud.google.com/apis/credentials?organizationId=132720938840&project=gfx-rig-1531502584775. Download the client_secret.json file for the OAuth 2 app. Copy the text of the downloaded JSON file here. (And then delete the file so it's not lying around!)",
 };
-const GOOGLE_TOKEN = {
+export const GOOGLE_TOKEN = {
   key: 'gfx-google-token',
   name: 'OAuth2 bearer token for google apis',
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+  scopes: [
+    'https://www.googleapis.com/auth/documents.readonly',
+    'https://www.googleapis.com/auth/spreadsheets.readonly',
+  ],
 };
 const MUX_SECRET = {
   key: 'gfx-mux-secret',
@@ -75,7 +77,7 @@ function writeCredentialsFile(credentials) {
  * @param {string} account
  * @returns {Promise<string>}
  */
-function getPassword(service, account) {
+export function getPassword(service, account) {
   return new Promise((resolve, reject) => {
     if (platform() === 'darwin') {
       keychain.getPassword({ service, account }, (err, password) => {
@@ -98,7 +100,7 @@ function getPassword(service, account) {
  * @param {string} passsword
  * @returns {Promise<void>}
  */
-function setPassword(service, account, password) {
+export function setPassword(service, account, password) {
   return new Promise((resolve, reject) => {
     if (platform() === 'darwin') {
       keychain.setPassword({ service, account, password }, (err) => {
@@ -118,11 +120,11 @@ function setPassword(service, account, password) {
   });
 }
 
-function deletePassword(service, account) {
+export function deletePassword(service, account) {
   return new Promise((resolve, reject) => {
     if (platform() === 'darwin') {
       keychain.deletePassword({ service, account }, (err) => {
-        if (err) {
+        if (err && err.code !== 'PasswordNotFound') {
           return reject(err);
         }
 
@@ -166,7 +168,7 @@ export function ensureRequiredCredentialsTask() {
   return ensureRequestedCredentials(REQUIRED_CREDS);
 }
 
-function resetServicePassword(service) {
+export function resetServicePassword(service) {
   return new Promise((resolve) => {
     const rl = createInterface({
       input: process.stdin,
@@ -232,87 +234,4 @@ export function resetGithubKey() {
 export async function resetAWSKeys() {
   await resetServicePassword(AWS_ACCESS);
   await resetServicePassword(AWS_SECRET);
-}
-
-export function resetGoogleClient() {
-  return resetServicePassword(GOOGLE_CLIENT);
-}
-
-export async function resetGoogleToken() {
-  await deletePassword(GOOGLE_TOKEN.key, ACCOUNT);
-  await getGoogleClient();
-}
-
-/**
- * Ensure that client credentials, and bearer token are present and stored.
- * Calls back with an authenticated client.
- */
-export async function getGoogleClient() {
-  // Ensure credentials are present.
-  await ensureCredential(GOOGLE_CLIENT);
-  // Get the stored credentials.
-  const secret = await getPassword(GOOGLE_CLIENT.key, ACCOUNT);
-  // Return an authorized Google client.
-  return authorize(JSON.parse(secret));
-}
-
-/**
- * Create an OAuth2 client with stored credentials, and then execute the
- * given callback function.
- *
- * @param {Object} credentials The authorization client credentials.
- * @returns {Promise<OAuth2Client>}
- */
-async function authorize(credentials) {
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
-
-  const oAuth2Client = new OAuth2Client(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
-
-  // Check if we have previously stored a token.
-  const secret = await getPassword(GOOGLE_TOKEN.key, ACCOUNT);
-
-  if (secret == null) {
-    return getNewToken(oAuth2Client);
-  }
-
-  oAuth2Client.setCredentials(JSON.parse(secret));
-
-  return oAuth2Client;
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {OAuth2Client} oAuth2Client The OAuth2 client to get token for.
- * @returns {Promise<OAuth2Client>}
- */
-function getNewToken(oAuth2Client) {
-  return new Promise((resolve) => {
-    const authUrl = oAuth2Client.generateAuthUrl({
-      access_type: 'offline',
-      scope: GOOGLE_TOKEN.scopes,
-    });
-
-    console.log('Authorize this app by visiting this url:', authUrl);
-
-    const rl = createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-
-    rl.question('Enter the code from that page here: ', async (code) => {
-      rl.close();
-      const token = await oAuth2Client.getToken(code);
-
-      oAuth2Client.setCredentials(token);
-
-      await setPassword(GOOGLE_TOKEN.key, ACCOUNT, JSON.stringify(token));
-
-      resolve(oAuth2Client);
-    });
-  });
 }

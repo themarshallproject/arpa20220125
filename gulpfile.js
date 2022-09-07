@@ -16,7 +16,7 @@ import toc from 'gulp-markdown-toc';
 import revAll from 'gulp-rev-all';
 import sourcemaps from 'gulp-sourcemaps';
 import open from 'open';
-import dartSass from 'sass';
+import dartSass from 'sass-embedded';
 import webpack from 'webpack';
 
 // local
@@ -27,9 +27,11 @@ import * as examples from './scripts/examples.js';
 import * as externaldata from './scripts/externaldata.js';
 import * as externalEmbeds from './scripts/external-embeds.js';
 import * as github from './scripts/github.js';
+import * as google from './scripts/google.js';
 import * as includes from './scripts/includes.js';
 import server from './scripts/server.js';
 import * as setup from './scripts/setup.js';
+import * as docs from './scripts/docs.js';
 import * as sheets from './scripts/sheets.js';
 import * as videos from './scripts/videos.js';
 import * as s3 from './scripts/s3.js';
@@ -50,7 +52,7 @@ const { local_markdown, generate_external_embeds, cdn, slug } =
 const sass = gulpSass(dartSass);
 
 async function startServer() {
-  const port = await getPort({ port: 3000 });
+  const port = await getPort({ port: [3000, 3001, 3002, 3003] });
   const lrPort = await getPort({ port: 35729 });
 
   server({ port, lrPort });
@@ -67,11 +69,9 @@ function styles() {
     .src('src/graphic.scss')
     .pipe(sourcemaps.init())
     .pipe(
-      sass
-        .sync({
-          includePaths: ['templates/'],
-        })
-        .on('error', sass.logError)
+      sass({
+        includePaths: ['templates/'],
+      }).on('error', sass.logError)
     )
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('build'))
@@ -333,16 +333,14 @@ gulp.task(
 );
 gulp.task('build:examples', examples.build);
 gulp.task('revision', revision);
+gulp.task('docs:download', docs.downloadData);
 gulp.task('sheets:download', sheets.downloadData);
 gulp.task('videos:transcode', videos.transcodeUploadedVideos);
 gulp.task('posts:download', endrun.getPostData);
 
 // Deployment
 gulp.task('deploy:endrun', endrun.endrunDeploy);
-gulp.task(
-  'deploy:s3',
-  gulp.series(buildProduction, revision, s3.deploy, buildDev)
-);
+gulp.task('deploy:s3', gulp.series(buildProduction, revision, s3.deploy));
 
 gulp.task('deploy:s3:raw', s3.deploy);
 gulp.task('deploy:data', s3.deployData);
@@ -354,8 +352,8 @@ gulp.task('credentials:endrun', credentials.resetEndrunKey);
 gulp.task('credentials:endrun_local', credentials.resetEndrunLocalKey);
 gulp.task('credentials:aws', credentials.resetAWSKeys);
 gulp.task('credentials:github', credentials.resetGithubKey);
-gulp.task('credentials:google', credentials.resetGoogleToken);
-gulp.task('credentials:google_client', credentials.resetGoogleClient);
+gulp.task('credentials:google', google.resetGoogleToken);
+gulp.task('credentials:google_client', google.resetGoogleClient);
 
 // Configuration management
 gulp.task('reset:type', setup.resetType);

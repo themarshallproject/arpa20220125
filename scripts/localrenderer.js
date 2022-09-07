@@ -14,7 +14,8 @@ const config = getLocalConfig();
 export function renderTemplate(options) {
   const renderedTemplate = renderGraphics(options);
   const renderedWithNav = renderNavBar(renderedTemplate);
-  return renderMetadata(renderedWithNav);
+  const renderedWithFooter = renderFooter(renderedWithNav);
+  return renderMetadata(renderedWithFooter);
 }
 
 function renderMetadata(html) {
@@ -24,6 +25,11 @@ function renderMetadata(html) {
 function renderNavBar(html) {
   var navBarHtml = fs.readFileSync('./post-templates/_nav-bar.html');
   return html.replace(/\|NAV_BAR\|/, navBarHtml);
+}
+
+function renderFooter(html) {
+  var footerHtml = fs.readFileSync('./post-templates/_post-footer.html');
+  return html.replace(/\|POST_FOOTER\|/, footerHtml);
 }
 
 function renderFromPostData(html) {

@@ -10,7 +10,7 @@ import flatmap from 'gulp-flatmap';
 import header from 'gulp-header';
 import livereload from 'gulp-livereload';
 import replace from 'gulp-replace';
-import dartSass from 'sass';
+import dartSass from 'sass-embedded';
 import webpack from 'webpack';
 
 // local
@@ -75,11 +75,9 @@ function exampleStyles() {
 
         return src(file.path)
           .pipe(
-            sass
-              .sync({
-                includePaths: ['src/', 'templates/'],
-              })
-              .on('error', sass.logError)
+            sass({
+              includePaths: ['src/', 'templates/'],
+            }).on('error', sass.logError)
           )
           .pipe(addSlugToPaths(exampleSlug));
       })

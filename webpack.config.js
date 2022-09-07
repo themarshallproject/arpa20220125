@@ -2,9 +2,20 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// packages
+import esbuild from 'esbuild';
+
+// plugins
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const jsRegex = /\.(mjs|js|jsx|ts|tsx)$/;
+const jsRegex = /\.(mjs|js)$/;
+const tsRegex = /\.ts$/;
+
+// Support browserslist
+// "defaults and supports es6-module and supports es6-module-dynamic-import",
+const target = ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'];
 
 /** @typedef {import('webpack').Configuration} WebpackConfig */
 
@@ -32,7 +43,7 @@ export default function getConfig(mode, entry, outputPath) {
       alias: {
         svelte: path.resolve('node_modules', 'svelte'),
       },
-      extensions: ['.mjs', '.js', '.svelte'],
+      extensions: ['.mjs', '.js', '.ts', '.svelte'],
       mainFields: ['svelte', 'module', 'browser', 'main'],
     },
     module: {
@@ -58,7 +69,8 @@ export default function getConfig(mode, entry, outputPath) {
             fullySpecified: false,
           },
         },
-        !isDev && {
+        // javascript support
+        {
           test: jsRegex,
           exclude: {
             // exclude node_modules...
@@ -67,15 +79,35 @@ export default function getConfig(mode, entry, outputPath) {
             not: [/node_modules\/svelte\/internal/],
           },
           use: {
-            loader: 'babel-loader',
+            loader: 'esbuild-loader',
             options: {
-              cacheDirectory: true,
-              presets: ['@babel/preset-env'],
+              implementation: esbuild,
+              loader: 'js',
+              target,
+            },
+          },
+        },
+        // typescript support
+        {
+          test: tsRegex,
+          exclude: {
+            // exclude node_modules...
+            or: [/node_modules/],
+            // ...but keep svelte internals
+            not: [/node_modules\/svelte\/internal/],
+          },
+          use: {
+            loader: 'esbuild-loader',
+            options: {
+              implementation: esbuild,
+              loader: 'ts',
+              target,
             },
           },
         },
       ].filter(Boolean),
     },
+    plugins: [isDev && new CaseSensitivePathsPlugin()].filter(Boolean),
   };
 
   return config;
