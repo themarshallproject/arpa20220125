@@ -1,48 +1,57 @@
+from matplotlib import test
 import pandas as pd
 import glob
 
-# def read_file(df):
-#     df = pd.read_excel(df)
-#     return df 
-    
-# datasets = glob.glob("analysis/source_data/payroll/*.xlsx")
+def get_year(filename):
+    year = filename.split("payroll/")[1]
+    year = year.split("emp")[0]
+    year = int("20"+year)
+    return year
 
-# dfs = []
-
-# for i, data in enumerate(datasets):
-#     df = read_file(data)
-#     df = f'data_{i+1}'
-#     dfs.append(df)
-
-# print(dfs)
+def test_get_year():
+    assert get_year("analysis/source_data/payroll/19emp.xlsx") == 2019
 
 #READ THE FILES
-df_21 = pd.read_excel("21emp.xlsx")
-df_20 = pd.read_excel("20emp.xlsx")
-df_19 = pd.read_excel("19emp.xlsx")
-df_18 = pd.read_excel("18emp.xlsx")
+def read_files(datasets):
+    dfs =[]
+    for i, data in enumerate(datasets):
+        df = pd.read_excel(data)
+        #GET YEAR FROM THE FILENAME
+        df['year'] = get_year(data) 
+        dfs.append(df)
+    return dfs 
 
 #ADD AVERAGE PAY
-dfs = [df_21, df_20, df_19, df_18]
+def add_average_pay(dfs):
+    for df in dfs:
+            df["average_fulltime_pay"] = df["Full-time Payroll"]/df["Full-time Employees"]
+            df["average_annual_pay"] =  df["average_fulltime_pay"]*12
+    return dfs 
 
-for df in dfs:
-    df["average_fulltime_pay"] = df["Full-time Payroll"]/df["Full-time Employees"]
-    df["average_annual_pay"] =  df["average_fulltime_pay"]*12
-
-#SLICE THE COLUMNS 
-columns = ["State", "Type of Government", \
-           "Name of Government", "Population/Enrollment/Function Code", \
-           "Government Function", "Full-time Employees", \
-           "Full-time Payroll", "average_annual_pay"]
-
-for df in dfs: 
-    df = df[[c for c in df.columns if c in columns]]
-
-#MERGE DATAFRAMES 
-for df in dfs: 
-    df_merge = pd.merge(df_20, df, on=["State", "Type of Government", "Name of Government",\
-    "Government Function"])
-
-#EXPORT AS 1 FILE 
-
+def test_add_pay():
+    dfs = [pd.read_excel("analysis/source_data/payroll/21emp.xlsx")]
+    dfs = add_average_pay(dfs)
+    print(round(dfs[0]['average_fulltime_pay'].iloc[0]))
+    assert round(dfs[0]['average_fulltime_pay'].iloc[0]) == 5220
     
+def main():
+ 
+    datasets = glob.glob("analysis/source_data/payroll/*.xlsx")
+    dfs = read_files(datasets)
+    dfs = add_average_pay(dfs)
+
+    #MERGE DATAFRAMES
+    df_all = pd.concat(dfs)
+
+    #EXPORT AS 1 FILE 
+    print("saving file")
+    df_all.to_csv("analysis/output_data/payroll_data.csv")
+
+    #SLICE THE COLUMNS 
+    # columns = ["State", "Type of Government", \
+    #         "Name of Government", "Population/Enrollment/Function Code", \
+    #         "Government Function", "Full-time Employees", \
+    #         "Full-time Payroll", "average_annual_pay"]
+
+if __name__ == "__main__":
+    main()
