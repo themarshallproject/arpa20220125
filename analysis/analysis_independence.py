@@ -9,7 +9,7 @@ def get_year(filename):
     return year
 
 def test_get_year():
-    assert get_year("analysis/source_data/payroll/19emp.xlsx") == 2019
+    assert get_year("analysis/source_data/payroll/17emp.xlsx") == 2017
 
 #READ THE FILES
 def read_files(datasets):
@@ -35,23 +35,32 @@ def test_add_pay():
     assert round(dfs[0]['average_fulltime_pay'].iloc[0]) == 5220
     
 def main():
- 
+    print("reading in files")
     datasets = glob.glob("analysis/source_data/payroll/*.xlsx")
     dfs = read_files(datasets)
     dfs = add_average_pay(dfs)
 
     #MERGE DATAFRAMES
+    print("merging")
     df_all = pd.concat(dfs)
 
-    #EXPORT AS 1 FILE 
-    print("saving file")
-    df_all.to_csv("analysis/output_data/payroll_data.csv")
-
     #SLICE THE COLUMNS 
-    # columns = ["State", "Type of Government", \
-    #         "Name of Government", "Population/Enrollment/Function Code", \
-    #         "Government Function", "Full-time Employees", \
-    #         "Full-time Payroll", "average_annual_pay"]
+    print("slicing")
+    df_all = df_all[["State", \
+             "Name of Government", "Population/Enrollment/Function Code", \
+             "Government Function", "Full-time Employees", \
+            "Full-time Payroll", "average_annual_pay", "year"]]\
+            .rename(columns = {
+    "Name of Government": "Govt_Name",
+    "Population/Enrollment/Function Code": "pop",
+    "Government Function": "function",
+    "Full-time Employees": "FTE",
+    "Full-time Payroll": "FTE_Pay",
+    "average_annual_pay": "AVG_Pay"})
+
+    #EXPORT AS 1 FILE 
+    print("saving")
+    df_all.to_csv("analysis/output_data/payroll_data.csv", index=False)
 
 if __name__ == "__main__":
     main()

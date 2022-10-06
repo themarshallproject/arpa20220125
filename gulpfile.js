@@ -3,7 +3,7 @@ import { writeFileSync, readdirSync } from 'fs';
 import { basename, extname, join } from 'path';
 
 // packages
-import getPort from 'get-port';
+
 import gulp from 'gulp';
 import autoprefixer from 'gulp-autoprefixer';
 import changedInPlace from 'gulp-changed-in-place';

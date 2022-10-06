@@ -29,10 +29,6 @@ analysis/output_data/group_by_category.csv: analysis/source_data/April-2022-Quar
 	@echo "Export grouped data for graphics"
 	$(PYENV) python analysis/group_by_category.py $< $@
 
-analysis/output_data/output.csv: analysis/source_data/input.csv  ## Run R analysis on the downloaded data, including saving output
-	@echo "Running R analysis"
-	Rscript analysis/analysis.R
-
 
 ##@ Source files
 analysis/source_data/April-2022-Quarterly-and-Annual-Reporting-Data-through-March-31-2022.xlsx:	## Download April twenty-two ARPA Data
@@ -52,6 +48,8 @@ analysis/output_data/arpa_wtfs.json: ## Pull hand-curated WTF examples from Airt
 
 src/assets/data/arpa_wtfs.json: analysis/output_data/arpa_wtfs.json ## move wtf data from source folder to graphics data folder
 	$(PYENV) python analysis/filter_by_wtf.py $< $@
+
+
 
 ##@ Upload/sync
 
