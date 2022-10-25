@@ -3,7 +3,7 @@ import pandas as pd
 
 def flag_topics(df):
 
-    list_le = ["police","PD","gun","law enforcement","public safety","crime","criminal","body cameras","tasers","armor","sheriff","officer"]
+    list_le = ["police","PD","gun","law enforcement","public safety","crime","criminal","body cameras","tasers","armor","sheriff","officer", "violence"]
     list_court = ["court","public defenders","prosecutors","juvenile court","juvenile justice"]
     list_correction = ["jail","prison","correction","incarcerated","inmate","guards","custody"]
 
