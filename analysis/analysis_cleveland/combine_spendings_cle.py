@@ -12,7 +12,7 @@ df_init = df_init[["Recipient Name", "Total Cumulative Obligations", "Project De
      "Total Cumulative Obligations": "Amount",
      "Focus": "Focus" })
 
-df_init["source"] = "initial"
+df_init["source"] = "direct"
 
 df_init['Amount'] = df_init['Amount'].fillna(0)
 
@@ -24,7 +24,7 @@ df_add = pd.read_csv("analysis/source_data/cleveland/arpa_cle_additional.csv")
 
 df_add = df_add[["recipient", "Amount", "Project description", "Focus"]]
 
-df_add["source"] = "additional"
+df_add["source"] = "indirect"
 
 #df_add['Amount'] = df_add['Amount'].str.replace('.00','')
 #df_add['Amount'] = df_add['Amount'].fillna(0)
