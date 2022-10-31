@@ -20,7 +20,7 @@ df_init['Amount'] = df_init['Amount'].astype(float)
 
 #CLEANING THE INDIRECT CJ SPENDING DATA
 
-df_add = pd.read_csv("analysis/source_data/cleveland/arpa_cle_indirect_clean.csv")
+df_add = pd.read_csv("analysis/source_data/cleveland/cle_indirect_multiple.csv")
 
 df_add = df_add[["recipient", "Amount", "Project description", "Focus"]]
 
