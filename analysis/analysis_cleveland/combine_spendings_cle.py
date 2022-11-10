@@ -24,7 +24,17 @@ df_indir = pd.read_csv("analysis/source_data/cleveland/cle_indirect_multiple.csv
 
 df_indir = df_indir[["recipient", "Amount", "Project description", "Focus"]]
 
-df_indir["source"] = "indirect"
+def indirect_county(row):
+    try:
+        if row["source"] == "direct":
+            source = "direct"
+        elif row["source"] == "indirect_county":
+            source = "indirect_county"
+    except:
+        source = "indirect_state"
+    return source
+
+df_indir["source"] = df_indir.apply(indirect_county, axis=1)
 
 df_indir['Amount'] = df_indir['Amount'].astype(float)
 

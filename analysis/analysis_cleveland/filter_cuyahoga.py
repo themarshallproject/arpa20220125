@@ -1,3 +1,8 @@
+## reads in the data we processed earlier that extracts CJ-related projects by keyword
+## filter to Ohio
+## then match the receipient nae with our hand-compiled names for Cuyahoga county cities/towns
+## for more vetting on Google Sheet
+## https://docs.google.com/spreadsheets/d/10A3xUicxV0yoEtRXz85z_nqDwzy_TbMqh_XD9qLNTok/edit#gid=912893235
 import csv
 import pandas as pd
 

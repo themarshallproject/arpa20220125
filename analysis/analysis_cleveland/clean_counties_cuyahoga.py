@@ -1,5 +1,6 @@
 import pandas as pd
 
+## Pulling out allocations for Cuyahoga County
 df_counties = pd.read_csv("analysis/source_data/allocation/fiscalrecoveryfunds_countyfunding_2021.05.10-1a.csv", engine='python',encoding='latin1')
 df_counties = df_counties.loc[df_counties['State'] == "Ohio"]
 df_counties = df_counties.loc[df_counties['County'] == "Cuyahoga County"]

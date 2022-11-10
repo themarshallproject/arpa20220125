@@ -1,7 +1,10 @@
+## parses NEU allocations from state's pdf file
+## and export that into a spreadsheet
 import tabula
 import pandas as pd
 
 df = tabula.read_pdf("analysis/source_data/allocation/ARPA_Non-Entitlement_Allocations_Distributions_2022-05-13.pdf", pages=[5,6])[0]
+
 tabula.convert_into("analysis/source_data/allocation/ARPA_Non-Entitlement_Allocations_Distributions_2022-05-13.pdf", "analysis/source_data/allocation/NEU_allocations_toclean.csv", output_format="csv", pages=[5,6])
 
 df = pd.read_csv("analysis/source_data/allocation/NEU_allocations_toclean.csv")

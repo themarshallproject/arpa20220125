@@ -1,3 +1,7 @@
+## combines all three allocation files (city, county, and NEU(small cities))
+## filter that list with a hand-compiled list of all cities/villages in Cuyahoga county (compiled by Rachel)
+## export this data for further analysis
+
 import pandas as pd
 
 #JOIINING with df of villages and small cities in Cuyahoga
