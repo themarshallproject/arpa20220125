@@ -21,17 +21,16 @@ df_dir['Amount'] = df_dir['Amount'].astype(float)
 #CLEANING THE INDIRECT CJ SPENDING DATA
 
 df_indir = pd.read_csv("analysis/source_data/cleveland/cle_indirect_multiple.csv")
-
-df_indir = df_indir[["recipient", "Amount", "Project description", "Focus"]]
+df_indir = df_indir[["recipient", "Amount", "Project description", "source", "Focus"]]
 
 def indirect_county(row):
-    try:
-        if row["source"] == "direct":
-            source = "direct"
-        elif row["source"] == "indirect_county":
-            source = "indirect_county"
-    except:
+    if row["source"] == "direct":
+        source = "direct"
+    elif row["source"] == "indirect_county":
+        source = "indirect_county"
+    else:
         source = "indirect_state"
+
     return source
 
 df_indir["source"] = df_indir.apply(indirect_county, axis=1)
